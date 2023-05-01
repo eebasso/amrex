@@ -6,7 +6,7 @@
 
 namespace amrex {
 
-// Tensor solver for high Reynolds flows with small gradient in viscosity.
+// Embedded boundary tensor solver for high Reynolds flows with small gradient in viscosity.
 // The system it solves is
 //
 //   alpha a v - beta div dot tau = rhs
@@ -22,7 +22,6 @@ namespace amrex {
 //
 // The scalars alpha and beta can be set with `setScalar(Real, Real)`.  If
 // they are not set, their default value is 1.
-
 class MLEBTensorOp
     : public MLEBABecLap
 {

@@ -7,6 +7,11 @@
 
 namespace amrex {
 
+/**
+ * \brief Multi-Level conjugate gradient method solver template class.
+ * 
+ * \tparam MF type acted on by linear operator, typically MultiFab
+ */
 template <typename MF>
 class MLCGSolverT
 {
@@ -26,7 +31,7 @@ public:
     void setSolver (Type _typ) noexcept { solver_type = _typ; }
 
     /**
-    * solve the system, Lp(solnL)=rhsL to relative err, tolerance
+    * Solve the system, Lp(solnL)=rhsL to relative err, tolerance
     * Returns an int indicating success or failure.
     * 0 means success
     * 1 means failed for loss of precision

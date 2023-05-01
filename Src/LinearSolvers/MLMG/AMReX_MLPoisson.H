@@ -8,8 +8,13 @@
 
 namespace amrex {
 
-// del dot grad phi
-
+/**
+ * \brief Multi-level Poisson template class.
+ * 
+ * del dot grad phi = rhs
+ * 
+ * \tparam MF typename, typically MultiFab
+ */
 template <typename MF>
 class MLPoissonT
     : public MLCellABecLapT<MF>

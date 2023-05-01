@@ -6,9 +6,19 @@
 
 namespace amrex {
 
-// del dot (sigma grah phi) = rhs
-// where phi and rhs are nodal, and sigma is cell-centered.
-
+/**
+ * \brief Multi-level nodal Laplacian solver.
+ * 
+ * Solves
+ * 
+ * del dot (sigma del phi) = rhs ,
+ * 
+ * where `phi` and `rhs` are nodal, and `sigma` is cell-centered.
+ * Note that `sigma` is currently only implemented as a diagonal
+ * rank-2 tensor field.
+ * 
+ * Inherits from MLNodeLinOp
+ */
 class MLNodeLaplacian
     : public MLNodeLinOp
 {
@@ -58,6 +68,12 @@ public :
 
     void setNormalizationThreshold (Real t) noexcept { m_normalization_threshold = t; }
 
+    /**
+     * \brief Set sigma as a diagonal rank-2 tensor field
+     * 
+     * \param amrlev Level of the adapative mesh refinement
+     * \param a_sigma Input fields components to be copied
+     */
     void setSigma (int amrlev, const MultiFab& a_sigma);
 
     void compDivergence (const Vector<MultiFab*>& rhs, const Vector<MultiFab*>& vel);
@@ -184,6 +200,7 @@ private:
     int m_is_rz = 0;
 
     Real m_const_sigma = Real(0.0);
+    // The AMREX_SPACEDIM components of the diagonal rank-2 tensor field sigma
     Vector<Vector<Array<std::unique_ptr<MultiFab>,AMREX_SPACEDIM> > > m_sigma;
     Vector<Vector<std::unique_ptr<MultiFab> > > m_stencil;
     Vector<std::unique_ptr<MultiFab> > m_nosigma_stencil;

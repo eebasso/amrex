@@ -7,8 +7,16 @@
 
 namespace amrex {
 
-// (alpha * a - beta * (del dot b grad)) phi
-
+/**
+ * Multi-Level cell-centered AB coefficient Laplacian solver template class. 
+ * 
+ * (alpha * a - beta * (del dot b grad)) phi = rhs ,
+ * 
+ * where `A` and `B` are scalar constants, `alpha` and `beta` are sca
+ * 
+ * \tparam MF typename, typically MultiFab
+ * 
+ */
 template <typename MF>
 class MLABecLaplacianT
     : public MLCellABecLapT<MF>

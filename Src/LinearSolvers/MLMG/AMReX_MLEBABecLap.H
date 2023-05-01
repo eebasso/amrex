@@ -9,8 +9,15 @@
 
 namespace amrex {
 
-// (alpha * a - beta * (del dot b grad)) phi
-
+/**
+ * Multi-Level cell-centered embedded boundary AB coefficients Laplacian solver. 
+ * 
+ * (alpha * a - beta * (del dot b grad)) phi = rhs
+ * 
+ * where alpha is ___, a is ___, beta is ___, and b is ___.
+ * 
+ * Inherits from MLCellABecLap
+ */
 class MLEBABecLap
     : public MLCellABecLap
 {

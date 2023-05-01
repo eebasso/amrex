@@ -33,7 +33,6 @@ class iMultiFab;
  * Additional member functions are defined for I/O and simple arithmetic operations on these aggregate objects.
  * This class does NOT provide a copy constructor or assignment operator.
  */
-
 class MultiFab
     :
     public FabArray<FArrayBox>
@@ -64,7 +63,7 @@ public:
     * \param ncomp number of components
     * \param ngrow number of cells the region grows
     * \param info MFInfo
-
+    * 
     * The size of the FArrayBox is given by the Box grown by ngrow, and
     * the number of components is given by ncomp. If info is set to
     * not allocating memory, then no FArrayBoxes are allocated at
@@ -622,6 +621,8 @@ public:
                             int             numcomp,
                             int             nghost);
 
+    /// @brief a
+    /// @details abc
     static void AddProduct (MultiFab&       dst,
                             const MultiFab& src1,
                             int             comp1,

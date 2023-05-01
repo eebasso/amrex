@@ -90,6 +90,8 @@ template <typename T> class MLCGSolverT;
 template <typename T> class MLPoissonT;
 template <typename T> class MLABecLaplacianT;
 
+/// \brief Multi-level linear operator template
+/// \tparam MF MultiFab typename, typically MultiFab
 template <typename MF>
 class MLLinOpT
 {
@@ -307,13 +309,13 @@ public:
     /**
      * \brief Apply the linear operator, out = L(in)
      *
-     * \param amrlev  AMR level
-     * \param mglev   MG level
-     * \param out     output
-     * \param in      input
-     * \param bc_mode Is the BC homogeneous or inhomogeneous?
-     * \param s_mode  Are data data solution or correction?
-     * \param bndry   object for handling coarse/fine and physical boundaries
+     * \param[in]  amrlev  AMR level
+     * \param[in]  mglev   MG level
+     * \param[out] out     output
+     * \param[in]  in      input
+     * \param[in]  bc_mode Is the BC homogeneous or inhomogeneous?
+     * \param[in]  s_mode  Are data data solution or correction?
+     * \param[in]  bndry   object for handling coarse/fine and physical boundaries
      */
     virtual void apply (int amrlev, int mglev, MF& out, MF& in, BCMode bc_mode,
                         StateMode s_mode, const MLMGBndryT<MF>* bndry=nullptr) const = 0;

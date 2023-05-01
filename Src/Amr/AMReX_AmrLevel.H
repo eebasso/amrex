@@ -30,11 +30,10 @@ class TagBox;
 class TagBoxArray;
 
 /**
-* \brief Virtual base class for managing individual levels.
-* AmrLevel functions both as a container for state data on a level
-* and also manages the advancement of data in time.
-*/
-
+ * \brief Virtual base class for managing individual levels.
+ * AmrLevel functions both as a container for state data on a level
+ * and also manages the advancement of data in time.
+ */
 class AmrLevel
 {
     friend class Amr;

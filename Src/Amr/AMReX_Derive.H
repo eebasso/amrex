@@ -100,7 +100,6 @@ class DescriptorList;
 * from the state data contained in AmrLevel and its derivatives. Some
 * examples might be kinetic energy, vorticity, concentration gradients ...
 */
-
 class DeriveRec
 {
    friend class DeriveList;

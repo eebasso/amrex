@@ -21,7 +21,6 @@ namespace amrex {
 //
 // The scalars alpha and beta can be set with `setScalar(Real, Real)`.  If
 // they are not set, their default value is 1.
-
 class MLTensorOp
     : public MLABecLaplacian
 {

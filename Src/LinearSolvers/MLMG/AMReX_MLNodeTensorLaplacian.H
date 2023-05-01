@@ -6,19 +6,25 @@
 
 namespace amrex {
 
+// Multi-Level nodal tensor Laplacian solver:
+//
 // del dot (sigma grad phi) = rhs
-// where phi and rhs are nodal multifab, and sigma is a tensor constant.
-// It is assumed that tensor is symmetric tensor of rank AMREX_SPACEDIM.
+//
+// where phi and rhs are nodal multifab, and sigma is a constant 
+// rank-2 symmetric tensor with AMREX_SPACEDIM choose 2 components.
 // Only periodic and Dirichlet are supported.
-
+//
+// Inherits from MLNodeLinOp
 class MLNodeTensorLaplacian
     : public MLNodeLinOp
 {
 public:
 
 #if (AMREX_SPACEDIM == 2)
-    static constexpr int nelems = 3;  // number of unique elements in sigma
+    // number of unique elements in sigma
+    static constexpr int nelems = 3;  
 #else
+    // number of unique elements in sigma
     static constexpr int nelems = 6;
 #endif
 
@@ -34,11 +40,20 @@ public:
     MLNodeTensorLaplacian& operator= (const MLNodeTensorLaplacian&) = delete;
     MLNodeTensorLaplacian& operator= (MLNodeTensorLaplacian&&) = delete;
 
-    // The user can set the tensor by calling either setSigma or setBeta.
-    // For 2d, a_sigma contains components xx, xy, and yy.
-    // For 3d, a_sigma contains components xx, xy, xz, yy, yz, and zz.
+    /**
+     * \brief  The user can set the constant tensor by calling either setSigma or setBeta.
+     * 
+     * \param[in] a_sigma Input to be copied to sigma. 
+     * For 2d, a_sigma contains components xx, xy, and yy.
+     * For 3d, a_sigma contains components xx, xy, xz, yy, yz, and zz.
+     */
     void setSigma (Array<Real,nelems> const& a_sigma) noexcept;
-    // sigma = I - beta beta^T.
+
+    /**
+     * \brief Sets sigma = I - beta beta^T
+     * 
+     * \param[in] a_beta AMREX_SPACEDIM vector, typically v/c
+     */
     void setBeta (Array<Real,AMREX_SPACEDIM> const& a_beta) noexcept;
 
     void define (const Vector<Geometry>& a_geom,
@@ -85,6 +100,7 @@ private:
 
     GpuArray<Real,nelems> scaledSigma (int amrlev, int mglev) const noexcept;
 
+    // The constant AMREX_SPACEDIM-choose-2 components of the homogeneous symmetric rank-2 tensor `sigma`
     GpuArray<Real,nelems> m_sigma;
     mutable int m_redblack = 0;
 };
