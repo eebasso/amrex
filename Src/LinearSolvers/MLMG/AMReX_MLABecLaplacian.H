@@ -8,13 +8,15 @@
 namespace amrex {
 
 /**
- * Multi-Level cell-centered AB coefficient Laplacian solver template class. 
+ * \brief Multi-level cell-centered AB coefficient Laplacian solver template class. 
  * 
- * (alpha * a - beta * (del dot b grad)) phi = rhs ,
+ * (A * alpha - B * (del dot beta grad)) phi = rhs ,
  * 
- * where `A` and `B` are scalar constants, `alpha` and `beta` are sca
+ * where `A` and `B` are scalar constants, `alpha` is a scalar field, and `beta` is a diagonal matrix field.
  * 
- * \tparam MF typename, typically MultiFab
+ * Inherits from MLCellABecLapT<MF>.
+ * 
+ * \tparam MF typename of phi and rhs, typically MultiFab
  * 
  */
 template <typename MF>
@@ -82,10 +84,10 @@ public:
      * Sets alpha as a scalar field to values from a single component
      * mutlifab.
      *
-     * \param [in] amrlev The level of the multifab for the solver, with
+     * \param[in] amrlev The level of the multifab for the solver, with
      *                    \p amrlev = 0 always being the lowest level in the
      *                    AMR hierarchy represented in the solve.
-     * \param [in] alpha  Multifab of alpha values.
+     * \param[in] alpha  Multifab of alpha values.
      */
     template <typename AMF,
               std::enable_if_t<IsFabArray<AMF>::value &&
@@ -98,10 +100,10 @@ public:
      * Sets alpha as a single scalar constant value across
      * the mutlifab.
      *
-     * \param [in] amrlev The level of the multifab for the solver, with
+     * \param[in] amrlev The level of the multifab for the solver, with
      *                    \p amrlev = 0 always being the lowest level in the
      *                    AMR hierarchy represented in the solve.
-     * \param [in] alpha  Single scalar value to populate across mutlifab.
+     * \param[in] alpha  Single scalar value to populate across mutlifab.
      */
     template <typename T,
               std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,
@@ -112,10 +114,10 @@ public:
      * Sets beta as a scalar field to be the values defined
      * in the supplied multifabs (one for each space dimension).
      *
-     * \param [in] amrlev The level of the multifab for the solver, with
+     * \param[in] amrlev The level of the multifab for the solver, with
      *                    \p amrlev = 0 always being the lowest level in the
      *                    AMR hierarchy represented in the solve.
-     * \param [in] beta   Array of Multifabs of beta values.
+     * \param[in] beta   Array of Multifabs of beta values.
      */
     template <typename AMF,
               std::enable_if_t<IsFabArray<AMF>::value &&
@@ -128,10 +130,10 @@ public:
      * Sets beta as a single scalar constant value across
      * the mutlifabs (one for each dimension).
      *
-     * \param [in] amrlev The level of the multifab for the solver, with
+     * \param[in] amrlev The level of the multifab for the solver, with
      *                    \p amrlev = 0 always being the lowest level in the
      *                    AMR hierarchy represented in the solve.
-     * \param [in] beta   Single scalar value to populate across mutlifabs.
+     * \param[in] beta   Single scalar value to populate across mutlifabs.
      */
     template <typename T,
               std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,

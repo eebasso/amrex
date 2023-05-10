@@ -12,7 +12,7 @@ namespace amrex {
 //   alpha a v - beta div dot tau = rhs
 //
 // where tau = eta [grad v + (grad v)^T] +  (kappa-(2/3)eta) (div v) I.
-// Here eta and kappa are shear and bulk viscosity, and I is identity tensor.
+// Here eta and kappa are shear and bulk viscosity fields, and I is identity tensor.
 //
 // The user needs to provide `a` by `setACoeffs`, eta by `setShearViscosity`,
 // and kappa by `setBulkViscosity`.  If `setBulkViscosity` is not called,
@@ -22,6 +22,8 @@ namespace amrex {
 //
 // The scalars alpha and beta can be set with `setScalar(Real, Real)`.  If
 // they are not set, their default value is 1.
+// 
+// Inherits from MLEBABecLap
 class MLEBTensorOp
     : public MLEBABecLap
 {

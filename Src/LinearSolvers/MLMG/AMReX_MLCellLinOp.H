@@ -18,7 +18,7 @@ namespace amrex {
 /**
  * \brief Multi-level cell-centered linear operator template class
  * 
- * \tparam MF Typename (usually Multi-Fab or something similar)
+ * \tparam MF Type acted on by operator, typically MultiFab
  */
 template <typename MF>
 class MLCellLinOpT  // NOLINT(cppcoreguidelines-virtual-class-destructor)

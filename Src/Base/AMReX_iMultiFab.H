@@ -24,7 +24,7 @@ namespace amrex {
 * member functions are defined for I/O and simple arithmetic operations on
 * these aggregate objects.
 *
-8 This class does NOT provide a copy constructor or assignment operator.
+* This class does NOT provide a copy constructor or assignment operator.
 */
 class iMultiFab
     :

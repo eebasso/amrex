@@ -26,6 +26,32 @@ void set_covered (const int i, const int j, const int k,
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
+/**
+ * \brief Set vfrac, vcent, barea, bcent, and bnorm for an EB
+ * 
+ * \param[in] i Dimension 1 index
+ * \param[in] j Dimension 2 index
+ * \param[in] k Dimension 3 index
+ * \param[in] cell 
+ * \param[in] apx 
+ * \param[in] apy 
+ * \param[in] apz 
+ * \param[in] fcx 
+ * \param[in] fcy 
+ * \param[in] fcz 
+ * \param[in] m2x 
+ * \param[in] m2y 
+ * \param[in] m2z 
+ * \param[out] vfrac Output, volume fraction
+ * \param[out] vcent 
+ * \param[out] barea Output, area of EB surface in cell
+ * \param[out] bcent 
+ * \param[out] bnorm Output, unit vector normal to EB surface
+ * \param[in] small_volfrac Threshold for vfrac to be considered a "small cell"
+ * \param[out] is_small_cell 
+ * \param[out] is_multicut 
+ * \return 
+ */
 void set_eb_data (const int i, const int j, const int k,
                   Array4<EBCellFlag> const& cell, Array4<Real> const& apx,
                   Array4<Real> const& apy, Array4<Real> const& apz,

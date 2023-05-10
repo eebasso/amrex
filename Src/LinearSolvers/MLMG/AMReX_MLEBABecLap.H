@@ -12,11 +12,11 @@ namespace amrex {
 /**
  * Multi-Level cell-centered embedded boundary AB coefficients Laplacian solver. 
  * 
- * (alpha * a - beta * (del dot b grad)) phi = rhs
+ * (A * alpha - B * (del dot beta grad)) phi = rhs
  * 
- * where alpha is ___, a is ___, beta is ___, and b is ___.
+ * where `A` and `B` are scalar constants, and `alpha` and `beta` are scalar fields.
  * 
- * Inherits from MLCellABecLap
+ * Inherits from MLCellABecLapT<MultiFab>
  */
 class MLEBABecLap
     : public MLCellABecLap

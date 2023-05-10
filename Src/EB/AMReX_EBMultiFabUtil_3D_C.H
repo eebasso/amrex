@@ -223,7 +223,31 @@ void eb_avgdown_boundaries (int i, int j, int k,
     }
 }
 
+
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
+/**
+ * \brief Compute divergence of the vector (u,v,w) at a point (i,j,k,n). Considers embedded boundaries.
+ * 
+ * \param[in] i Dimension 1 index
+ * \param[in] j Dimension 2 index
+ * \param[in] k Dimension 3 index
+ * \param[in] n MultiFab component index 
+ * \param[out] divu Output, divergence of (u,v,w)
+ * \param[in] u Dimension 1 component of the input vector
+ * \param[in] v Dimension 2 component of the input vector
+ * \param[in] w Dimension 3 component of the input vector
+ * \param[in] ccm Cell-centered mask
+ * \param[in] flag Array4 of EBCellFlag, specifies whether the cell is covered, regular, or neither
+ * \param[in] vfrc Volume fraction
+ * \param[in] apx Area fraction of dimension 1
+ * \param[in] apy Area fraction of dimension 2
+ * \param[in] apz Area fraction of dimension 3
+ * \param[in] fcx Face centroids perpendicular to dimension 1. Has two components with dimensions ordered as 2,3.
+ * \param[in] fcy Face centroids perpendicular to dimension 2. Has two components with dimensions ordered as 1,3.
+ * \param[in] fcz Face centroids perpendicular to dimension 3. Has two components with dimensions ordered as 1,2.
+ * \param[in] dxinv Array of 1/dx
+ * \param[in] already_on_centroids Checks if ___ are already on centroids.
+ */
 void eb_compute_divergence (int i, int j, int k, int n, Array4<Real> const& divu,
                             Array4<Real const> const& u, Array4<Real const> const& v,
                             Array4<Real const> const& w, Array4<int const> const& ccm,

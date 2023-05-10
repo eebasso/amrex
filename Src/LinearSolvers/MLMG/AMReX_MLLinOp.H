@@ -90,8 +90,8 @@ template <typename T> class MLCGSolverT;
 template <typename T> class MLPoissonT;
 template <typename T> class MLABecLaplacianT;
 
-/// \brief Multi-level linear operator template
-/// \tparam MF MultiFab typename, typically MultiFab
+/// \brief Multi-level linear operator template.
+/// \tparam MF typename that the linear operator acts on, typically MultiFab.
 template <typename MF>
 class MLLinOpT
 {
@@ -289,7 +289,7 @@ public:
      * \param famrlev fine AMR level
      * \param fine    fine level data
      * \param crse    coarse level data
-     * \parame nghost number of ghost cells
+     * \param nghost number of ghost cells
      */
     virtual void interpolationAmr (int famrlev, MF& fine, const MF& crse,
                                    IntVect const& nghost) const = 0;
@@ -298,7 +298,7 @@ public:
      * \brief Average-down data from fine AMR level to coarse AMR level.
      *
      * \param camrlev  coarse AMR level
-     * \param crse_sol solutoin on coarse AMR level
+     * \param crse_sol solution on coarse AMR level
      * \param crse_rhs RHS on coarse AMR level
      * \param fine_sol solution on fine AMR level
      * \param fine_rhs RHS on fine AMR level
@@ -408,7 +408,7 @@ public:
     //! This is needed for our nodal projection solver
     virtual void unimposeNeumannBC (int /*amrlev*/, MF& /*rhs*/) const {}
 
-    //! Extra terms introduced when we treate inhomogeneous Nuemann BC as homogeneous.
+    //! Extra terms introduced when we treate inhomogeneous Neumann BC as homogeneous.
     virtual void applyInhomogNeumannTerm (int /*amrlev*/, MF& /*rhs*/) const {}
 
     //! for overset solver only
