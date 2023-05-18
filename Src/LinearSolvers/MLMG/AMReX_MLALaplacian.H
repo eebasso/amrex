@@ -8,6 +8,18 @@
 
 namespace amrex {
 
+/**
+ * \brief Multi-level cell-centered Laplacian A,B,alpha template solver.
+ * 
+ * Solves (A * alpha - B * (del dot grad)) phi = rhs ,
+ * 
+ * where `A` and `B` are scalar constants, and `alpha` is a scalar field.
+ * Use `setScalars` to set `A` and `B`, and use 
+ * 
+ * Inherits from MLCellABecLapT<MF>
+ * 
+ * \tparam MF Template class of input, typically MultiFab or some other FabArray
+ */
 template <typename MF>
 class MLALaplacianT
     : public MLCellABecLapT<MF>

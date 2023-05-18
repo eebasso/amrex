@@ -10,14 +10,14 @@ namespace amrex {
 /**
  * \brief Multi-level cell-centered AB coefficient Laplacian solver template class. 
  * 
- * (A * alpha - B * (del dot beta grad)) phi = rhs ,
+ * Solves (A * alpha - B * (del dot beta grad)) phi = rhs ,
  * 
- * where `A` and `B` are scalar constants, `alpha` is a scalar field, and `beta` is a diagonal matrix field.
+ * where `A` and `B` are scalar constants, `alpha` is a scalar field, 
+ * and `beta` is a diagonal matrix field.
  * 
  * Inherits from MLCellABecLapT<MF>.
  * 
  * \tparam MF typename of phi and rhs, typically MultiFab
- * 
  */
 template <typename MF>
 class MLABecLaplacianT
