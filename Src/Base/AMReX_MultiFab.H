@@ -19,7 +19,7 @@
 namespace amrex
 {
 
-typedef FabArray<BaseFab<float> > fMultiFab;
+using fMultiFab = FabArray<BaseFab<float> >;
 
 class iMultiFab;
 
@@ -674,8 +674,8 @@ public:
 private:
     //
     //! Some useful typedefs.
-    typedef FabArrayBase::CopyComTagsContainer CopyComTagsContainer;
-    typedef FabArrayBase::MapOfCopyComTagContainers MapOfCopyComTagContainers;
+    using CopyComTagsContainer = FabArrayBase::CopyComTagsContainer;
+    using MapOfCopyComTagContainers = FabArrayBase::MapOfCopyComTagContainers;
 
     void initVal ();
 };
