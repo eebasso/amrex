@@ -32,24 +32,24 @@ AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
  * \param[in] i Dimension 1 index
  * \param[in] j Dimension 2 index
  * \param[in] k Dimension 3 index
- * \param[in] cell 
- * \param[in] apx 
- * \param[in] apy 
- * \param[in] apz 
- * \param[in] fcx 
- * \param[in] fcy 
- * \param[in] fcz 
+ * \param[in] cell EBCellFlag
+ * \param[in] apx Area fractions on the yz face
+ * \param[in] apy Area fractions on the xz face
+ * \param[in] apz Area fractions on the xy face
+ * \param[in] fcx Face centroid, (y,z)
+ * \param[in] fcy Face centroid, (x,z)
+ * \param[in] fcz Face centroid, (x,y)
  * \param[in] m2x 
  * \param[in] m2y 
  * \param[in] m2z 
- * \param[out] vfrac Output, volume fraction
- * \param[out] vcent 
- * \param[out] barea Output, area of EB surface in cell
- * \param[out] bcent 
- * \param[out] bnorm Output, unit vector normal to EB surface
+ * \param[out] vfrac Output: cell volume fraction
+ * \param[out] vcent Output: cell volume centroid
+ * \param[out] barea Output: EB boundary area fraction
+ * \param[out] bcent Output: EB boundary centroid
+ * \param[out] bnorm Output: unit vector normal to EB surface
  * \param[in] small_volfrac Threshold for vfrac to be considered a "small cell"
- * \param[out] is_small_cell 
- * \param[out] is_multicut 
+ * \param[out] is_small_cell Output: If true, it means vfrac(i,j,k) < small_volfrac
+ * \param[out] is_multicut Output: If true, it means there are two cuts at the opposite corners.
  * \return 
  */
 void set_eb_data (const int i, const int j, const int k,

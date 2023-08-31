@@ -21,17 +21,17 @@ amrex_eb2_build_types (Box const& tbx, Box const& bxg2,
     amrex::Loop(lo, hi,
     [=] (int i, int j, int k) noexcept
     {
-        if (   s(i,j,k) < 0.0_rt && s(i+1,j,k) < 0.0_rt
-            && s(i,j+1,k) < 0.0_rt && s(i+1,j+1,k) < 0.0_rt
-            && s(i,j,k+1) < 0.0_rt && s(i+1,j,k+1) < 0.0_rt
+        if (   s(i,j  ,k  ) < 0.0_rt && s(i+1,j  ,k  ) < 0.0_rt
+            && s(i,j+1,k  ) < 0.0_rt && s(i+1,j+1,k  ) < 0.0_rt
+            && s(i,j  ,k+1) < 0.0_rt && s(i+1,j  ,k+1) < 0.0_rt
             && s(i,j+1,k+1) < 0.0_rt && s(i+1,j+1,k+1) < 0.0_rt)
         {
             cell(i,j,k).setRegular();
         }
-        else if (s(i,j,k) >= 0.0_rt && s(i+1,j,k) >= 0.0_rt
-            &&   s(i,j+1,k) >= 0.0_rt && s(i+1,j+1,k) >= 0.0_rt
-            &&   s(i,j  ,k+1) >= 0.0_rt && s(i+1,j,k+1) >= 0.0_rt
-            &&   s(i,j+1,k+1) >= 0.0_rt && s(i+1,j+1,k+1) >= 0.0_rt)
+        else if (s(i,j  ,k  ) >= 0.0_rt && s(i+1,j  ,k  ) >= 0.0_rt
+              && s(i,j+1,k  ) >= 0.0_rt && s(i+1,j+1,k  ) >= 0.0_rt
+              && s(i,j  ,k+1) >= 0.0_rt && s(i+1,j  ,k+1) >= 0.0_rt
+              && s(i,j+1,k+1) >= 0.0_rt && s(i+1,j+1,k+1) >= 0.0_rt)
         {
             cell(i,j,k).setCovered();
         }
@@ -48,13 +48,13 @@ amrex_eb2_build_types (Box const& tbx, Box const& bxg2,
     amrex::Loop(lo, hi,
     [=] (int i, int j, int k) noexcept
     {
-        if (    s(i,j,k) < 0.0_rt && s(i,j+1,k) < 0.0_rt
+        if (   s(i,j,k  ) < 0.0_rt && s(i,j+1,k  ) < 0.0_rt
             && s(i,j,k+1) < 0.0_rt && s(i,j+1,k+1) < 0.0_rt )
         {
             fx(i,j,k) = Type::regular;
         }
-        else if (s(i,j,k) >= 0.0_rt && s(i,j+1,k) >= 0.0_rt
-            &&  s(i,j,k+1) >= 0.0_rt && s(i,j+1,k+1) >= 0.0_rt )
+        else if (s(i,j,k  ) >= 0.0_rt && s(i,j+1,k  ) >= 0.0_rt
+              && s(i,j,k+1) >= 0.0_rt && s(i,j+1,k+1) >= 0.0_rt )
         {
             fx(i,j,k) = Type::covered;
         }
@@ -71,13 +71,13 @@ amrex_eb2_build_types (Box const& tbx, Box const& bxg2,
     amrex::Loop(lo, hi,
     [=] (int i, int j, int k) noexcept
     {
-        if (    s(i,j,k) < 0.0_rt && s(i+1,j,k) < 0.0_rt
+        if (   s(i,j,k  ) < 0.0_rt && s(i+1,j,k  ) < 0.0_rt
             && s(i,j,k+1) < 0.0_rt && s(i+1,j,k+1) < 0.0_rt )
         {
             fy(i,j,k) = Type::regular;
         }
-        else if (s(i,j,k) >= 0.0_rt && s(i+1,j,k) >= 0.0_rt
-            &&  s(i,j,k+1) >= 0.0_rt && s(i+1,j,k+1) >= 0.0_rt )
+        else if (s(i,j,k  ) >= 0.0_rt && s(i+1,j,k  ) >= 0.0_rt
+              && s(i,j,k+1) >= 0.0_rt && s(i+1,j,k+1) >= 0.0_rt )
         {
             fy(i,j,k) = Type::covered;
         }
@@ -94,7 +94,7 @@ amrex_eb2_build_types (Box const& tbx, Box const& bxg2,
     amrex::Loop(lo, hi,
     [=] (int i, int j, int k) noexcept
     {
-        if (    s(i,j,k) < 0.0_rt && s(i+1,j,k) < 0.0_rt
+        if (   s(i,j  ,k) < 0.0_rt && s(i+1,j,k) < 0.0_rt
             && s(i,j+1,k) < 0.0_rt && s(i+1,j+1,k) < 0.0_rt)
         {
             fz(i,j,k) = Type::regular;
