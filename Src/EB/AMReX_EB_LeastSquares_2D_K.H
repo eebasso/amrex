@@ -61,7 +61,7 @@ void decomp_chol_np6(Array2D<Real,0,5,0,5>& aa)
 
 // This is the 2D version (i.e. for 6x6 (A^T A) matrix)
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-void  cholsol_np6(Array2D<Real,0,11,0,5>& Amatrix, Array1D<Real,0,5>& b)
+void cholsol_np6 (Array2D<Real,0,11,0,5>& Amatrix, Array1D<Real,0,5>& b)
 {
     int neq = 6;
 
@@ -152,7 +152,7 @@ void  cholsol_np6(Array2D<Real,0,11,0,5>& Amatrix, Array1D<Real,0,5>& b)
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-void  cholsol_for_eb(Array2D<Real,0,17,0,5>& Amatrix, Array1D<Real,0,5>& b)
+void cholsol_for_eb (Array2D<Real,0,17,0,5>& Amatrix, Array1D<Real,0,5>& b)
 {
     int neq = 6;
 
@@ -243,7 +243,7 @@ void  cholsol_for_eb(Array2D<Real,0,17,0,5>& Amatrix, Array1D<Real,0,5>& b)
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-Real grad_x_of_phi_on_centroids(int i,int j,int k,int n,
+Real grad_x_of_phi_on_centroids (int i,int j,int k,int n,
                                 Array4<Real const> const& phi,
                                 Array4<Real const> const& phieb,
                                 Array4<EBCellFlag const> const& flag,
@@ -328,7 +328,7 @@ Real grad_x_of_phi_on_centroids(int i,int j,int k,int n,
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-Real grad_y_of_phi_on_centroids(int i,int j,int k,int n,
+Real grad_y_of_phi_on_centroids (int i,int j,int k,int n,
                                 Array4<Real const> const& phi,
                                 Array4<Real const> const& phieb,
                                 Array4<EBCellFlag const> const& flag,
@@ -409,14 +409,14 @@ Real grad_y_of_phi_on_centroids(int i,int j,int k,int n,
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-Real grad_eb_of_phi_on_centroids(int i,int j,int k,int n,
-                                Array4<Real const> const& phi,
-                                Array4<Real const> const& phieb,
-                                Array4<EBCellFlag const> const& flag,
-                                Array4<Real const> const& ccent,
-                                Array4<Real const> const& bcent,
-                                Real& nrmx, Real& nrmy,
-                                bool is_eb_inhomog)
+Real grad_eb_of_phi_on_centroids (int i,int j,int k,int n,
+                                 Array4<Real const> const& phi,
+                                 Array4<Real const> const& phieb,
+                                 Array4<EBCellFlag const> const& flag,
+                                 Array4<Real const> const& ccent,
+                                 Array4<Real const> const& bcent,
+                                 Real& nrmx, Real& nrmy,
+                                 bool is_eb_inhomog)
 {
     Array2D<Real,0,17,0,5> Amatrix;
     Array1D<Real,0, 5    > rhs;
@@ -492,7 +492,7 @@ Real grad_eb_of_phi_on_centroids(int i,int j,int k,int n,
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-Real grad_x_of_phi_on_centroids_extdir(int i,int j,int k,int n,
+Real grad_x_of_phi_on_centroids_extdir (int i,int j,int k,int n,
                                        Array4<Real const> const& phi,
                                        Array4<Real const> const& phieb,
                                        Array4<EBCellFlag const> const& flag,
@@ -629,7 +629,7 @@ Real grad_x_of_phi_on_centroids_extdir(int i,int j,int k,int n,
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-Real grad_y_of_phi_on_centroids_extdir(int i,int j,int k,int n,
+Real grad_y_of_phi_on_centroids_extdir (int i,int j,int k,int n,
                                        Array4<Real const> const& phi,
                                        Array4<Real const> const& phieb,
                                        Array4<EBCellFlag const> const& flag,
@@ -762,7 +762,7 @@ Real grad_y_of_phi_on_centroids_extdir(int i,int j,int k,int n,
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-Real grad_eb_of_phi_on_centroids_extdir(int i,int j,int k,int n,
+Real grad_eb_of_phi_on_centroids_extdir (int i,int j,int k,int n,
                                         Array4<Real const> const& phi,
                                         Array4<Real const> const& phieb,
                                         Array4<EBCellFlag const> const& flag,

@@ -7,7 +7,7 @@ namespace amrex {
 
 // This is the 3D version (i.e. for 10x10 (A^T A) matrix)
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-void decomp_chol_np10(Array2D<Real,0,9,0,9>& aa)
+void decomp_chol_np10 (Array2D<Real,0,9,0,9>& aa)
 {
     int neq = 10;
 
@@ -15,28 +15,20 @@ void decomp_chol_np10(Array2D<Real,0,9,0,9>& aa)
     Real sum1;
     int ising;
 
-    for (int ii = 0; ii < neq; ii++)
-    {
+    for (int ii = 0; ii < neq; ii++) {
         ising = 0;
-
-        for (int jj = ii; jj < neq; jj++)
-        {
+        for (int jj = ii; jj < neq; jj++) {
             sum1 = aa(ii,jj);
-
-            for (int kk = ii-1; kk >= 0; kk--)
-            {
+            for (int kk = ii-1; kk >= 0; kk--) {
                 sum1 = sum1 - aa(ii,kk)*aa(jj,kk);
             }
-
-            if (ii == jj)
-            {
-                 if (sum1 <= Real(0.0))
-                 {
-                     p[ii] = Real(0.0);
-                     ising = 1;
-                 } else {
-                     p[ii] = std::sqrt(sum1);
-                 }
+            if (ii == jj) {
+                if (sum1 <= Real(0.0)) {
+                    p[ii] = Real(0.0);
+                    ising = 1;
+                } else {
+                    p[ii] = std::sqrt(sum1);
+                }
             } else {
                 if (ising == 0) {
                    aa(jj,ii) = sum1 / p[ii];
@@ -47,290 +39,104 @@ void decomp_chol_np10(Array2D<Real,0,9,0,9>& aa)
         }
     }
 
-    for (int ii = 0; ii < neq; ii++)
-    {
-        for (int jj = ii+1; jj < neq; jj++)
-        {
+    for (int ii = 0; ii < neq; ii++) {
+        for (int jj = ii+1; jj < neq; jj++) {
            aa(ii,jj) = Real(0.0);       // Zero upper triangle
-           aa(ii,jj) = aa(jj,ii);  // Zero upper triangle
+        //    aa(ii,jj) = aa(jj,ii);  // Zero upper triangle
         }
-
         aa(ii,ii) = p[ii];
+    }
+}
+
+AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
+void decomp_chol_np10 (Array2D<Real,0,9,0,9>& AtA, Array1D<Real,0,9>& b)
+{
+    decomp_chol_np10(AtA);
+    int neq = 10;
+
+    if (AtA(0,0) > 0.) {
+        b(0) = b(0) / AtA(0,0);
+    } else {
+        b(0) = 0.;
+    }
+    for (int ii = 1; ii < neq; ii++) {
+        if (AtA(ii,ii) > 0.) {
+            for (int jj = 0; jj < ii; jj++) {
+                b(ii) = b(ii) - AtA(ii,jj)*b(jj);
+            }
+            b(ii) = b(ii) / AtA(ii,ii);
+        } else {
+            b(ii) = Real(0.0);
+        }
+    }
+
+    if (AtA(neq-1,neq-1) > 0.) {
+        b(neq-1) = b(neq-1) / AtA(neq-1,neq-1);
+    } else {
+        b(neq-1) = Real(0.0);
+    }
+    for (int ii = neq-2; ii >= 0; ii--) {
+        if (AtA(ii,ii) > 0.) {
+            for (int jj = ii+1; jj < neq; jj++) {
+                b(ii) = b(ii) - AtA(ii,jj)*b(jj);
+            }
+            b(ii) = b(ii) / AtA(ii,ii);
+        } else {
+            b(ii) = Real(0.0);
+        }
     }
 }
 
 // This is the 3D version (i.e. for 10x10 (A^T A) matrix)
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-void  cholsol_np10(Array2D<Real,0,35,0,9>& Amatrix, Array1D<Real,0,9>& b)
+void  cholsol_np10 (Array2D<Real,0,35,0,9>& Amatrix, Array1D<Real,0,9>& b)
 {
     int neq = 10;
-
     Array2D<Real,0,9,0,9> AtA;
 
-    for (int irow = 0; irow < neq; irow++) {
-        for (int icol = 0; icol < neq; icol++) {
-            AtA(irow,icol) =  Real(0.0);
+    for (int i = 0; i < neq; i++) {
+        AtA(i,i) = Real(0.0);
+        for (int k = 0; k < 36; k++) {
+            AtA(i,i) += Amatrix(k,i)*Amatrix(k,i);
         }
-    }
-
-    for (int irow = 0; irow < 36; irow++)
-    {
-         AtA(0,0) += Amatrix(irow,0)*Amatrix(irow,0); // e^T e
-         AtA(0,1) += Amatrix(irow,0)*Amatrix(irow,1); // e^T x
-         AtA(0,2) += Amatrix(irow,0)*Amatrix(irow,2); // e^T y
-         AtA(0,3) += Amatrix(irow,0)*Amatrix(irow,3); // e^T z
-         AtA(0,4) += Amatrix(irow,0)*Amatrix(irow,4); // e^T x^2
-         AtA(0,5) += Amatrix(irow,0)*Amatrix(irow,5); // e^T x*y
-         AtA(0,6) += Amatrix(irow,0)*Amatrix(irow,6); // e^T y^2
-         AtA(0,7) += Amatrix(irow,0)*Amatrix(irow,7); // e^T x*z
-         AtA(0,8) += Amatrix(irow,0)*Amatrix(irow,8); // e^T y*z
-         AtA(0,9) += Amatrix(irow,0)*Amatrix(irow,9); // e^T z^2
-
-         AtA(1,1) += Amatrix(irow,1)*Amatrix(irow,1); // x^T x
-         AtA(1,2) += Amatrix(irow,1)*Amatrix(irow,2); // x^T y
-         AtA(1,3) += Amatrix(irow,1)*Amatrix(irow,3); // x^T y
-         AtA(1,4) += Amatrix(irow,1)*Amatrix(irow,4); // x^T (x^2)
-         AtA(1,5) += Amatrix(irow,1)*Amatrix(irow,5); // x^T (xy)
-         AtA(1,6) += Amatrix(irow,1)*Amatrix(irow,6); // x^T (y^2)
-         AtA(1,7) += Amatrix(irow,1)*Amatrix(irow,7); // x^T x*z
-         AtA(1,8) += Amatrix(irow,1)*Amatrix(irow,8); // x^T y*z
-         AtA(1,9) += Amatrix(irow,1)*Amatrix(irow,9); // x^T z^2
-
-         AtA(2,2) += Amatrix(irow,2)*Amatrix(irow,2); // y^T y
-         AtA(2,3) += Amatrix(irow,2)*Amatrix(irow,3); // y^T z
-         AtA(2,4) += Amatrix(irow,2)*Amatrix(irow,4); // y^T (x^2)
-         AtA(2,5) += Amatrix(irow,2)*Amatrix(irow,5); // y^T (xy)
-         AtA(2,6) += Amatrix(irow,2)*Amatrix(irow,6); // y^T (y^2)
-         AtA(2,7) += Amatrix(irow,2)*Amatrix(irow,7); // y^T x*z
-         AtA(2,8) += Amatrix(irow,2)*Amatrix(irow,8); // y^T y*z
-         AtA(2,9) += Amatrix(irow,2)*Amatrix(irow,9); // y^T z^2
-
-         AtA(3,3) += Amatrix(irow,3)*Amatrix(irow,3); // z^T z
-         AtA(3,4) += Amatrix(irow,3)*Amatrix(irow,4); // z^T (x^2)
-         AtA(3,5) += Amatrix(irow,3)*Amatrix(irow,5); // z^T (xy)
-         AtA(3,6) += Amatrix(irow,3)*Amatrix(irow,6); // z^T (y^2)
-         AtA(3,7) += Amatrix(irow,3)*Amatrix(irow,7); // z^T x*z
-         AtA(3,8) += Amatrix(irow,3)*Amatrix(irow,8); // z^T y*z
-         AtA(3,9) += Amatrix(irow,3)*Amatrix(irow,9); // z^T z^2
-
-         AtA(4,4) += Amatrix(irow,4)*Amatrix(irow,4); // (x^2)^T (x^2)
-         AtA(4,5) += Amatrix(irow,4)*Amatrix(irow,5); // (x^2)^T (xy)
-         AtA(4,6) += Amatrix(irow,4)*Amatrix(irow,6); // (x^2)^T (y^2)
-         AtA(4,7) += Amatrix(irow,4)*Amatrix(irow,7); // (x^2)^T x*z
-         AtA(4,8) += Amatrix(irow,4)*Amatrix(irow,8); // (x^2)^T y*z
-         AtA(4,9) += Amatrix(irow,4)*Amatrix(irow,9); // (x^2)^T z^2
-
-         AtA(5,5) += Amatrix(irow,5)*Amatrix(irow,5); // (xy)^T (xy)
-         AtA(5,6) += Amatrix(irow,5)*Amatrix(irow,6); // (xy)^T (y^2)
-         AtA(5,7) += Amatrix(irow,5)*Amatrix(irow,7); // (xy)^T x*z
-         AtA(5,8) += Amatrix(irow,5)*Amatrix(irow,8); // (xy)^T y*z
-         AtA(5,9) += Amatrix(irow,5)*Amatrix(irow,9); // (xy)^T z^2
-
-         AtA(6,6) += Amatrix(irow,6)*Amatrix(irow,6); // (y^2)^T (y^2)
-         AtA(6,7) += Amatrix(irow,6)*Amatrix(irow,7); // (y^2)^T x*z
-         AtA(6,8) += Amatrix(irow,6)*Amatrix(irow,8); // (y^2)^T y*z
-         AtA(6,9) += Amatrix(irow,6)*Amatrix(irow,9); // (y^2)^T z^2
-
-         AtA(7,7) += Amatrix(irow,7)*Amatrix(irow,7); // (xz)^T x*z
-         AtA(7,8) += Amatrix(irow,7)*Amatrix(irow,8); // (xz)^T y*z
-         AtA(7,9) += Amatrix(irow,7)*Amatrix(irow,9); // (xz)^T z^2
-
-         AtA(8,8) += Amatrix(irow,8)*Amatrix(irow,8); // (yz)^T y*z
-         AtA(8,9) += Amatrix(irow,8)*Amatrix(irow,9); // (yz)^T z^2
-
-         AtA(9,9) += Amatrix(irow,9)*Amatrix(irow,9); // (z^2)^T z^2
-    }
-
-    for (int irow = 0; irow < neq-1; irow++) {
-        for (int icol = irow+1; icol < neq; icol++) {
-            AtA(icol,irow) = AtA(irow,icol);
-        }
-    }
-
-    decomp_chol_np10(AtA);
-
-    if (AtA(0,0) > 0.) {
-        b(0) = b(0) / AtA(0,0);
-    } else {
-        b(0) = 0.;
-    }
-
-    for (int ii = 1; ii < neq; ii++)
-    {
-        if (AtA(ii,ii) > 0.)
-        {
-            for (int jj = 0; jj < ii; jj++) {
-                b(ii) = b(ii) - AtA(ii,jj)*b(jj);
+        for (int j = i+1; j < neq; j++) {
+            AtA(i,j) = Real(0.0);
+            for (int k = 0; k < 36; k++) {
+                AtA(i,j) += Amatrix(k,i)*Amatrix(k,j);
             }
-
-            b(ii) = b(ii) / AtA(ii,ii);
-        }
-        else
-        {
-            b(ii) = Real(0.0);
+            AtA(j,i) = AtA(i,j);
         }
     }
 
-    if (AtA(neq-1,neq-1) > 0.) {
-        b(neq-1) = b(neq-1) / AtA(neq-1,neq-1);
-    } else {
-        b(neq-1) = Real(0.0);
-    }
-
-    for (int ii = neq-2; ii >= 0; ii--)
-    {
-        if (AtA(ii,ii) > 0.)
-        {
-            for (int jj = ii+1; jj < neq; jj++) {
-                b(ii) = b(ii) - AtA(ii,jj)*b(jj);
-            }
-
-            b(ii) = b(ii) / AtA(ii,ii);
-        }
-        else
-        {
-            b(ii) = Real(0.0);
-        }
-    }
+    decomp_chol_np10(AtA, b);
 }
 
 // This is the 3D version (i.e. for 10x10 (A^T A) matrix) but for A = 54 x 10
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-void  cholsol_for_eb(Array2D<Real,0,53,0,9>& Amatrix, Array1D<Real,0,9>& b)
+void  cholsol_for_eb (Array2D<Real,0,53,0,9>& Amatrix, Array1D<Real,0,9>& b)
 {
     int neq = 10;
-
     Array2D<Real,0,9,0,9> AtA;
 
-    for (int irow = 0; irow < neq; irow++) {
-        for (int icol = 0; icol < neq; icol++) {
-            AtA(irow,icol) =  Real(0.0);
+    for (int i = 0; i < neq; i++) {
+        AtA(i,i) = Real(0.0);
+        for (int k = 0; k < 54; k++) {
+            AtA(i,i) += Amatrix(k,i)*Amatrix(k,i);
         }
-    }
-
-    for (int irow = 0; irow < 54; irow++)
-    {
-        AtA(0,0) += Amatrix(irow,0)*Amatrix(irow,0); // e^T e
-        AtA(0,1) += Amatrix(irow,0)*Amatrix(irow,1); // e^T x
-        AtA(0,2) += Amatrix(irow,0)*Amatrix(irow,2); // e^T y
-        AtA(0,3) += Amatrix(irow,0)*Amatrix(irow,3); // e^T z
-        AtA(0,4) += Amatrix(irow,0)*Amatrix(irow,4); // e^T x^2
-        AtA(0,5) += Amatrix(irow,0)*Amatrix(irow,5); // e^T x*y
-        AtA(0,6) += Amatrix(irow,0)*Amatrix(irow,6); // e^T y^2
-        AtA(0,7) += Amatrix(irow,0)*Amatrix(irow,7); // e^T x*z
-        AtA(0,8) += Amatrix(irow,0)*Amatrix(irow,8); // e^T y*z
-        AtA(0,9) += Amatrix(irow,0)*Amatrix(irow,9); // e^T z^2
-
-        AtA(1,1) += Amatrix(irow,1)*Amatrix(irow,1); // x^T x
-        AtA(1,2) += Amatrix(irow,1)*Amatrix(irow,2); // x^T y
-        AtA(1,3) += Amatrix(irow,1)*Amatrix(irow,3); // x^T y
-        AtA(1,4) += Amatrix(irow,1)*Amatrix(irow,4); // x^T (x^2)
-        AtA(1,5) += Amatrix(irow,1)*Amatrix(irow,5); // x^T (xy)
-        AtA(1,6) += Amatrix(irow,1)*Amatrix(irow,6); // x^T (y^2)
-        AtA(1,7) += Amatrix(irow,1)*Amatrix(irow,7); // x^T x*z
-        AtA(1,8) += Amatrix(irow,1)*Amatrix(irow,8); // x^T y*z
-        AtA(1,9) += Amatrix(irow,1)*Amatrix(irow,9); // x^T z^2
-
-        AtA(2,2) += Amatrix(irow,2)*Amatrix(irow,2); // y^T y
-        AtA(2,3) += Amatrix(irow,2)*Amatrix(irow,3); // y^T z
-        AtA(2,4) += Amatrix(irow,2)*Amatrix(irow,4); // y^T (x^2)
-        AtA(2,5) += Amatrix(irow,2)*Amatrix(irow,5); // y^T (xy)
-        AtA(2,6) += Amatrix(irow,2)*Amatrix(irow,6); // y^T (y^2)
-        AtA(2,7) += Amatrix(irow,2)*Amatrix(irow,7); // y^T x*z
-        AtA(2,8) += Amatrix(irow,2)*Amatrix(irow,8); // y^T y*z
-        AtA(2,9) += Amatrix(irow,2)*Amatrix(irow,9); // y^T z^2
-
-        AtA(3,3) += Amatrix(irow,3)*Amatrix(irow,3); // z^T z
-        AtA(3,4) += Amatrix(irow,3)*Amatrix(irow,4); // z^T (x^2)
-        AtA(3,5) += Amatrix(irow,3)*Amatrix(irow,5); // z^T (xy)
-        AtA(3,6) += Amatrix(irow,3)*Amatrix(irow,6); // z^T (y^2)
-        AtA(3,7) += Amatrix(irow,3)*Amatrix(irow,7); // z^T x*z
-        AtA(3,8) += Amatrix(irow,3)*Amatrix(irow,8); // z^T y*z
-        AtA(3,9) += Amatrix(irow,3)*Amatrix(irow,9); // z^T z^2
-
-        AtA(4,4) += Amatrix(irow,4)*Amatrix(irow,4); // (x^2)^T (x^2)
-        AtA(4,5) += Amatrix(irow,4)*Amatrix(irow,5); // (x^2)^T (xy)
-        AtA(4,6) += Amatrix(irow,4)*Amatrix(irow,6); // (x^2)^T (y^2)
-        AtA(4,7) += Amatrix(irow,4)*Amatrix(irow,7); // (x^2)^T x*z
-        AtA(4,8) += Amatrix(irow,4)*Amatrix(irow,8); // (x^2)^T y*z
-        AtA(4,9) += Amatrix(irow,4)*Amatrix(irow,9); // (x^2)^T z^2
-
-        AtA(5,5) += Amatrix(irow,5)*Amatrix(irow,5); // (xy)^T (xy)
-        AtA(5,6) += Amatrix(irow,5)*Amatrix(irow,6); // (xy)^T (y^2)
-        AtA(5,7) += Amatrix(irow,5)*Amatrix(irow,7); // (xy)^T x*z
-        AtA(5,8) += Amatrix(irow,5)*Amatrix(irow,8); // (xy)^T y*z
-        AtA(5,9) += Amatrix(irow,5)*Amatrix(irow,9); // (xy)^T z^2
-
-        AtA(6,6) += Amatrix(irow,6)*Amatrix(irow,6); // (y^2)^T (y^2)
-        AtA(6,7) += Amatrix(irow,6)*Amatrix(irow,7); // (y^2)^T x*z
-        AtA(6,8) += Amatrix(irow,6)*Amatrix(irow,8); // (y^2)^T y*z
-        AtA(6,9) += Amatrix(irow,6)*Amatrix(irow,9); // (y^2)^T z^2
-
-        AtA(7,7) += Amatrix(irow,7)*Amatrix(irow,7); // (xz)^T x*z
-        AtA(7,8) += Amatrix(irow,7)*Amatrix(irow,8); // (xz)^T y*z
-        AtA(7,9) += Amatrix(irow,7)*Amatrix(irow,9); // (xz)^T z^2
-
-        AtA(8,8) += Amatrix(irow,8)*Amatrix(irow,8); // (yz)^T y*z
-        AtA(8,9) += Amatrix(irow,8)*Amatrix(irow,9); // (yz)^T z^2
-
-        AtA(9,9) += Amatrix(irow,9)*Amatrix(irow,9); // (z^2)^T z^2
-    }
-
-    for (int irow = 0; irow < neq-1; irow++) {
-        for (int icol = irow+1; icol < neq; icol++) {
-            AtA(icol,irow) = AtA(irow,icol);
-        }
-    }
-
-    decomp_chol_np10(AtA);
-
-    if (AtA(0,0) > 0.) {
-        b(0) = b(0) / AtA(0,0);
-    } else {
-        b(0) = 0.;
-    }
-
-    for (int ii = 1; ii < neq; ii++)
-    {
-        if (AtA(ii,ii) > 0.)
-        {
-            for (int jj = 0; jj < ii; jj++) {
-                b(ii) = b(ii) - AtA(ii,jj)*b(jj);
+        for (int j = i+1; j < neq; j++) {
+            AtA(i,j) = Real(0.0);
+            for (int k = 0; k < 54; k++) {
+                AtA(i,j) += Amatrix(k,i)*Amatrix(k,j);
             }
-
-            b(ii) = b(ii) / AtA(ii,ii);
-        }
-        else
-        {
-            b(ii) = Real(0.0);
+            AtA(j,i) = AtA(i,j);
         }
     }
 
-    if (AtA(neq-1,neq-1) > 0.) {
-        b(neq-1) = b(neq-1) / AtA(neq-1,neq-1);
-    } else {
-        b(neq-1) = Real(0.0);
-    }
-
-    for (int ii = neq-2; ii >= 0; ii--)
-    {
-        if (AtA(ii,ii) > 0.)
-        {
-            for (int jj = ii+1; jj < neq; jj++) {
-                b(ii) = b(ii) - AtA(ii,jj)*b(jj);
-            }
-
-            b(ii) = b(ii) / AtA(ii,ii);
-        }
-        else
-        {
-            b(ii) = Real(0.0);
-        }
-    }
+    decomp_chol_np10(AtA, b);
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-Real grad_x_of_phi_on_centroids(int i,int j,int k,int n,
+Real grad_x_of_phi_on_centroids (int i,int j,int k,int n,
                                 Array4<Real const> const& phi,
                                 Array4<Real const> const& phieb,
                                 Array4<EBCellFlag const> const& flag,
@@ -420,7 +226,7 @@ Real grad_x_of_phi_on_centroids(int i,int j,int k,int n,
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-Real grad_y_of_phi_on_centroids(int i,int j,int k,int n,
+Real grad_y_of_phi_on_centroids (int i,int j,int k,int n,
                                 Array4<Real const> const& phi,
                                 Array4<Real const> const& phieb,
                                 Array4<EBCellFlag const> const& flag,
@@ -510,7 +316,7 @@ Real grad_y_of_phi_on_centroids(int i,int j,int k,int n,
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-Real grad_z_of_phi_on_centroids(int i,int j,int k,int n,
+Real grad_z_of_phi_on_centroids (int i,int j,int k,int n,
                                 Array4<Real const> const& phi,
                                 Array4<Real const> const& phieb,
                                 Array4<EBCellFlag const> const& flag,
@@ -602,7 +408,7 @@ Real grad_z_of_phi_on_centroids(int i,int j,int k,int n,
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-Real grad_eb_of_phi_on_centroids(int i,int j,int k,int n,
+Real grad_eb_of_phi_on_centroids (int i,int j,int k,int n,
                                  Array4<Real const> const& phi,
                                  Array4<Real const> const& phieb,
                                  Array4<EBCellFlag const> const& flag,
@@ -693,7 +499,7 @@ Real grad_eb_of_phi_on_centroids(int i,int j,int k,int n,
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-Real grad_x_of_phi_on_centroids_extdir(int i,int j,int k,int n,
+Real grad_x_of_phi_on_centroids_extdir (int i,int j,int k,int n,
                                 Array4<Real const> const& phi,
                                 Array4<Real const> const& phieb,
                                 Array4<EBCellFlag const> const& flag,
@@ -851,7 +657,7 @@ Real grad_x_of_phi_on_centroids_extdir(int i,int j,int k,int n,
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-Real grad_y_of_phi_on_centroids_extdir(int i,int j,int k,int n,
+Real grad_y_of_phi_on_centroids_extdir (int i,int j,int k,int n,
                                 Array4<Real const> const& phi,
                                 Array4<Real const> const& phieb,
                                 Array4<EBCellFlag const> const& flag,
@@ -1007,7 +813,7 @@ Real grad_y_of_phi_on_centroids_extdir(int i,int j,int k,int n,
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-Real grad_z_of_phi_on_centroids_extdir(int i,int j,int k,int n,
+Real grad_z_of_phi_on_centroids_extdir (int i,int j,int k,int n,
                                 Array4<Real const> const& phi,
                                 Array4<Real const> const& phieb,
                                 Array4<EBCellFlag const> const& flag,
@@ -1164,7 +970,7 @@ Real grad_z_of_phi_on_centroids_extdir(int i,int j,int k,int n,
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-Real grad_eb_of_phi_on_centroids_extdir(int i,int j,int k,int n,
+Real grad_eb_of_phi_on_centroids_extdir (int i,int j,int k,int n,
                                  Array4<Real const> const& phi,
                                  Array4<Real const> const& phieb,
                                  Array4<EBCellFlag const> const& flag,
