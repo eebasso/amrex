@@ -825,10 +825,10 @@ Box&
 Box::convert (const IntVect& typ) noexcept
 {
     BL_ASSERT(typ.allGE(IntVect::TheZeroVector()) && typ.allLE(IntVect::TheUnitVector()));
-    IntVect shft(typ - btype.ixType());
-    bigend += shft;
-    btype = IndexType(typ);
-    return *this;
+    // IntVect shft(typ - btype.ixType());
+    // bigend += shft;
+    // btype = IndexType(typ);
+    return Box::convert(IndexType(typ));
 }
 
 AMREX_GPU_HOST_DEVICE
@@ -838,12 +838,10 @@ Box::convert (IndexType t) noexcept
 {
    for (int dir = 0; dir < AMREX_SPACEDIM; dir++)
    {
-      const auto typ = t[dir];
-      const auto bitval = btype[dir];
-      const int off = typ - bitval;
+      const int off = t[dir] - btype[dir];
       bigend.shift(dir,off);
-      btype.setType(dir, (IndexType::CellIndex) typ);
    }
+   btype = t;
    return *this;
 }
 

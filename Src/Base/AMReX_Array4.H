@@ -65,6 +65,7 @@ namespace amrex {
         Dim3 begin{1,1,1};
         Dim3 end{0,0,0};  // end is hi + 1
         int  ncomp=0;
+        Vector<IntVect> ixTypes;
 
         AMREX_GPU_HOST_DEVICE
         constexpr Array4 () noexcept : p(nullptr) {}
@@ -131,7 +132,7 @@ namespace amrex {
 #if defined(AMREX_DEBUG) || defined(AMREX_BOUND_CHECK)
             index_assert(i,j,k,0);
 #endif
-            return p[(i-begin.x)+(j-begin.y)*jstride+(k-begin.z)*kstride];
+            return p[(i-begin.x)+(j-begin.y)*jstride[0]+(k-begin.z)*kstride[0]];
         }
 
         template <class U=T, typename std::enable_if<!std::is_void<U>::value,int>::type = 0>
@@ -140,7 +141,7 @@ namespace amrex {
 #if defined(AMREX_DEBUG) || defined(AMREX_BOUND_CHECK)
             index_assert(i,j,k,n);
 #endif
-            return p[(i-begin.x)+(j-begin.y)*jstride+(k-begin.z)*kstride+n*nstride];
+            return p[(i-begin.x)+(j-begin.y)*jstride[n]+(k-begin.z)*kstride[n]+nstride[n]];
         }
 
         template <class U=T, typename std::enable_if<!std::is_void<U>::value,int>::type = 0>
@@ -149,7 +150,7 @@ namespace amrex {
 #if defined(AMREX_DEBUG) || defined(AMREX_BOUND_CHECK)
             index_assert(i,j,k,0);
 #endif
-            return p + ((i-begin.x)+(j-begin.y)*jstride+(k-begin.z)*kstride);
+            return p + ((i-begin.x)+(j-begin.y)*jstride[n]+(k-begin.z)*kstride[n]);
         }
 
         template <class U=T, typename std::enable_if<!std::is_void<U>::value,int>::type = 0>
@@ -158,7 +159,8 @@ namespace amrex {
 #if defined(AMREX_DEBUG) || defined(AMREX_BOUND_CHECK)
             index_assert(i,j,k,0);
 #endif
-            return p + ((i-begin.x)+(j-begin.y)*jstride+(k-begin.z)*kstride+n*nstride);
+            // return p + ((i-begin.x)+(j-begin.y)*jstride+(k-begin.z)*kstride+n*nstride);
+            return p + ((i-begin.x)+(j-begin.y)*jstride[n]+(k-begin.z)*kstride[n]+nstride[n]);
         }
 
         template <class U=T, typename std::enable_if<!std::is_void<U>::value,int>::type = 0>
