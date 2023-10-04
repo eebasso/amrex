@@ -672,19 +672,19 @@ MLCellABecLapT<MF>::makeHypre (Hypre::Interface hypre_interface) const
         auto ac = getACoeffs(0, mglev);
         if (ac)
         {
-            hypre_solver->setACoeffs(*ac);
+            hypre_solver->setAlphaCoeffs(*ac);
         }
         else
         {
             MultiFab alpha(ba,dm,1,0,MFInfo(),factory);
             alpha.setVal(0.0);
-            hypre_solver->setACoeffs(alpha);
+            hypre_solver->setAlphaCoeffs(alpha);
         }
 
         auto bc = getBCoeffs(0, mglev);
         if (bc[0])
         {
-            hypre_solver->setBCoeffs(bc);
+            hypre_solver->setBetaCoeffs(bc);
         }
         else
         {
@@ -695,7 +695,7 @@ MLCellABecLapT<MF>::makeHypre (Hypre::Interface hypre_interface) const
                               dm, 1, 0, MFInfo(), factory);
                 beta[idim].setVal(1.0);
             }
-            hypre_solver->setBCoeffs(amrex::GetArrOfConstPtrs(beta));
+            hypre_solver->setBetaCoeffs(amrex::GetArrOfConstPtrs(beta));
         }
         hypre_solver->setIsMatrixSingular(this->isBottomSingular());
 
@@ -727,19 +727,19 @@ MLCellABecLapT<MF>::makePETSc () const
         auto ac = getACoeffs(0, mglev);
         if (ac)
         {
-            petsc_solver->setACoeffs(*ac);
+            petsc_solver->setAlphaCoeffs(*ac);
         }
         else
         {
             MultiFab alpha(ba,dm,1,0,MFInfo(),factory);
             alpha.setVal(0.0);
-            petsc_solver->setACoeffs(alpha);
+            petsc_solver->setAlphaCoeffs(alpha);
         }
 
         auto bc = getBCoeffs(0, mglev);
         if (bc[0])
         {
-            petsc_solver->setBCoeffs(bc);
+            petsc_solver->setBetaCoeffs(bc);
         }
         else
         {
@@ -750,7 +750,7 @@ MLCellABecLapT<MF>::makePETSc () const
                                   dm, 1, 0, MFInfo(), factory);
                 beta[idim].setVal(1.0);
             }
-            petsc_solver->setBCoeffs(amrex::GetArrOfConstPtrs(beta));
+            petsc_solver->setBetaCoeffs(amrex::GetArrOfConstPtrs(beta));
         }
         return petsc_solver;
     }

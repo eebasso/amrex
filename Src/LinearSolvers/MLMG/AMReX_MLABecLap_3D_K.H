@@ -8,93 +8,93 @@ template <typename T>
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 void mlabeclap_adotx (int i, int j, int k, int n, Array4<T> const& y,
                       Array4<T const> const& x,
-                      Array4<T const> const& a,
-                      Array4<T const> const& bX,
-                      Array4<T const> const& bY,
-                      Array4<T const> const& bZ,
+                      Array4<T const> const& alpha,
+                      Array4<T const> const& betaX,
+                      Array4<T const> const& betaY,
+                      Array4<T const> const& betaZ,
                       GpuArray<T,AMREX_SPACEDIM> const& dxinv,
-                      T alpha, T beta) noexcept
+                      T scalar_a, T scalar_b) noexcept
 {
-    const T dhx = beta*dxinv[0]*dxinv[0];
-    const T dhy = beta*dxinv[1]*dxinv[1];
-    const T dhz = beta*dxinv[2]*dxinv[2];
-    y(i,j,k,n) = alpha*a(i,j,k)*x(i,j,k,n)
-        - dhx * (bX(i+1,j,k,n)*(x(i+1,j,k,n) - x(i  ,j,k,n))
-               - bX(i  ,j,k,n)*(x(i  ,j,k,n) - x(i-1,j,k,n)))
-        - dhy * (bY(i,j+1,k,n)*(x(i,j+1,k,n) - x(i,j  ,k,n))
-               - bY(i,j  ,k,n)*(x(i,j  ,k,n) - x(i,j-1,k,n)))
-        - dhz * (bZ(i,j,k+1,n)*(x(i,j,k+1,n) - x(i,j,k  ,n))
-               - bZ(i,j,k  ,n)*(x(i,j,k  ,n) - x(i,j,k-1,n)));
+    const T dhx = scalar_b*dxinv[0]*dxinv[0];
+    const T dhy = scalar_b*dxinv[1]*dxinv[1];
+    const T dhz = scalar_b*dxinv[2]*dxinv[2];
+    y(i,j,k,n) = scalar_a*alpha(i,j,k)*x(i,j,k,n)
+        - dhx * (betaX(i+1,j,k,n)*(x(i+1,j,k,n) - x(i  ,j,k,n))
+               - betaX(i  ,j,k,n)*(x(i  ,j,k,n) - x(i-1,j,k,n)))
+        - dhy * (betaY(i,j+1,k,n)*(x(i,j+1,k,n) - x(i,j  ,k,n))
+               - betaY(i,j  ,k,n)*(x(i,j  ,k,n) - x(i,j-1,k,n)))
+        - dhz * (betaZ(i,j,k+1,n)*(x(i,j,k+1,n) - x(i,j,k  ,n))
+               - betaZ(i,j,k  ,n)*(x(i,j,k  ,n) - x(i,j,k-1,n)));
 }
 
 /**
- * \brief Outputs alpha * a * x - beta del b del x, 
+ * \brief Outputs A alpha x - B del (beta del x), 
  *
- * where alpha and beta are scalar constants,
- * a is a scalar field, and b is a diagonal matrix field
+ * where A and B are scalar constants,
+ * alpha is a scalar field, and beta is a diagonal matrix field
  * 
  * \tparam T Template typename, typically AMReX::Real
  * \param[in] i Dimension 1 index
  * \param[in] j Dimension 2 index
  * \param[in] k Dimension 3 index
- * \param[in] n Fourth Array4 index on x, y, and b
- * \param[out] y Output Array4, alpha * a * x - beta del b del x
+ * \param[in] n Fourth Array4 index on x, y, and beta
+ * \param[out] y Output Array4, A alpha x - B * del (beta del x)
  * \param[in] x Input Array4
- * \param[in] a Scalar field, does not depend on n
- * \param[in] bX Dimension 1 diagonal component of b 
- * \param[in] bY Dimension 2 diagonal component of b
- * \param[in] bZ Dimension 3 diagonal component of b
+ * \param[in] alpha Scalar field alpha, does not depend on n
+ * \param[in] betaX Dimension 1 diagonal component of beta
+ * \param[in] betaY Dimension 2 diagonal component of beta
+ * \param[in] betaZ Dimension 3 diagonal component of beta
  * \param[in] osm Overset mask
  * \param[in] dxinv Constant array of 1/dx
- * \param[in] alpha Constant scalar value
- * \param[in] beta Constant scalar value
+ * \param[in] scalar_a Uniform scalar A
+ * \param[in] scalar_b Uniform scalar B
  * \return AMREX_GPU_HOST_DEVICE 
  */
 template <typename T>
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 void mlabeclap_adotx_os (int i, int j, int k, int n, Array4<T> const& y,
                          Array4<T const> const& x,
-                         Array4<T const> const& a,
-                         Array4<T const> const& bX,
-                         Array4<T const> const& bY,
-                         Array4<T const> const& bZ,
+                         Array4<T const> const& alpha,
+                         Array4<T const> const& betaX,
+                         Array4<T const> const& betaY,
+                         Array4<T const> const& betaZ,
                          Array4<int const> const& osm,
                          GpuArray<T,AMREX_SPACEDIM> const& dxinv,
-                         T alpha, T beta) noexcept
+                         T scalar_a, T scalar_b) noexcept
 {
-    const T dhx = beta*dxinv[0]*dxinv[0];
-    const T dhy = beta*dxinv[1]*dxinv[1];
-    const T dhz = beta*dxinv[2]*dxinv[2];
+    const T dhx = scalar_b*dxinv[0]*dxinv[0];
+    const T dhy = scalar_b*dxinv[1]*dxinv[1];
+    const T dhz = scalar_b*dxinv[2]*dxinv[2];
     if (osm(i,j,k) == 0) {
         y(i,j,k,n) = T(0.0);
     } else {
-        y(i,j,k,n) = alpha*a(i,j,k)*x(i,j,k,n)
-            - dhx * (bX(i+1,j,k,n)*(x(i+1,j,k,n) - x(i  ,j,k,n))
-                   - bX(i  ,j,k,n)*(x(i  ,j,k,n) - x(i-1,j,k,n)))
-            - dhy * (bY(i,j+1,k,n)*(x(i,j+1,k,n) - x(i,j  ,k,n))
-                   - bY(i,j  ,k,n)*(x(i,j  ,k,n) - x(i,j-1,k,n)))
-            - dhz * (bZ(i,j,k+1,n)*(x(i,j,k+1,n) - x(i,j,k  ,n))
-                   - bZ(i,j,k  ,n)*(x(i,j,k  ,n) - x(i,j,k-1,n)));
+        y(i,j,k,n) = scalar_a*alpha(i,j,k)*x(i,j,k,n)
+            - dhx * (betaX(i+1,j,k,n)*(x(i+1,j,k,n) - x(i  ,j,k,n))
+                   - betaX(i  ,j,k,n)*(x(i  ,j,k,n) - x(i-1,j,k,n)))
+            - dhy * (betaY(i,j+1,k,n)*(x(i,j+1,k,n) - x(i,j  ,k,n))
+                   - betaY(i,j  ,k,n)*(x(i,j  ,k,n) - x(i,j-1,k,n)))
+            - dhz * (betaZ(i,j,k+1,n)*(x(i,j,k+1,n) - x(i,j,k  ,n))
+                   - betaZ(i,j,k  ,n)*(x(i,j,k  ,n) - x(i,j,k-1,n)));
     }
 }
 
 template <typename T>
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 void mlabeclap_normalize (int i, int j, int k, int n, Array4<T> const& x,
-                          Array4<T const> const& a,
-                          Array4<T const> const& bX,
-                          Array4<T const> const& bY,
-                          Array4<T const> const& bZ,
+                          Array4<T const> const& alpha,
+                          Array4<T const> const& betaX,
+                          Array4<T const> const& betaY,
+                          Array4<T const> const& betaZ,
                           GpuArray<T,AMREX_SPACEDIM> const& dxinv,
-                          T alpha, T beta) noexcept
+                          T scalar_a, T scalar_b) noexcept
 {
-    const T dhx = beta*dxinv[0]*dxinv[0];
-    const T dhy = beta*dxinv[1]*dxinv[1];
-    const T dhz = beta*dxinv[2]*dxinv[2];
-    x(i,j,k,n) /= alpha*a(i,j,k)
-        + dhx*(bX(i,j,k,n)+bX(i+1,j,k,n))
-        + dhy*(bY(i,j,k,n)+bY(i,j+1,k,n))
-        + dhz*(bZ(i,j,k,n)+bZ(i,j,k+1,n));
+    const T dhx = scalar_b*dxinv[0]*dxinv[0];
+    const T dhy = scalar_b*dxinv[1]*dxinv[1];
+    const T dhz = scalar_b*dxinv[2]*dxinv[2];
+    x(i,j,k,n) /= scalar_a*alpha(i,j,k)
+        + dhx*(betaX(i,j,k,n)+betaX(i+1,j,k,n))
+        + dhy*(betaY(i,j,k,n)+betaY(i,j+1,k,n))
+        + dhz*(betaZ(i,j,k,n)+betaZ(i,j,k+1,n));
 }
 
 template <typename T>
@@ -231,10 +231,10 @@ void mlabeclap_flux_zface (Box const& box, Array4<T> const& fz, Array4<T const> 
 template <typename T>
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 void abec_gsrb (int i, int j, int k, int n, Array4<T> const& phi, Array4<T const> const& rhs,
-                T alpha, Array4<T const> const& a,
+                T scalar_a, Array4<T const> const& alpha,
                 T dhx, T dhy, T dhz,
-                Array4<T const> const& bX, Array4<T const> const& bY,
-                Array4<T const> const& bZ,
+                Array4<T const> const& betaX, Array4<T const> const& betaY,
+                Array4<T const> const& betaZ,
                 Array4<int const> const& m0, Array4<int const> const& m2,
                 Array4<int const> const& m4,
                 Array4<int const> const& m1, Array4<int const> const& m3,
@@ -264,22 +264,22 @@ void abec_gsrb (int i, int j, int k, int n, Array4<T> const& phi, Array4<T const
         T cf5 = (k == vhi.z && m5(i,j,vhi.z+1) > 0)
             ? f5(i,j,vhi.z,n) : T(0.0);
 
-        T gamma = alpha*a(i,j,k)
-            +   dhx*(bX(i,j,k,n)+bX(i+1,j,k,n))
-            +   dhy*(bY(i,j,k,n)+bY(i,j+1,k,n))
-            +   dhz*(bZ(i,j,k,n)+bZ(i,j,k+1,n));
+        T gamma = scalar_a*alpha(i,j,k)
+            +   dhx*(betaX(i,j,k,n)+betaX(i+1,j,k,n))
+            +   dhy*(betaY(i,j,k,n)+betaY(i,j+1,k,n))
+            +   dhz*(betaZ(i,j,k,n)+betaZ(i,j,k+1,n));
 
         T g_m_d = gamma
-            - (dhx*(bX(i,j,k,n)*cf0 + bX(i+1,j,k,n)*cf3)
-            +  dhy*(bY(i,j,k,n)*cf1 + bY(i,j+1,k,n)*cf4)
-            +  dhz*(bZ(i,j,k,n)*cf2 + bZ(i,j,k+1,n)*cf5));
+            - (dhx*(betaX(i,j,k,n)*cf0 + betaX(i+1,j,k,n)*cf3)
+            +  dhy*(betaY(i,j,k,n)*cf1 + betaY(i,j+1,k,n)*cf4)
+            +  dhz*(betaZ(i,j,k,n)*cf2 + betaZ(i,j,k+1,n)*cf5));
 
-        T rho =  dhx*( bX(i  ,j,k,n)*phi(i-1,j,k,n)
-               +       bX(i+1,j,k,n)*phi(i+1,j,k,n) )
-               + dhy*( bY(i,j  ,k,n)*phi(i,j-1,k,n)
-               +       bY(i,j+1,k,n)*phi(i,j+1,k,n) )
-               + dhz*( bZ(i,j,k  ,n)*phi(i,j,k-1,n)
-               +       bZ(i,j,k+1,n)*phi(i,j,k+1,n) );
+        T rho =  dhx*( betaX(i  ,j,k,n)*phi(i-1,j,k,n)
+               +       betaX(i+1,j,k,n)*phi(i+1,j,k,n) )
+               + dhy*( betaY(i,j  ,k,n)*phi(i,j-1,k,n)
+               +       betaY(i,j+1,k,n)*phi(i,j+1,k,n) )
+               + dhz*( betaZ(i,j,k  ,n)*phi(i,j,k-1,n)
+               +       betaZ(i,j,k+1,n)*phi(i,j,k+1,n) );
 
         T res =  rhs(i,j,k,n) - (gamma*phi(i,j,k,n) - rho);
         phi(i,j,k,n) = phi(i,j,k,n) + omega/g_m_d * res;
@@ -290,10 +290,10 @@ template <typename T>
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 void abec_gsrb_os (int i, int j, int k, int n,
                    Array4<T> const& phi, Array4<T const> const& rhs,
-                   T alpha, Array4<T const> const& a,
+                   T scalar_a, Array4<T const> const& alpha,
                    T dhx, T dhy, T dhz,
-                   Array4<T const> const& bX, Array4<T const> const& bY,
-                   Array4<T const> const& bZ,
+                   Array4<T const> const& betaX, Array4<T const> const& betaY,
+                   Array4<T const> const& betaZ,
                    Array4<int const> const& m0, Array4<int const> const& m2,
                    Array4<int const> const& m4,
                    Array4<int const> const& m1, Array4<int const> const& m3,
@@ -327,22 +327,22 @@ void abec_gsrb_os (int i, int j, int k, int n,
             T cf5 = (k == vhi.z && m5(i,j,vhi.z+1) > 0)
                 ? f5(i,j,vhi.z,n) : T(0.0);
 
-            T gamma = alpha*a(i,j,k)
-                +   dhx*(bX(i,j,k,n)+bX(i+1,j,k,n))
-                +   dhy*(bY(i,j,k,n)+bY(i,j+1,k,n))
-                +   dhz*(bZ(i,j,k,n)+bZ(i,j,k+1,n));
+            T gamma = scalar_a*alpha(i,j,k)
+                +   dhx*(betaX(i,j,k,n)+betaX(i+1,j,k,n))
+                +   dhy*(betaY(i,j,k,n)+betaY(i,j+1,k,n))
+                +   dhz*(betaZ(i,j,k,n)+betaZ(i,j,k+1,n));
 
             T g_m_d = gamma
-                - (dhx*(bX(i,j,k,n)*cf0 + bX(i+1,j,k,n)*cf3)
-                +  dhy*(bY(i,j,k,n)*cf1 + bY(i,j+1,k,n)*cf4)
-                +  dhz*(bZ(i,j,k,n)*cf2 + bZ(i,j,k+1,n)*cf5));
+                - (dhx*(betaX(i,j,k,n)*cf0 + betaX(i+1,j,k,n)*cf3)
+                +  dhy*(betaY(i,j,k,n)*cf1 + betaY(i,j+1,k,n)*cf4)
+                +  dhz*(betaZ(i,j,k,n)*cf2 + betaZ(i,j,k+1,n)*cf5));
 
-            T rho =  dhx*( bX(i  ,j,k,n)*phi(i-1,j,k,n)
-                   +       bX(i+1,j,k,n)*phi(i+1,j,k,n) )
-                   + dhy*( bY(i,j  ,k,n)*phi(i,j-1,k,n)
-                   +       bY(i,j+1,k,n)*phi(i,j+1,k,n) )
-                   + dhz*( bZ(i,j,k  ,n)*phi(i,j,k-1,n)
-                   +       bZ(i,j,k+1,n)*phi(i,j,k+1,n) );
+            T rho =  dhx*( betaX(i  ,j,k,n)*phi(i-1,j,k,n)
+                   +       betaX(i+1,j,k,n)*phi(i+1,j,k,n) )
+                   + dhy*( betaY(i,j  ,k,n)*phi(i,j-1,k,n)
+                   +       betaY(i,j+1,k,n)*phi(i,j+1,k,n) )
+                   + dhz*( betaZ(i,j,k  ,n)*phi(i,j,k-1,n)
+                   +       betaZ(i,j,k+1,n)*phi(i,j,k+1,n) );
 
             T res =  rhs(i,j,k,n) - (gamma*phi(i,j,k,n) - rho);
             phi(i,j,k,n) = phi(i,j,k,n) + omega/g_m_d * res;
@@ -374,10 +374,10 @@ template <typename T>
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 void abec_gsrb_with_line_solve (
                 Box const& box, Array4<T> const& phi, Array4<T const> const& rhs,
-                T alpha, Array4<T const> const& a,
+                T scalar_a, Array4<T const> const& alpha,
                 T dhx, T dhy, T dhz,
-                Array4<T const> const& bX, Array4<T const> const& bY,
-                Array4<T const> const& bZ,
+                Array4<T const> const& betaX, Array4<T const> const& betaY,
+                Array4<T const> const& betaZ,
                 Array4<int const> const& m0, Array4<int const> const& m2,
                 Array4<int const> const& m4,
                 Array4<int const> const& m1, Array4<int const> const& m3,
@@ -429,10 +429,10 @@ void abec_gsrb_with_line_solve (
 
                         for (int k = lo.z; k <= hi.z; ++k)
                         {
-                            T gamma = alpha*a(i,j,k)
-                                +   dhx*(bX(i,j,k,n)+bX(i+1,j,k,n))
-                                +   dhy*(bY(i,j,k,n)+bY(i,j+1,k,n))
-                                +   dhz*(bZ(i,j,k,n)+bZ(i,j,k+1,n));
+                            T gamma = scalar_a*alpha(i,j,k)
+                                +   dhx*(betaX(i,j,k,n)+betaX(i+1,j,k,n))
+                                +   dhy*(betaY(i,j,k,n)+betaY(i,j+1,k,n))
+                                +   dhz*(betaZ(i,j,k,n)+betaZ(i,j,k+1,n));
 
                             T cf0 = (i == vlo.x && m0(vlo.x-1,j,k) > 0)
                                 ? f0(vlo.x,j,k,n) : T(0.0);
@@ -448,32 +448,32 @@ void abec_gsrb_with_line_solve (
                                 ? f5(i,j,vhi.z,n) : T(0.0);
 
                             T g_m_d = gamma
-                                - (dhx*(bX(i,j,k,n)*cf0 + bX(i+1,j,k,n)*cf3)
-                                +  dhy*(bY(i,j,k,n)*cf1 + bY(i,j+1,k,n)*cf4)
-                                +  dhz*(bZ(i,j,k,n)*cf2 + bZ(i,j,k+1,n)*cf5));
+                                - (dhx*(betaX(i,j,k,n)*cf0 + betaX(i+1,j,k,n)*cf3)
+                                +  dhy*(betaY(i,j,k,n)*cf1 + betaY(i,j+1,k,n)*cf4)
+                                +  dhz*(betaZ(i,j,k,n)*cf2 + betaZ(i,j,k+1,n)*cf5));
 
-                            T rho =  dhx*( bX(i  ,j,k,n)*phi(i-1,j,k,n)
-                                   +       bX(i+1,j,k,n)*phi(i+1,j,k,n) )
-                                   + dhy*( bY(i,j  ,k,n)*phi(i,j-1,k,n)
-                                   +       bY(i,j+1,k,n)*phi(i,j+1,k,n) );
+                            T rho =  dhx*( betaX(i  ,j,k,n)*phi(i-1,j,k,n)
+                                   +       betaX(i+1,j,k,n)*phi(i+1,j,k,n) )
+                                   + dhy*( betaY(i,j  ,k,n)*phi(i,j-1,k,n)
+                                   +       betaY(i,j+1,k,n)*phi(i,j+1,k,n) );
 
                             // We have already accounted for this external boundary in the coefficient of phi(i,j,k,n)
                             if (i == vlo.x && m0(vlo.x-1,j,k) > 0) {
-                                rho -= dhx*bX(i  ,j,k,n)*phi(i-1,j,k,n);
+                                rho -= dhx*betaX(i  ,j,k,n)*phi(i-1,j,k,n);
                             }
                             if (i == vhi.x && m3(vhi.x+1,j,k) > 0) {
-                                rho -= dhx*bX(i+1,j,k,n)*phi(i+1,j,k,n);
+                                rho -= dhx*betaX(i+1,j,k,n)*phi(i+1,j,k,n);
                             }
                             if (j == vlo.y && m1(i,vlo.y-1,k) > 0) {
-                                rho -= dhy*bY(i,j  ,k,n)*phi(i,j-1,k,n);
+                                rho -= dhy*betaY(i,j  ,k,n)*phi(i,j-1,k,n);
                             }
                             if (j == vhi.y && m4(i,vhi.y+1,k) > 0) {
-                                rho -= dhy*bY(i,j+1,k,n)*phi(i,j+1,k,n);
+                                rho -= dhy*betaY(i,j+1,k,n)*phi(i,j+1,k,n);
                             }
 
-                            a_ls(k-lo.z) = -dhz*bZ(i,j,k,n);
+                            a_ls(k-lo.z) = -dhz*betaZ(i,j,k,n);
                             b_ls(k-lo.z) =  g_m_d;
-                            c_ls(k-lo.z) = -dhz*bZ(i,j,k+1,n);
+                            c_ls(k-lo.z) = -dhz*betaZ(i,j,k+1,n);
                             u_ls(k-lo.z) = T(0.);
                             r_ls(k-lo.z) = rhs(i,j,k,n) + rho;
                             // r_ls(k-lo.z) = g_m_d*phi(i,j,k,n) -gamma*phi(i,j,k,n) + rhs(i,j,k,n) + rho;
@@ -481,12 +481,12 @@ void abec_gsrb_with_line_solve (
                             if (k == lo.z)
                             {
                                 a_ls(k-lo.z) = T(0.);
-                                if (!(m2(i,j,vlo.z-1) > 0)) { r_ls(k-lo.z) += dhz*bZ(i,j,k,n)*phi(i,j,k-1,n); }
+                                if (!(m2(i,j,vlo.z-1) > 0)) { r_ls(k-lo.z) += dhz*betaZ(i,j,k,n)*phi(i,j,k-1,n); }
                             }
                             if (k == hi.z)
                             {
                                 c_ls(k-lo.z) = T(0.);
-                                if (!(m5(i,j,vhi.z+1) > 0)) { r_ls(k-lo.z) += dhz*bZ(i,j,k+1,n)*phi(i,j,k+1,n); }
+                                if (!(m5(i,j,vhi.z+1) > 0)) { r_ls(k-lo.z) += dhz*betaZ(i,j,k+1,n)*phi(i,j,k+1,n); }
                             }
                         }
 
@@ -509,10 +509,10 @@ void abec_gsrb_with_line_solve (
 
                         for (int j = lo.y; j <= hi.y; ++j)
                         {
-                            T gamma = alpha*a(i,j,k)
-                                +   dhx*(bX(i,j,k,n)+bX(i+1,j,k,n))
-                                +   dhy*(bY(i,j,k,n)+bY(i,j+1,k,n))
-                                +   dhz*(bZ(i,j,k,n)+bZ(i,j,k+1,n));
+                            T gamma = scalar_a*alpha(i,j,k)
+                                +   dhx*(betaX(i,j,k,n)+betaX(i+1,j,k,n))
+                                +   dhy*(betaY(i,j,k,n)+betaY(i,j+1,k,n))
+                                +   dhz*(betaZ(i,j,k,n)+betaZ(i,j,k+1,n));
 
                             T cf0 = (i == vlo.x && m0(vlo.x-1,j,k) > 0)
                                 ? f0(vlo.x,j,k,n) : T(0.0);
@@ -528,44 +528,44 @@ void abec_gsrb_with_line_solve (
                                 ? f5(i,j,vhi.z,n) : T(0.0);
 
                             T g_m_d = gamma
-                                - (dhx*(bX(i,j,k,n)*cf0 + bX(i+1,j,k,n)*cf3)
-                                +  dhy*(bY(i,j,k,n)*cf1 + bY(i,j+1,k,n)*cf4)
-                                +  dhz*(bZ(i,j,k,n)*cf2 + bZ(i,j,k+1,n)*cf5));
+                                - (dhx*(betaX(i,j,k,n)*cf0 + betaX(i+1,j,k,n)*cf3)
+                                +  dhy*(betaY(i,j,k,n)*cf1 + betaY(i,j+1,k,n)*cf4)
+                                +  dhz*(betaZ(i,j,k,n)*cf2 + betaZ(i,j,k+1,n)*cf5));
 
-                            T rho =  dhx*( bX(i  ,j,k,n)*phi(i-1,j,k,n)
-                                   +       bX(i+1,j,k,n)*phi(i+1,j,k,n) )
-                                   + dhz*( bZ(i,j  ,k,n)*phi(i,j,k-1,n)
-                                   +       bZ(i,j,k+1,n)*phi(i,j,k+1,n) );
+                            T rho =  dhx*( betaX(i  ,j,k,n)*phi(i-1,j,k,n)
+                                   +       betaX(i+1,j,k,n)*phi(i+1,j,k,n) )
+                                   + dhz*( betaZ(i,j  ,k,n)*phi(i,j,k-1,n)
+                                   +       betaZ(i,j,k+1,n)*phi(i,j,k+1,n) );
 
                             // We have already accounted for this external boundary in the coefficient of phi(i,j,k,n)
                             if (i == vlo.x && m0(vlo.x-1,j,k) > 0) {
-                                rho -= dhx*bX(i  ,j,k,n)*phi(i-1,j,k,n);
+                                rho -= dhx*betaX(i  ,j,k,n)*phi(i-1,j,k,n);
                             }
                             if (i == vhi.x && m3(vhi.x+1,j,k) > 0) {
-                                rho -= dhx*bX(i+1,j,k,n)*phi(i+1,j,k,n);
+                                rho -= dhx*betaX(i+1,j,k,n)*phi(i+1,j,k,n);
                             }
                             if (k == vlo.z && m2(i,j,vlo.z-1) > 0) {
-                                rho -= dhz*bZ(i,j  ,k,n)*phi(i,j,k-1,n);
+                                rho -= dhz*betaZ(i,j  ,k,n)*phi(i,j,k-1,n);
                             }
                             if (k == vhi.z && m5(i,j,vhi.z+1) > 0) {
-                                rho -= dhz*bZ(i,j,k+1,n)*phi(i,j,k+1,n);
+                                rho -= dhz*betaZ(i,j,k+1,n)*phi(i,j,k+1,n);
                             }
 
-                            a_ls(j-lo.y) = -dhy*bY(i,j,k,n);
+                            a_ls(j-lo.y) = -dhy*betaY(i,j,k,n);
                             b_ls(j-lo.y) =  g_m_d;
-                            c_ls(j-lo.y) = -dhy*bY(i,j+1,k,n);
+                            c_ls(j-lo.y) = -dhy*betaY(i,j+1,k,n);
                             u_ls(j-lo.y) = T(0.);
                             r_ls(j-lo.y) = rhs(i,j,k,n) + rho;
 
                             if (j == lo.y)
                             {
                                 a_ls(j-lo.y) = T(0.);
-                                if (!(m1(i,vlo.y-1,k) > 0)) { r_ls(j-lo.y) += dhy*bY(i,j,k,n)*phi(i,j-1,k,n); }
+                                if (!(m1(i,vlo.y-1,k) > 0)) { r_ls(j-lo.y) += dhy*betaY(i,j,k,n)*phi(i,j-1,k,n); }
                             }
                             if (j == hi.y)
                             {
                                 c_ls(j-lo.y) = T(0.);
-                                if (!(m4(i,vhi.y+1,k) > 0)) { r_ls(j-lo.y) += dhy*bY(i,j+1,k,n)*phi(i,j+1,k,n); }
+                                if (!(m4(i,vhi.y+1,k) > 0)) { r_ls(j-lo.y) += dhy*betaY(i,j+1,k,n)*phi(i,j+1,k,n); }
                             }
                         }
 
@@ -588,10 +588,10 @@ void abec_gsrb_with_line_solve (
 
                         for (int i = lo.x; i <= hi.x; ++i)
                         {
-                            T gamma = alpha*a(i,j,k)
-                                +   dhx*(bX(i,j,k,n)+bX(i+1,j,k,n))
-                                +   dhy*(bY(i,j,k,n)+bY(i,j+1,k,n))
-                                +   dhz*(bZ(i,j,k,n)+bZ(i,j,k+1,n));
+                            T gamma = scalar_a*alpha(i,j,k)
+                                +   dhx*(betaX(i,j,k,n)+betaX(i+1,j,k,n))
+                                +   dhy*(betaY(i,j,k,n)+betaY(i,j+1,k,n))
+                                +   dhz*(betaZ(i,j,k,n)+betaZ(i,j,k+1,n));
 
                             T cf0 = (i == vlo.x && m0(vlo.x-1,j,k) > 0)
                                 ? f0(vlo.x,j,k,n) : T(0.0);
@@ -607,44 +607,44 @@ void abec_gsrb_with_line_solve (
                                 ? f5(i,j,vhi.z,n) : T(0.0);
 
                             T g_m_d = gamma
-                                - (dhx*(bX(i,j,k,n)*cf0 + bX(i+1,j,k,n)*cf3)
-                                +  dhy*(bY(i,j,k,n)*cf1 + bY(i,j+1,k,n)*cf4)
-                                +  dhz*(bZ(i,j,k,n)*cf2 + bZ(i,j,k+1,n)*cf5));
+                                - (dhx*(betaX(i,j,k,n)*cf0 + betaX(i+1,j,k,n)*cf3)
+                                +  dhy*(betaY(i,j,k,n)*cf1 + betaY(i,j+1,k,n)*cf4)
+                                +  dhz*(betaZ(i,j,k,n)*cf2 + betaZ(i,j,k+1,n)*cf5));
 
-                            T rho =  dhy*( bY(i,j  ,k,n)*phi(i,j-1,k,n)
-                                   +       bY(i,j+1,k,n)*phi(i,j+1,k,n) )
-                                   + dhz*( bZ(i,j  ,k,n)*phi(i,j,k-1,n)
-                                   +       bZ(i,j,k+1,n)*phi(i,j,k+1,n) );
+                            T rho =  dhy*( betaY(i,j  ,k,n)*phi(i,j-1,k,n)
+                                   +       betaY(i,j+1,k,n)*phi(i,j+1,k,n) )
+                                   + dhz*( betaZ(i,j  ,k,n)*phi(i,j,k-1,n)
+                                   +       betaZ(i,j,k+1,n)*phi(i,j,k+1,n) );
 
                             // We have already accounted for this external boundary in the coefficient of phi(i,j,k,n)
                             if (j == vlo.y && m1(i,vlo.y-1,k) > 0) {
-                                rho -= dhy*bY(i,j  ,k,n)*phi(i,j-1,k,n);
+                                rho -= dhy*betaY(i,j  ,k,n)*phi(i,j-1,k,n);
                             }
                             if (j == vhi.y && m4(i,vhi.y+1,k) > 0) {
-                                rho -= dhy*bY(i,j+1,k,n)*phi(i,j+1,k,n);
+                                rho -= dhy*betaY(i,j+1,k,n)*phi(i,j+1,k,n);
                             }
                             if (k == vlo.z && m2(i,j,vlo.z-1) > 0) {
-                                rho -= dhz*bZ(i,j  ,k,n)*phi(i,j,k-1,n);
+                                rho -= dhz*betaZ(i,j  ,k,n)*phi(i,j,k-1,n);
                             }
                             if (k == vhi.z && m5(i,j,vhi.z+1) > 0) {
-                                rho -= dhz*bZ(i,j,k+1,n)*phi(i,j,k+1,n);
+                                rho -= dhz*betaZ(i,j,k+1,n)*phi(i,j,k+1,n);
                             }
 
-                            a_ls(i-lo.x) = -dhx*bX(i,j,k,n);
+                            a_ls(i-lo.x) = -dhx*betaX(i,j,k,n);
                             b_ls(i-lo.x) =  g_m_d;
-                            c_ls(i-lo.x) = -dhx*bX(i+1,j,k,n);
+                            c_ls(i-lo.x) = -dhx*betaX(i+1,j,k,n);
                             u_ls(i-lo.x) = T(0.);
                             r_ls(i-lo.x) = rhs(i,j,k,n) + rho;
 
                             if (i == lo.x)
                             {
                                 a_ls(i-lo.x) = T(0.);
-                                if (!(m0(vlo.x-1,j,k) > 0)) { r_ls(i-lo.x) += dhx*bX(i,j,k,n)*phi(i-1,j,k,n); }
+                                if (!(m0(vlo.x-1,j,k) > 0)) { r_ls(i-lo.x) += dhx*betaX(i,j,k,n)*phi(i-1,j,k,n); }
                             }
                             if (i == hi.x)
                             {
                                 c_ls(i-lo.x) = T(0.);
-                                if (!(m3(vhi.x+1,j,k) > 0)) { r_ls(i-lo.x) += dhx*bX(i+1,j,k,n)*phi(i+1,j,k,n); }
+                                if (!(m3(vhi.x+1,j,k) > 0)) { r_ls(i-lo.x) += dhx*betaX(i+1,j,k,n)*phi(i+1,j,k,n); }
                             }
                         }
 
@@ -663,7 +663,7 @@ void abec_gsrb_with_line_solve (
 
 template <typename T>
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-void overset_rescale_bcoef_x (Box const& box, Array4<T> const& bX, Array4<int const> const& osm,
+void overset_rescale_bcoef_x (Box const& box, Array4<T> const& betaX, Array4<int const> const& osm,
                               int ncomp, T osfac) noexcept
 {
     const auto lo = amrex::lbound(box);
@@ -673,7 +673,7 @@ void overset_rescale_bcoef_x (Box const& box, Array4<T> const& bX, Array4<int co
         for (int j = lo.y; j <= hi.y; ++j) {
         for (int i = lo.x; i <= hi.x; ++i) {
             if ((osm(i-1,j,k)+osm(i,j,k)) == 1) {
-                bX(i,j,k,n) *= osfac;
+                betaX(i,j,k,n) *= osfac;
             }
         }}}
     }
@@ -681,7 +681,7 @@ void overset_rescale_bcoef_x (Box const& box, Array4<T> const& bX, Array4<int co
 
 template <typename T>
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-void overset_rescale_bcoef_y (Box const& box, Array4<T> const& bY, Array4<int const> const& osm,
+void overset_rescale_bcoef_y (Box const& box, Array4<T> const& betaY, Array4<int const> const& osm,
                               int ncomp, T osfac) noexcept
 {
     const auto lo = amrex::lbound(box);
@@ -691,7 +691,7 @@ void overset_rescale_bcoef_y (Box const& box, Array4<T> const& bY, Array4<int co
         for (int j = lo.y; j <= hi.y; ++j) {
         for (int i = lo.x; i <= hi.x; ++i) {
             if ((osm(i,j-1,k)+osm(i,j,k)) == 1) {
-                bY(i,j,k,n) *= osfac;
+                betaY(i,j,k,n) *= osfac;
             }
         }}}
     }
@@ -699,7 +699,7 @@ void overset_rescale_bcoef_y (Box const& box, Array4<T> const& bY, Array4<int co
 
 template <typename T>
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-void overset_rescale_bcoef_z (Box const& box, Array4<T> const& bZ, Array4<int const> const& osm,
+void overset_rescale_bcoef_z (Box const& box, Array4<T> const& betaZ, Array4<int const> const& osm,
                               int ncomp, T osfac) noexcept
 {
     const auto lo = amrex::lbound(box);
@@ -709,7 +709,7 @@ void overset_rescale_bcoef_z (Box const& box, Array4<T> const& bZ, Array4<int co
         for (int j = lo.y; j <= hi.y; ++j) {
         for (int i = lo.x; i <= hi.x; ++i) {
             if ((osm(i,j,k-1)+osm(i,j,k)) == 1) {
-                bZ(i,j,k,n) *= osfac;
+                betaZ(i,j,k,n) *= osfac;
             }
         }}}
     }

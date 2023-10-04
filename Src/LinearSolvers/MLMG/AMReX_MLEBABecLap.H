@@ -48,21 +48,37 @@ public:
     void setPhiOnCentroid ();
 
     void setScalars (Real a, Real b);
-    void setACoeffs (int amrlev, const MultiFab& alpha);
-    void setACoeffs (int amrlev, Real alpha);
+    
+    void setAlphaCoeffs (int amrlev, const MultiFab& alpha);
+    void setAlphaCoeffs (int amrlev, Real alpha);
 
-    void setBCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta,
+    void setBetaCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta,
                      Location a_beta_loc);
-    void setBCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta)
-        {setBCoeffs (amrlev, beta, Location::FaceCenter);}
+    void setBetaCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta)
+        {setBetaCoeffs (amrlev, beta, Location::FaceCenter);}
 
-    void setBCoeffs (int amrlev, Real beta);
-    void setBCoeffs (int amrlev, Vector<Real> const& beta);
+    void setBetaCoeffs (int amrlev, Real beta);
+    void setBetaCoeffs (int amrlev, Vector<Real> const& beta);
+
+    // Equivalent to setAlphaCoeffs. Use of this method is discouraged to avoid confusion between A and alpha
+    void setACoeffs (int amrlev, const MultiFab& alpha) { setAlphaCoeffs(amrlev,alpha); }
+    // Equivalent to setAlphaCoeffs. Use of this method is discouraged to avoid confusion between A and alpha
+    void setACoeffs (int amrlev, Real alpha) { setAlphaCoeffs(amrlev,alpha); }
+    // Equivalent to setBetaCoeffs. Use of this method is discouraged to avoid confusion between B and beta
+    void setBCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta,
+                     Location a_beta_loc) { setBetaCoeffs(amrlev,beta,a_beta_loc); }
+    // Equivalent to setBetaCoeffs. Use of this method is discouraged to avoid confusion between B and beta
+    void setBCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta)
+        {setBetaCoeffs (amrlev, beta);}
+    // Equivalent to setBetaCoeffs. Use of this method is discouraged to avoid confusion between B and beta
+    void setBCoeffs (int amrlev, Real beta) { setBetaCoeffs(amrlev,beta); }
+    // Equivalent to setBetaCoeffs. Use of this method is discouraged to avoid confusion between B and beta
+    void setBCoeffs (int amrlev, Vector<Real> const& beta) { setBetaCoeffs(amrlev,beta); }
 
     // Tells the solver that EB boundaries have Dirichlet bc's specified by "phi"
-    void setEBDirichlet      (int amrlev, const MultiFab& phi, const MultiFab& beta);
-    void setEBDirichlet      (int amrlev, const MultiFab& phi, Real beta);
-    void setEBDirichlet      (int amrlev, const MultiFab& phi, Vector<Real> const& beta);
+    void setEBDirichlet (int amrlev, const MultiFab& phi, const MultiFab& beta);
+    void setEBDirichlet (int amrlev, const MultiFab& phi, Real beta);
+    void setEBDirichlet (int amrlev, const MultiFab& phi, Vector<Real> const& beta);
 
     // Tells the solver that EB boundaries have homogeneous Dirichlet bc's
     void setEBHomogDirichlet (int amrlev,                      const MultiFab& beta);
@@ -102,9 +118,9 @@ public:
     Real getAScalar () const final { return m_a_scalar; }
     Real getBScalar () const final { return m_b_scalar; }
     MultiFab const* getACoeffs (int amrlev, int mglev) const final
-        { return &(m_a_coeffs[amrlev][mglev]); }
+        { return &(m_alpha_coeffs[amrlev][mglev]); }
     Array<MultiFab const*,AMREX_SPACEDIM> getBCoeffs (int amrlev, int mglev) const final
-        { return amrex::GetArrOfConstPtrs(m_b_coeffs[amrlev][mglev]); }
+        { return amrex::GetArrOfConstPtrs(m_beta_coeffs[amrlev][mglev]); }
 
     std::unique_ptr<MLLinOp> makeNLinOp (int /*grid_size*/) const final {
         amrex::Abort("MLABecLaplacian::makeNLinOp: Not implemented");
@@ -140,12 +156,12 @@ protected:
 
     Real m_a_scalar = std::numeric_limits<Real>::quiet_NaN();
     Real m_b_scalar = std::numeric_limits<Real>::quiet_NaN();
-    Vector<Vector<MultiFab> > m_a_coeffs;
-    Vector<Vector<Array<MultiFab,AMREX_SPACEDIM> > > m_b_coeffs;
+    Vector<Vector<MultiFab> > m_alpha_coeffs;
+    Vector<Vector<Array<MultiFab,AMREX_SPACEDIM> > > m_beta_coeffs;
     Vector<Vector<iMultiFab> > m_cc_mask;
 
     Vector<std::unique_ptr<MultiFab> > m_eb_phi;
-    Vector<Vector<std::unique_ptr<MultiFab> > > m_eb_b_coeffs;
+    Vector<Vector<std::unique_ptr<MultiFab> > > m_eb_beta_coeffs;
 
     Vector<int> m_is_singular;
 

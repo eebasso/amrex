@@ -13,20 +13,20 @@ namespace amrex {
  * 
  * The system it solves is
  * 
- *    alpha a v - beta div dot tau = rhs ,
+ *    A alpha v - B div dot tau = rhs ,
  *
- * where alpha and beta are _____, a is _____, and
+ * where A and B are scalar constants, alpha is a cell-centered field, and
  * 
  *    tau = eta [grad v + (grad v)^T] + (kappa-(2/3)eta) (div v) I .
  * 
  * Here I is identity tensor, and eta and kappa are shear and bulk viscosity 
  * and can be specified as either scalar constants or diagonal matrix fields.
  * 
- * The user needs to provide `a` by `setACoeffs`, eta by `setShearViscosity`,
+ * The user needs to provide `alpha` by `setAlphaCoeffs`, eta by `setShearViscosity`,
  * and kappa by `setBulkViscosity`.  If `setBulkViscosity` is not called,
  * kappa is set to zero.
  *
- * The scalars alpha and beta can be set with `setScalar(Real, Real)`.  If
+ * The scalars `A` and `B` can be set with `setScalar(Real, Real)`.  If
  * they are not set, their default value is 1.
  *
  * Inherits from MLABecLaplacian.
@@ -98,7 +98,7 @@ public:
     void compVelGrad (int amrlev, const Array<MultiFab*,AMREX_SPACEDIM>& fluxes,
                       MultiFab& sol, Location loc) const;
 
-    void setBCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta) = delete;
+    void setBetaCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta) = delete;
 
 protected:
 

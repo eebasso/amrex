@@ -71,13 +71,13 @@ Hypre::setScalars (Real sa, Real sb)
 }
 
 void
-Hypre::setACoeffs (const MultiFab& alpha)
+Hypre::setAlphaCoeffs (const MultiFab& alpha)
 {
     MultiFab::Copy(acoefs, alpha, 0, 0, 1, 0);
 }
 
 void
-Hypre::setBCoeffs (const Array<const MultiFab*, BL_SPACEDIM>& beta)
+Hypre::setBetaCoeffs (const Array<const MultiFab*, BL_SPACEDIM>& beta)
 {
     for (int idim=0; idim < AMREX_SPACEDIM; idim++) {
         const int ng = std::min(bcoefs[idim].nGrow(), beta[idim]->nGrow());

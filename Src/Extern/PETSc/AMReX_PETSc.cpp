@@ -115,18 +115,30 @@ PETScABecLap::setScalars (Real sa, Real sb)
 }
 
 void
-PETScABecLap::setACoeffs (const MultiFab& alpha)
+PETScABecLap::setAlphaCoeffs (const MultiFab& alpha)
 {
     MultiFab::Copy(acoefs, alpha, 0, 0, 1, 0);
 }
 
 void
-PETScABecLap::setBCoeffs (const Array<const MultiFab*, BL_SPACEDIM>& beta)
+PETScABecLap::setBetaCoeffs (const Array<const MultiFab*, BL_SPACEDIM>& beta)
 {
     for (int idim=0; idim < AMREX_SPACEDIM; idim++) {
         const int ng = std::min(bcoefs[idim].nGrow(), beta[idim]->nGrow());
         MultiFab::Copy(bcoefs[idim], *beta[idim], 0, 0, 1, ng);
     }
+}
+
+void
+PETScABecLap::setACoeffs (const MultiFab& alpha)
+{
+    PETScABecLap::setAlphaCoeffs(alpha);
+}
+
+void
+PETScABecLap::setBCoeffs (const Array<const MultiFab*, BL_SPACEDIM>& beta)
+{
+    PETScABecLap::setBetaCoeffs(beta);
 }
 
 void
@@ -491,7 +503,7 @@ PETScABecLap::prepareSolver ()
                              auto const& fcz = fcent[2]->const_array(mfi);)
                 auto const& barea_a = barea->const_array(mfi);
                 auto const& bcent_a = bcent->const_array(mfi);
-                Array4<Real const> beb = (m_eb_b_coeffs) ? m_eb_b_coeffs->const_array(mfi)
+                Array4<Real const> beb = (m_eb_beta_coeffs) ? m_eb_beta_coeffs->const_array(mfi)
                                                          : Array4<Real const>();
 
                 constexpr int stencil_size = AMREX_D_TERM(3,*3,*3);
