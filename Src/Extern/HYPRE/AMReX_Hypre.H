@@ -33,8 +33,8 @@ public:
     Hypre& operator= (Hypre const&) = delete;
 
     void setScalars (Real sa, Real sb);
-    void setACoeffs (const MultiFab& alpha);
-    void setBCoeffs (const Array<const MultiFab*,BL_SPACEDIM>& beta);
+    void setAlphaCoeffs (const MultiFab& alpha);
+    void setBetaCoeffs (const Array<const MultiFab*,BL_SPACEDIM>& beta);
     void setVerbose (int _verbose);
     void setIsMatrixSingular(bool flag) { is_matrix_singular = flag; }
     virtual void solve (MultiFab& soln, const MultiFab& rhs, Real rel_tol, Real abs_tol,

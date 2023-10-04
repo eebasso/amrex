@@ -48,21 +48,22 @@ public:
     void setPhiOnCentroid ();
 
     void setScalars (Real a, Real b);
-    void setACoeffs (int amrlev, const MultiFab& alpha);
-    void setACoeffs (int amrlev, Real alpha);
+    
+    void setAlphaCoeffs (int amrlev, const MultiFab& alpha);
+    void setAlphaCoeffs (int amrlev, Real alpha);
 
-    void setBCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta,
+    void setBetaCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta,
                      Location a_beta_loc);
-    void setBCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta)
-        {setBCoeffs (amrlev, beta, Location::FaceCenter);}
+    void setBetaCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta)
+        {setBetaCoeffs (amrlev, beta, Location::FaceCenter);}
 
-    void setBCoeffs (int amrlev, Real beta);
-    void setBCoeffs (int amrlev, Vector<Real> const& beta);
+    void setBetaCoeffs (int amrlev, Real beta);
+    void setBetaCoeffs (int amrlev, Vector<Real> const& beta);
 
     // Tells the solver that EB boundaries have Dirichlet bc's specified by "phi"
-    void setEBDirichlet      (int amrlev, const MultiFab& phi, const MultiFab& beta);
-    void setEBDirichlet      (int amrlev, const MultiFab& phi, Real beta);
-    void setEBDirichlet      (int amrlev, const MultiFab& phi, Vector<Real> const& beta);
+    void setEBDirichlet (int amrlev, const MultiFab& phi, const MultiFab& beta);
+    void setEBDirichlet (int amrlev, const MultiFab& phi, Real beta);
+    void setEBDirichlet (int amrlev, const MultiFab& phi, Vector<Real> const& beta);
 
     // Tells the solver that EB boundaries have homogeneous Dirichlet bc's
     void setEBHomogDirichlet (int amrlev,                      const MultiFab& beta);

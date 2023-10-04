@@ -120,21 +120,21 @@ MLEBABecLap::setScalars (Real a, Real b)
 }
 
 void
-MLEBABecLap::setACoeffs (int amrlev, const MultiFab& alpha)
+MLEBABecLap::setAlphaCoeffs (int amrlev, const MultiFab& alpha)
 {
     MultiFab::Copy(m_a_coeffs[amrlev][0], alpha, 0, 0, 1, 0);
     m_needs_update = true;
 }
 
 void
-MLEBABecLap::setACoeffs (int amrlev, Real alpha)
+MLEBABecLap::setAlphaCoeffs (int amrlev, Real alpha)
 {
     m_a_coeffs[amrlev][0].setVal(alpha);
     m_needs_update = true;
 }
 
 void
-MLEBABecLap::setBCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta,
+MLEBABecLap::setBetaCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta,
                          Location a_beta_loc)
 {
     const int ncomp = getNComp();
@@ -160,7 +160,7 @@ MLEBABecLap::setBCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>
 }
 
 void
-MLEBABecLap::setBCoeffs (int amrlev, Real beta)
+MLEBABecLap::setBetaCoeffs (int amrlev, Real beta)
 {
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
         m_b_coeffs[amrlev][0][idim].setVal(beta);
@@ -170,7 +170,7 @@ MLEBABecLap::setBCoeffs (int amrlev, Real beta)
 }
 
 void
-MLEBABecLap::setBCoeffs (int amrlev, Vector<Real> const& beta)
+MLEBABecLap::setBetaCoeffs (int amrlev, Vector<Real> const& beta)
 {
     const int ncomp = getNComp();
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {

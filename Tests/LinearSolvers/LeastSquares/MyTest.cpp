@@ -296,8 +296,8 @@ MyTest::apply ()
        mleb.setScalars(scalars[0], scalars[1]);
 
        for (int ilev = 0; ilev <= max_level; ++ilev) {
-           mleb.setACoeffs(ilev, acoef_comp[ilev]);
-           mleb.setBCoeffs(ilev, amrex::GetArrOfConstPtrs(bcoef_comp[ilev]));
+           mleb.setAlphaCoeffs(ilev, acoef_comp[ilev]);
+           mleb.setBetaCoeffs(ilev, amrex::GetArrOfConstPtrs(bcoef_comp[ilev]));
        }
 
 

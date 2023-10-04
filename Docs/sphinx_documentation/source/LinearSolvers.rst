@@ -67,7 +67,7 @@ Coefficients
 Next, we consider the coefficients for equation :eq:`eqn::abeclap`.
 For :cpp:`MLPoisson`, there are no coefficients to set so nothing needs to be done.
 For :cpp:`MLABecLaplacian`, we need to call member functions :cpp:`setScalars`,
-:cpp:`setACoeffs`, and :cpp:`setBCoeffs`.
+:cpp:`setAlphaCoeffs`, and :cpp:`setBetaCoeffs`.
 The :cpp:`setScalars` function sets the scalar constants :math:`A` and :math:`B`
 
 .. code-block::
@@ -80,17 +80,17 @@ For the general case where
 
   .. code-block::
 
-      void setACoeffs (int amrlev, const MultiFab& alpha);
-      void setBCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta);
+      void setAlphaCoeffs (int amrlev, const MultiFab& alpha);
+      void setBetaCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta);
 
 For the case where :math:`\alpha` and/or :math:`\beta` are scalar constants,
 there is the option to use
 
   .. code-block::
 
-      void setACoeffs (int amrlev, Real alpha);
-      void setBCoeffs (int amrlev, Real beta);
-      void setBCoeffs (int amrlev, Vector<Real> const& beta);
+      void setAlphaCoeffs (int amrlev, Real alpha);
+      void setBetaCoeffs (int amrlev, Real beta);
+      void setBetaCoeffs (int amrlev, Vector<Real> const& beta);
 
 Note, however, that the solver behavior is the same regardless of which functions you
 use to set the coefficients. These functions solely copy the constant value(s) to a MultiFab
@@ -513,13 +513,13 @@ at cell centroids, you must set
 
 The default is for the face-based coefficients to be defined at face centers;
 to tell the that the face-based coefficients should be interpreted
-as living at face centroids, modify the setBCoeffs command to be
+as living at face centroids, modify the setBetaCoeffs command to be
 
 .. highlight:: c++
 
 ::
 
-    ml_ebabeclap->setBCoeffs(lev, beta, MLMG::Location::FaceCentroid);
+    ml_ebabeclap->setBetaCoeffs(lev, beta, MLMG::Location::FaceCentroid);
 
 External Solvers
 ================

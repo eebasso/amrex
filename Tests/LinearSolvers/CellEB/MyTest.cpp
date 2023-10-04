@@ -61,8 +61,8 @@ MyTest::solve ()
     mleb.setScalars(scalars[0], scalars[1]);
 
     for (int ilev = 0; ilev <= max_level; ++ilev) {
-        mleb.setACoeffs(ilev, acoef[ilev]);
-        mleb.setBCoeffs(ilev, amrex::GetArrOfConstPtrs(bcoef[ilev]));
+        mleb.setAlphaCoeffs(ilev, acoef[ilev]);
+        mleb.setBetaCoeffs(ilev, amrex::GetArrOfConstPtrs(bcoef[ilev]));
     }
 
     if (eb_is_dirichlet) {

@@ -624,13 +624,13 @@ at cell centroids, you must set
 
 The default is for the face-based coefficients to be defined at face centers;
 to tell the that the face-based coefficients should be interpreted
-as living at face centroids, modify the setBCoeffs command to be
+as living at face centroids, modify the setBetaCoeffs command to be
 
 .. highlight:: c++
 
 ::
 
-    ml_ebabeclap->setBCoeffs(lev, beta, MLMG::Location::FaceCentroid);
+    ml_ebabeclap->setBetaCoeffs(lev, beta, MLMG::Location::FaceCentroid);
 
 Tutorials
 =========

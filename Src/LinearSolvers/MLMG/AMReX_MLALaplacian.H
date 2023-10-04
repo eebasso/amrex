@@ -53,7 +53,7 @@ public:
                  const Vector<FabFactory<FAB> const*>& a_factory = {});
 
     void setScalars (RT a, RT b) noexcept;
-    void setACoeffs (int amrlev, const MF& alpha);
+    void setAlphaCoeffs (int amrlev, const MF& alpha);
 
     [[nodiscard]] int getNComp () const override { return m_ncomp; }
 
@@ -163,7 +163,7 @@ MLALaplacianT<MF>::setScalars (RT a, RT b) noexcept
 
 template <typename MF>
 void
-MLALaplacianT<MF>::setACoeffs (int amrlev, const MF& alpha)
+MLALaplacianT<MF>::setAlphaCoeffs (int amrlev, const MF& alpha)
 {
     const int ncomp = this->getNComp();
     m_a_coeffs[amrlev][0].LocalCopy(alpha, 0, 0, ncomp, IntVect(0));

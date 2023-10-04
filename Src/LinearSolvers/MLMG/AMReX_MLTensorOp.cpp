@@ -95,13 +95,13 @@ MLTensorOp::define (const Vector<Geometry>& a_geom,
 void
 MLTensorOp::setShearViscosity (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& eta)
 {
-    MLABecLaplacian::setBCoeffs(amrlev, eta);
+    MLABecLaplacian::setBetaCoeffs(amrlev, eta);
 }
 
 void
 MLTensorOp::setShearViscosity (int amrlev, Real eta)
 {
-    MLABecLaplacian::setBCoeffs(amrlev, eta);
+    MLABecLaplacian::setBetaCoeffs(amrlev, eta);
 }
 
 void

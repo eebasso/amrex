@@ -55,8 +55,8 @@ MyTest::solve ()
     mleb.setScalars(1.0, 1.0);
 
     for (int ilev = 0; ilev <= max_level; ++ilev) {
-        mleb.setACoeffs(ilev, acoef[ilev]);
-        mleb.setBCoeffs(ilev, amrex::GetArrOfConstPtrs(bcoef[ilev]));
+        mleb.setAlphaCoeffs(ilev, acoef[ilev]);
+        mleb.setBetaCoeffs(ilev, amrex::GetArrOfConstPtrs(bcoef[ilev]));
     }
 
     MLMG mlmg(mleb);

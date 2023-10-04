@@ -941,7 +941,7 @@ MLPoissonT<MF>::makeNLinOp (int grid_size) const
     const FabArrayBase::CPC& cpc = alpha.getCPC(IntVect(0),foo,IntVect(0),Periodicity::NonPeriodic());
     alpha.setVal(RT(0.0), cpc, 0, 1);
 
-    nop->setACoeffs(0, alpha);
+    nop->setAlphaCoeffs(0, alpha);
 
     return r;
 }

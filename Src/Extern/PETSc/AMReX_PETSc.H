@@ -32,8 +32,8 @@ public:
     PETScABecLap& operator= (PETScABecLap &&) noexcept = delete;
 
     void setScalars (Real sa, Real sb);
-    void setACoeffs (const MultiFab& alpha);
-    void setBCoeffs (const Array<const MultiFab*,BL_SPACEDIM>& beta);
+    void setAlphaCoeffs (const MultiFab& alpha);
+    void setBetaCoeffs (const Array<const MultiFab*,BL_SPACEDIM>& beta);
     void setVerbose (int _verbose);
     void solve (MultiFab& soln, const MultiFab& rhs, Real rel_tol, Real abs_tol,
                 int max_iter, const BndryData& bndry, int max_bndry_order);

@@ -94,7 +94,7 @@ public:
                                std::is_convertible_v<typename AMF::value_type,
                                                      typename  MF::value_type>,
                                int> = 0>
-    void setACoeffs (int amrlev, const AMF& alpha);
+    void setAlphaCoeffs (int amrlev, const AMF& alpha);
 
     /**
      * Sets alpha as a single scalar constant value across
@@ -108,7 +108,7 @@ public:
     template <typename T,
               std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,
                                int> = 0>
-    void setACoeffs (int amrlev, T alpha);
+    void setAlphaCoeffs (int amrlev, T alpha);
 
     /**
      * Sets beta as a scalar field to be the values defined
@@ -124,7 +124,7 @@ public:
                                std::is_convertible_v<typename AMF::value_type,
                                                      typename  MF::value_type>,
                                int> = 0>
-    void setBCoeffs (int amrlev, const Array<AMF const*,AMREX_SPACEDIM>& beta);
+    void setBetaCoeffs (int amrlev, const Array<AMF const*,AMREX_SPACEDIM>& beta);
 
     /**
      * Sets beta as a single scalar constant value across
@@ -138,7 +138,7 @@ public:
     template <typename T,
               std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,
                                int> = 0>
-    void setBCoeffs (int amrlev, T beta);
+    void setBetaCoeffs (int amrlev, T beta);
 
     /**
      * Set each beta component to a single scalar constant value corresponding to the
@@ -152,7 +152,7 @@ public:
     template <typename T,
               std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,
                                int> = 0>
-    void setBCoeffs (int amrlev, Vector<T> const& beta);
+    void setBetaCoeffs (int amrlev, Vector<T> const& beta);
 
     [[nodiscard]] int getNComp () const override { return m_ncomp; }
 
@@ -327,10 +327,10 @@ template <typename AMF,
                            std::is_convertible_v<typename AMF::value_type,
                                                  typename  MF::value_type>, int>>
 void
-MLABecLaplacianT<MF>::setACoeffs (int amrlev, const AMF& alpha)
+MLABecLaplacianT<MF>::setAlphaCoeffs (int amrlev, const AMF& alpha)
 {
     AMREX_ASSERT_WITH_MESSAGE(alpha.nComp() == 1,
-                              "MLABecLaplacian::setACoeffs: alpha is supposed to be single component.");
+                              "MLABecLaplacian::setAlphaCoeffs: alpha is supposed to be single component.");
     m_a_coeffs[amrlev][0].LocalCopy(alpha, 0, 0, 1, IntVect(0));
     m_needs_update = true;
 }
@@ -339,7 +339,7 @@ template <typename MF>
 template <typename T,
           std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,int>>
 void
-MLABecLaplacianT<MF>::setACoeffs (int amrlev, T alpha)
+MLABecLaplacianT<MF>::setAlphaCoeffs (int amrlev, T alpha)
 {
     m_a_coeffs[amrlev][0].setVal(RT(alpha));
     m_needs_update = true;
@@ -352,7 +352,7 @@ template <typename AMF,
                            std::is_convertible_v<typename AMF::value_type,
                                                  typename  MF::value_type>, int>>
 void
-MLABecLaplacianT<MF>::setBCoeffs (int amrlev,
+MLABecLaplacianT<MF>::setBetaCoeffs (int amrlev,
                                   const Array<AMF const*,AMREX_SPACEDIM>& beta)
 {
     const int ncomp = this->getNComp();
@@ -377,7 +377,7 @@ template <typename MF>
 template <typename T,
           std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,int>>
 void
-MLABecLaplacianT<MF>::setBCoeffs (int amrlev, T beta)
+MLABecLaplacianT<MF>::setBetaCoeffs (int amrlev, T beta)
 {
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
         m_b_coeffs[amrlev][0][idim].setVal(RT(beta));
@@ -389,7 +389,7 @@ template <typename MF>
 template <typename T,
           std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,int>>
 void
-MLABecLaplacianT<MF>::setBCoeffs (int amrlev, Vector<T> const& beta)
+MLABecLaplacianT<MF>::setBetaCoeffs (int amrlev, Vector<T> const& beta)
 {
     const int ncomp = this->getNComp();
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
@@ -1265,8 +1265,8 @@ MLABecLaplacianT<MF>::makeNLinOp (int /*grid_size*/) const
         }
     }
 
-    nop->setACoeffs(0, alpha);
-    nop->setBCoeffs(0, GetArrOfConstPtrs(m_b_coeffs[0].back()));
+    nop->setAlphaCoeffs(0, alpha);
+    nop->setBetaCoeffs(0, GetArrOfConstPtrs(m_b_coeffs[0].back()));
 
     return r;
 }
