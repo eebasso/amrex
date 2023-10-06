@@ -365,7 +365,11 @@ MLABecLaplacianT<MF>::setAlphaCoeffs (int amrlev, const AMF& alpha)
 {
     AMREX_ASSERT_WITH_MESSAGE(alpha.nComp() == 1,
                               "MLABecLaplacian::setAlphaCoeffs: alpha is supposed to be single component.");
+<<<<<<< HEAD
     m_alpha_coeffs[amrlev][0].LocalCopy(alpha, 0, 0, 1, IntVect(0));
+=======
+    m_a_coeffs[amrlev][0].LocalCopy(alpha, 0, 0, 1, IntVect(0));
+>>>>>>> 7a4e83c95c2779431d271c7ef435d380b1d38d7a
     m_needs_update = true;
 }
 
@@ -1300,7 +1304,11 @@ MLABecLaplacianT<MF>::makeNLinOp (int /*grid_size*/) const
     }
 
     nop->setAlphaCoeffs(0, alpha);
+<<<<<<< HEAD
     nop->setBetaCoeffs(0, GetArrOfConstPtrs(m_beta_coeffs[0].back()));
+=======
+    nop->setBetaCoeffs(0, GetArrOfConstPtrs(m_b_coeffs[0].back()));
+>>>>>>> 7a4e83c95c2779431d271c7ef435d380b1d38d7a
 
     return r;
 }

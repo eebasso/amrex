@@ -86,7 +86,12 @@ public:
 
     void compVelGrad (int amrlev, const Array<MultiFab*,AMREX_SPACEDIM>& grads,
                       MultiFab& sol, Location loc) const;
+<<<<<<< HEAD
     void setBCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta,
+=======
+
+    void setBetaCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta,
+>>>>>>> 7a4e83c95c2779431d271c7ef435d380b1d38d7a
                      Location a_beta_loc) = delete;
     void setBetaCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta,
                      Location a_beta_loc) = delete;
