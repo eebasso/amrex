@@ -16,7 +16,6 @@
 namespace amrex {
 
 //!A Box with real dimensions.  A RealBox is OK iff volume >= 0.
-
 class RealBox
 {
 public:

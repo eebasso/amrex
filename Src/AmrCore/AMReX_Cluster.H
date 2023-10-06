@@ -20,7 +20,6 @@ class ClusterList;
 *
 * Utility class for tagging error cells.
 */
-
 class Cluster
 {
 public:

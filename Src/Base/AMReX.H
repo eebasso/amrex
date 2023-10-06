@@ -16,16 +16,6 @@
 #include <string>
 #include <vector>
 
-//
-// Initialize, Finalize, Error Reporting, and Version String Functions
-
-/*
- This class consists of initialize, finalize, error-reporting, and version
- functions that are used throughout AMReX.  Note that all the output functions
- add a terminating exclamation mark, so there is no need to add any punctuation
- to sentences that get output explicitly.
-*/
-
 namespace amrex
 {
     class AMReX;
@@ -33,6 +23,15 @@ namespace amrex
     using PTR_TO_VOID_FUNC = void (*)();
     using ErrorHandler = void (*)(const char*);
 
+    /**
+     * \brief Initialize, Finalize, Error Reporting, and Version String Functions
+     * 
+     * The system namespace consists of initialize, finalize, error-reporting, and version
+     * functions that are used throughout AMReX.  Note that all the output functions
+     * add a terminating exclamation mark, so there is no need to add any punctuation
+     * to sentences that get output explicitly.
+     * 
+     */
     namespace system
     {
 #ifndef AMREX_DEBUG
@@ -165,7 +164,6 @@ namespace amrex
     * via abort().  Intended for use by the BL_ASSERT() macro
     * in <AMReX_BLassert.H>.
     */
-
     void Assert_host (const char* EX, const char* file, int line, const char* msg);
 
     AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
@@ -266,7 +264,7 @@ namespace amrex
 
         static AMReX* top () noexcept { return m_instance.back().get(); }
 
-        // Thisfunction will take the ownership of the AMReX pointer,
+        // This function will take the ownership of the AMReX pointer,
         // and put it on the top of the stack (i.e., back of the
         // vector).  If the pointer is already in the stack, it will
         // be moved to the top.

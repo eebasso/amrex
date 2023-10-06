@@ -17,7 +17,6 @@ class IArrayBox;
 *
 * Specifies interpolater interface for coarse-to-fine interpolation in space.
 */
-
 class Interpolater
     : public InterpBase
 {

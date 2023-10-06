@@ -20,7 +20,6 @@ namespace amrex {
 *
 * This class is used to tag cells in a Box that need addition refinement.
 */
-
 class TagBox final
     :
     public BaseFab<char>

@@ -29,7 +29,6 @@ namespace amrex {
 /**
 * \brief Attributes of StateData.
 */
-
 class StateDescriptor
 {
     friend class DescriptorList;

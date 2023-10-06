@@ -100,7 +100,6 @@ namespace Gpu {
      *
      * Will disable the launching of GPU kernels between the calls.
      */
-
     inline bool setLaunchRegion (bool launch) noexcept {
         bool r = in_launch_region;
         in_launch_region = launch;

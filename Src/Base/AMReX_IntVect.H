@@ -34,15 +34,14 @@ int coarsen (int i, int ratio) noexcept
 }
 
 /**
-* An Integer Vector in SPACEDIM-Dimensional Space
-*
-* The class IntVect is an implementation of an integer vector in a
-* SPACEDIM-dimensional space.  It represents a point in a discrete space.
-* IntVect values are accessed using the operator[] function, as for a normal
-* C++ array.  In addition, the basic arithmetic operators have been overloaded
-* to implement scaling and translation operations.
-*/
-
+ * \brief An Integer Vector in SPACEDIM-Dimensional Space
+ *
+ * The class IntVect is an implementation of an integer vector in a
+ * SPACEDIM-dimensional space.  It represents a point in a discrete space.
+ * IntVect values are accessed using the operator[] function, as for a normal
+ * C++ array.  In addition, the basic arithmetic operators have been overloaded
+ * to implement scaling and translation operations.
+ */
 class IntVect
 {
     friend MPI_Datatype ParallelDescriptor::Mpi_typemap<IntVect>::type();

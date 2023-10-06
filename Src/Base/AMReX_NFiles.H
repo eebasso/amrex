@@ -23,18 +23,17 @@ namespace amrex {
 *   nfi.Stream().write((const char *) data.dataPtr(), nChars);
 * }
 */
-
 class NFilesIter
 {
   public:
 
 
     /**
-    * \brief the nfiles will be named "filePrefix" + "00000"
+    * \brief constructor for writing with static set selection
+    * 
+    * the nfiles will be named "filePrefix" + "00000"
     * through "filePrefix" + "noutfiles-1"
     * the range [1, nProcs] for noutfiles is enforced
-    *
-    * constructor for writing with static set selection
     *
     * \param noutfiles
     * \param &fileprefix

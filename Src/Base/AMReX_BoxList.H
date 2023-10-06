@@ -45,10 +45,9 @@ namespace amrex
 
 
 /** \brief A class for managing a List of Boxes that share a common
-* IndexType.  This class implements operations for sets of Boxes.
-* This is a concrete class, not a polymorphic one.
-*/
-
+ * IndexType. This class implements operations for sets of Boxes.
+ * This is a concrete class, not a polymorphic one.
+ */
 class BoxList
 {
 public:

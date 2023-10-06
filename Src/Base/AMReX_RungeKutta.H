@@ -48,7 +48,6 @@ namespace amrex::RungeKutta {
  * FillPatcher class can be useful for implementing such a callable.  See
  * AmrLevel::RK for an example.
  */
-
 struct PostStageNoOp {
     template <typename MF>
     std::enable_if_t<IsFabArray<MF>::value> operator() (int, MF&) const {}

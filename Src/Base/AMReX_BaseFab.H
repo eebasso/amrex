@@ -90,6 +90,46 @@ makeArray4 (T* p, Box const& bx, int ncomp) noexcept
     return Array4<T>{p, amrex::begin(bx), amrex::end(bx), ncomp};
 }
 
+template <typename T>
+typename std::enable_if<std::is_arithmetic<T>::value>::type
+placementNew (T* const /*ptr*/, Long /*n*/)
+{}
+
+template <typename T>
+std::enable_if_t<std::is_trivially_default_constructible<T>::value
+                 && !std::is_arithmetic<T>::value>
+placementNew (T* const ptr, Long n)
+{
+    for (Long i = 0; i < n; ++i) {
+        new (ptr+i) T;
+    }
+}
+
+template <typename T>
+std::enable_if_t<!std::is_trivially_default_constructible<T>::value>
+placementNew (T* const ptr, Long n)
+{
+    AMREX_HOST_DEVICE_FOR_1D ( n, i,
+    {
+        new (ptr+i) T;
+    });
+}
+
+template <typename T>
+typename std::enable_if<std::is_trivially_destructible<T>::value>::type
+placementDelete (T* const /*ptr*/, Long /*n*/)
+{}
+
+template <typename T>
+typename std::enable_if<!std::is_trivially_destructible<T>::value>::type
+placementDelete (T* const ptr, Long n)
+{
+    AMREX_HOST_DEVICE_FOR_1D (n, i,
+    {
+        (ptr+i)->~T();
+    });
+}
+
 /**
 *  \brief A Fortran Array-like Object
 *  BaseFab emulates the Fortran array concept.
@@ -137,47 +177,6 @@ makeArray4 (T* p, Box const& bx, int ncomp) noexcept
 
 *  T MUST have a default constructor and an assignment operator.
 */
-
-template <typename T>
-typename std::enable_if<std::is_arithmetic<T>::value>::type
-placementNew (T* const /*ptr*/, Long /*n*/)
-{}
-
-template <typename T>
-std::enable_if_t<std::is_trivially_default_constructible<T>::value
-                 && !std::is_arithmetic<T>::value>
-placementNew (T* const ptr, Long n)
-{
-    for (Long i = 0; i < n; ++i) {
-        new (ptr+i) T;
-    }
-}
-
-template <typename T>
-std::enable_if_t<!std::is_trivially_default_constructible<T>::value>
-placementNew (T* const ptr, Long n)
-{
-    AMREX_HOST_DEVICE_FOR_1D ( n, i,
-    {
-        new (ptr+i) T;
-    });
-}
-
-template <typename T>
-typename std::enable_if<std::is_trivially_destructible<T>::value>::type
-placementDelete (T* const /*ptr*/, Long /*n*/)
-{}
-
-template <typename T>
-typename std::enable_if<!std::is_trivially_destructible<T>::value>::type
-placementDelete (T* const ptr, Long n)
-{
-    AMREX_HOST_DEVICE_FOR_1D (n, i,
-    {
-        (ptr+i)->~T();
-    });
-}
-
 template <class T>
 class BaseFab
     : public DataAllocator
