@@ -11,18 +11,18 @@ namespace amrex {
 /**
  * \brief MultiFabSet is a grouping of MultiFabs usually made when each component requires a separate IndexType.
  * Often made for input/output into multi-component linear operators. It can also be used to represent
- * edge-centered (i.e., 1-form or vector) and face-centered (i.e., 2-form or psuedovector) fields. While the
+ * edge-centered (i.e., 1-form or vector) and face-centered (i.e., 2-form or pseudovector) fields. While the
  * MultiFab class allows for multiple components, each component is required to live at exactly the same location
  * (IndexType) on the grid due to the current nature of Array4.
- * 
- * Specifically, each component in a MultiFab shares the same BoxArray and thus IndexType. Unfortunately, 
- * differential forms such as 1-forms (vector fields) and 2-forms (psuedovector fields) are ideally used by finite 
- * difference methods when each component has a distinct IndexType. In particular, 1-form components live on the 
- * lines between nodes (i.e., the edges of the grid cells), and 2-form components live on the faces of grid cells. 
- * This requires each component to have slightly different BoxArray's and associated Array4's. 
- * 
- * In summary, MultiFabSet is intended to be an extension of how edge- and face-centered fields have been 
- * represented thus far, which is a collection of single component MultiFab's that live on slightly different FAB's 
+ *
+ * Specifically, each component in a MultiFab shares the same BoxArray and thus IndexType. Unfortunately,
+ * differential forms such as 1-forms (vector fields) and 2-forms (pseudovector fields) are ideally used by finite
+ * difference methods when each component has a distinct IndexType. In particular, 1-form components live on the
+ * lines between nodes (i.e., the edges of the grid cells), and 2-form components live on the faces of grid cells.
+ * This requires each component to have slightly different BoxArray's and associated Array4's.
+ *
+ * In summary, MultiFabSet is intended to be an extension of how edge- and face-centered fields have been
+ * represented thus far, which is a collection of single component MultiFab's that live on slightly different FAB's
  * with distinct IndexType's (nodal flags).
  */
 // template <unsigned long encodedIxTypes>
