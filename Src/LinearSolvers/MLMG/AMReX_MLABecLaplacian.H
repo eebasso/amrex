@@ -214,9 +214,6 @@ public:
 
     [[nodiscard]] RT getAScalar () const final { return m_a_scalar; }
     [[nodiscard]] RT getBScalar () const final { return m_b_scalar; }
-    [[nodiscard]] MF const* getAlphaCoeffs (int amrlev, int mglev) const final
-        { return &(m_alpha_coeffs[amrlev][mglev]); }
-    // Use of getAlphaCoeffs is preferred
     [[nodiscard]] MF const* getACoeffs (int amrlev, int mglev) const final
         { return &(m_alpha_coeffs[amrlev][mglev]); }
     [[nodiscard]] Array<MF const*,AMREX_SPACEDIM> getBCoeffs (int amrlev, int mglev) const final

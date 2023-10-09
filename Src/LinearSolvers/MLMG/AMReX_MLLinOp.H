@@ -314,7 +314,7 @@ public:
      * \param[out] out     output
      * \param[in]  in      input
      * \param[in]  bc_mode Is the BC homogeneous or inhomogeneous?
-     * \param[in]  s_mode  Are data data solution or correction?
+     * \param[in]  s_mode  Are data solution or correction?
      * \param[in]  bndry   object for handling coarse/fine and physical boundaries
      */
     virtual void apply (int amrlev, int mglev, MF& out, MF& in, BCMode bc_mode,
@@ -408,7 +408,7 @@ public:
     //! This is needed for our nodal projection solver
     virtual void unimposeNeumannBC (int /*amrlev*/, MF& /*rhs*/) const {}
 
-    //! Extra terms introduced when we treate inhomogeneous Neumann BC as homogeneous.
+    //! Extra terms introduced when we treat inhomogeneous Neumann BC as homogeneous.
     virtual void applyInhomogNeumannTerm (int /*amrlev*/, MF& /*rhs*/) const {}
 
     //! for overset solver only

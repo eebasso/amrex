@@ -55,6 +55,7 @@ public:
     void setScalars (RT a, RT b) noexcept;
     void setAlphaCoeffs (int amrlev, const MF& alpha);
     // Equivalent to setAlphaCoeffs. Use of this method is discouraged to avoid confusion between A and alpha
+    [[deprecated("Use setAlphaCoeffs instead.")]]
     void setACoeffs (int amrlev, const MF& alpha) { setAlphaCoeffs(amrlev,alpha); }
 
     [[nodiscard]] int getNComp () const override { return m_ncomp; }
