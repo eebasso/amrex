@@ -81,7 +81,7 @@ public:
     void setScalars (T1 a, T2 b) noexcept;
 
     /**
-     * Sets alpha as a scalar field to values from a single component
+     * \brief Sets alpha as a scalar field to values from a single component
      * mutlifab.
      *
      * \param[in] amrlev The level of the multifab for the solver, with
@@ -97,7 +97,7 @@ public:
     void setAlphaCoeffs (int amrlev, const AMF& alpha);
 
     /**
-     * Sets alpha as a single scalar constant value across
+     * \brief Sets alpha as a single scalar constant value across
      * the mutlifab.
      *
      * \param[in] amrlev The level of the multifab for the solver, with
@@ -111,7 +111,7 @@ public:
     void setAlphaCoeffs (int amrlev, T alpha);
 
     /**
-     * Sets beta as a scalar field to be the values defined
+     * \brief Sets beta as a face-centered field to be the values defined
      * in the supplied multifabs (one for each space dimension).
      *
      * \param[in] amrlev The level of the multifab for the solver, with
@@ -127,7 +127,7 @@ public:
     void setBetaCoeffs (int amrlev, const Array<AMF const*,AMREX_SPACEDIM>& beta);
 
     /**
-     * Sets beta as a single scalar constant value across
+     * \brief Sets beta as a single scalar constant value across
      * the mutlifabs (one for each dimension).
      *
      * \param[in] amrlev The level of the multifab for the solver, with
@@ -141,13 +141,13 @@ public:
     void setBetaCoeffs (int amrlev, T beta);
 
     /**
-     * Set each beta component to a single scalar constant value corresponding to the
+     * \brief Set each beta component to a constant value corresponding to the
      * respective component of the supplied vector.
      *
-     * \param [in] amrlev The level of the multifab for the solver, with
+     * \param[in] amrlev The level of the multifab for the solver, with
      *                    \p amrlev = 0 always being the lowest level in the
      *                    AMR hierarchy represented in the solve.
-     * \param [in] beta   Vector of scalar constant values.
+     * \param[in] beta   Vector of constant values.
      */
     template <typename T,
               std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,
@@ -160,12 +160,14 @@ public:
                                std::is_convertible_v<typename AMF::value_type,
                                                      typename  MF::value_type>,
                                int> = 0>
+    [[deprecated("Use setAlphaCoeffs instead.")]]
     void setACoeffs (int amrlev, const AMF& alpha) { setAlphaCoeffs(amrlev,alpha); }
 
     // Equivalent to setAlphaCoeffs. Use of this method is discouraged to avoid confusion between A and alpha
     template <typename T,
               std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,
                                int> = 0>
+    [[deprecated("Use setAlphaCoeffs instead.")]]
     void setACoeffs (int amrlev, T alpha) { setAlphaCoeffs(amrlev,alpha); }
 
     // Equivalent to setBetaCoeffs. Use of this method is discouraged to avoid confusion between B and beta
@@ -174,18 +176,21 @@ public:
                                std::is_convertible_v<typename AMF::value_type,
                                                      typename  MF::value_type>,
                                int> = 0>
+    [[deprecated("Use setBetaCoeffs instead.")]]
     void setBCoeffs (int amrlev, const Array<AMF const*,AMREX_SPACEDIM>& beta) { setBetaCoeffs(amrlev,beta); }
 
     // Equivalent to setBetaCoeffs. Use of this method is discouraged to avoid confusion between B and beta
     template <typename T,
               std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,
                                int> = 0>
+    [[deprecated("Use setBetaCoeffs instead.")]]
     void setBCoeffs (int amrlev, T beta) { setBetaCoeffs(amrlev,beta); }
 
     // Equivalent to setBetaCoeffs. Use of this method is discouraged to avoid confusion between B and beta
     template <typename T,
               std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,
                                int> = 0>
+    [[deprecated("Use setBetaCoeffs instead.")]]
     void setBCoeffs (int amrlev, Vector<T> const& beta) { setBetaCoeffs(amrlev,beta); }
 
     [[nodiscard]] int getNComp () const override { return m_ncomp; }
@@ -209,6 +214,9 @@ public:
 
     [[nodiscard]] RT getAScalar () const final { return m_a_scalar; }
     [[nodiscard]] RT getBScalar () const final { return m_b_scalar; }
+    [[nodiscard]] MF const* getAlphaCoeffs (int amrlev, int mglev) const final
+        { return &(m_alpha_coeffs[amrlev][mglev]); }
+    // Use of getAlphaCoeffs is preferred
     [[nodiscard]] MF const* getACoeffs (int amrlev, int mglev) const final
         { return &(m_alpha_coeffs[amrlev][mglev]); }
     [[nodiscard]] Array<MF const*,AMREX_SPACEDIM> getBCoeffs (int amrlev, int mglev) const final
@@ -365,11 +373,7 @@ MLABecLaplacianT<MF>::setAlphaCoeffs (int amrlev, const AMF& alpha)
 {
     AMREX_ASSERT_WITH_MESSAGE(alpha.nComp() == 1,
                               "MLABecLaplacian::setAlphaCoeffs: alpha is supposed to be single component.");
-<<<<<<< HEAD
     m_alpha_coeffs[amrlev][0].LocalCopy(alpha, 0, 0, 1, IntVect(0));
-=======
-    m_a_coeffs[amrlev][0].LocalCopy(alpha, 0, 0, 1, IntVect(0));
->>>>>>> 7a4e83c95c2779431d271c7ef435d380b1d38d7a
     m_needs_update = true;
 }
 
@@ -1304,11 +1308,7 @@ MLABecLaplacianT<MF>::makeNLinOp (int /*grid_size*/) const
     }
 
     nop->setAlphaCoeffs(0, alpha);
-<<<<<<< HEAD
     nop->setBetaCoeffs(0, GetArrOfConstPtrs(m_beta_coeffs[0].back()));
-=======
-    nop->setBetaCoeffs(0, GetArrOfConstPtrs(m_b_coeffs[0].back()));
->>>>>>> 7a4e83c95c2779431d271c7ef435d380b1d38d7a
 
     return r;
 }

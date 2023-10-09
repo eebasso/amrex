@@ -66,7 +66,7 @@ public:
 
     // Phi on EB
     void setEBDirichlet (Real a_phi_eb);
-    //
+
     template <typename F>
     std::enable_if_t<IsCallableR<Real,F,AMREX_D_DECL(Real,Real,Real)>::value>
     setEBDirichlet (F&& f);

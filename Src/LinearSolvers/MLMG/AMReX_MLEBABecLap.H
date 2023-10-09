@@ -47,32 +47,101 @@ public:
 
     void setPhiOnCentroid ();
 
+    /**
+     * Set scalar constants A and B in the equation:
+     * (A \alpha - B \nabla \cdot \beta \nabla ) \phi = f
+     * for the Multi-Level Embedded Boundary AB Laplacian Solver.
+     */
     void setScalars (Real a, Real b);
     
+    /**
+     * \brief Sets alpha as a scalar field to values from a single component
+     * mutlifab.
+     *
+     * \param[in] amrlev The level of the multifab for the solver, with
+     *                    \p amrlev = 0 always being the lowest level in the
+     *                    AMR hierarchy represented in the solve.
+     * \param[in] alpha  Multifab of alpha values.
+     */
     void setAlphaCoeffs (int amrlev, const MultiFab& alpha);
+
+    /**
+     * \brief Sets alpha as a single scalar constant value across
+     * the mutlifab.
+     *
+     * \param[in] amrlev The level of the multifab for the solver, with
+     *                    \p amrlev = 0 always being the lowest level in the
+     *                    AMR hierarchy represented in the solve.
+     * \param[in] alpha  Single scalar value to populate across mutlifab.
+     */
     void setAlphaCoeffs (int amrlev, Real alpha);
 
+    /**
+     * \brief Sets beta as a field with location specified by \p a_beta_loc to be
+     * the values defined in the supplied multifabs (one for each space dimension).
+     * 
+     * \param amrlev     The level of the multifab for the solver, with
+     *                    \p amrlev = 0 always being the lowest level in the
+     *                    AMR hierarchy represented in the solve.
+     * \param beta       Array of Multifabs of beta values.
+     * \param a_beta_loc The grid location of beta
+     */
     void setBetaCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta,
                      Location a_beta_loc);
+
+    /**
+     * \brief Sets beta as a face-centered field to be the values defined
+     * in the supplied multifabs (one for each space dimension).
+     *
+     * \param[in] amrlev The level of the multifab for the solver, with
+     *                    \p amrlev = 0 always being the lowest level in the
+     *                    AMR hierarchy represented in the solve.
+     * \param[in] beta   Array of Multifabs of beta values.
+     */
     void setBetaCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta)
         {setBetaCoeffs (amrlev, beta, Location::FaceCenter);}
 
+    /**
+     * \brief Sets beta as a single scalar constant value across
+     * the mutlifabs (one for each dimension).
+     *
+     * \param[in] amrlev The level of the multifab for the solver, with
+     *                    \p amrlev = 0 always being the lowest level in the
+     *                    AMR hierarchy represented in the solve.
+     * \param[in] beta   Single scalar value to populate across mutlifabs.
+     */
     void setBetaCoeffs (int amrlev, Real beta);
+
+    /**
+     * \brief Set each beta component to a constant value corresponding to the
+     * respective component of the supplied vector.
+     *
+     * \param[in] amrlev The level of the multifab for the solver, with
+     *                    \p amrlev = 0 always being the lowest level in the
+     *                    AMR hierarchy represented in the solve.
+     * \param[in] beta   Vector of constant values.
+     */
     void setBetaCoeffs (int amrlev, Vector<Real> const& beta);
 
     // Equivalent to setAlphaCoeffs. Use of this method is discouraged to avoid confusion between A and alpha
+    [[deprecated("Use setAlphaCoeffs instead.")]]
     void setACoeffs (int amrlev, const MultiFab& alpha) { setAlphaCoeffs(amrlev,alpha); }
     // Equivalent to setAlphaCoeffs. Use of this method is discouraged to avoid confusion between A and alpha
+    [[deprecated("Use setAlphaCoeffs instead.")]]
     void setACoeffs (int amrlev, Real alpha) { setAlphaCoeffs(amrlev,alpha); }
     // Equivalent to setBetaCoeffs. Use of this method is discouraged to avoid confusion between B and beta
+    [[deprecated("Use setBetaCoeffs instead.")]]
     void setBCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta,
                      Location a_beta_loc) { setBetaCoeffs(amrlev,beta,a_beta_loc); }
     // Equivalent to setBetaCoeffs. Use of this method is discouraged to avoid confusion between B and beta
+    [[deprecated("Use setBetaCoeffs instead.")]]
     void setBCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta)
         {setBetaCoeffs (amrlev, beta);}
     // Equivalent to setBetaCoeffs. Use of this method is discouraged to avoid confusion between B and beta
+    [[deprecated("Use setBetaCoeffs instead.")]]
     void setBCoeffs (int amrlev, Real beta) { setBetaCoeffs(amrlev,beta); }
     // Equivalent to setBetaCoeffs. Use of this method is discouraged to avoid confusion between B and beta
+    [[deprecated("Use setBetaCoeffs instead.")]]
     void setBCoeffs (int amrlev, Vector<Real> const& beta) { setBetaCoeffs(amrlev,beta); }
 
     // Tells the solver that EB boundaries have Dirichlet bc's specified by "phi"
