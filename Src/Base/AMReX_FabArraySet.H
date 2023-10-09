@@ -86,7 +86,6 @@ public:
 
     FabArraySet (FabArraySet&& rhs) noexcept;
     FabArraySet& operator= (FabArraySet&& rhs) noexcept;
-
     FabArraySet (const FabArraySet& rhs) = delete;
     FabArraySet& operator= (const FabArray<FAB>& rhs) = delete;
 
