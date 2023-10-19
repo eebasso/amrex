@@ -170,7 +170,7 @@ public:
                   const Geometry& geom);
 
     /**
-    * \brief /in this version the area is assumed to muliplied into the flux (if not, use scale to fix)
+    * \brief /in this version the area is assumed to multiplied into the flux (if not, use scale to fix)
     *
     * \param mflx
     * \param dir
@@ -191,7 +191,7 @@ public:
     /**
     * \brief Increment flux correction with fine data.
     *
-    * /in this version the area is assumed to muliplied into the flux (if not, use scale to fix)
+    * /in this version the area is assumed to multiplied into the flux (if not, use scale to fix)
     *
     * \param mflx
     * \param dir
@@ -229,7 +229,7 @@ public:
     /**
     * \brief Increment flux correction with fine data.
     *
-    * in this version the area is assumed to muliplied into the flux (if not, use scale to fix)
+    * in this version the area is assumed to multiplied into the flux (if not, use scale to fix)
     *
     * \param flux
     * \param dir
