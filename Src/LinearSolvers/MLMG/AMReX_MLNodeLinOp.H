@@ -38,6 +38,10 @@ public:
                  const Vector<FabFactory<FArrayBox> const*>& a_factory = {},
                  int a_eb_limit_coarsening = -1);
 
+    void setSmoothNumSweeps (int nsweeps) noexcept {
+        m_smooth_num_sweeps = nsweeps;
+    }
+
     void setLevelBC (int /*amrlev*/, const MultiFab* /*levelbcdata*/,
                              const MultiFab* = nullptr, const MultiFab* = nullptr,
                              const MultiFab* = nullptr) final {}
@@ -157,7 +161,6 @@ protected:
     CoarseningStrategy m_coarsening_strategy = CoarseningStrategy::Sigma;
 #endif
 
-    bool m_is_bottom_singular = false;
     bool m_masks_built = false;
     bool m_overset_dirichlet_mask = false;
 #ifdef AMREX_USE_GPU
@@ -166,6 +169,9 @@ protected:
     int m_smooth_num_sweeps = 2;
 #endif
     mutable bool m_in_solution_mode = true;
+
+private:
+    bool m_is_bottom_singular = false;
 };
 
 }

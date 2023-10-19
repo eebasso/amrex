@@ -8,15 +8,15 @@ namespace amrex {
 
 /**
  * \brief Multi-level nodal Laplacian solver.
- * 
+ *
  * Solves
- * 
+ *
  * del dot (sigma del phi) = rhs ,
- * 
+ *
  * where `phi` and `rhs` are nodal, and `sigma` is cell-centered.
  * Note that `sigma` is currently only implemented as a diagonal
  * rank-2 tensor field.
- * 
+ *
  * Inherits from MLNodeLinOp
  */
 class MLNodeLaplacian
@@ -70,9 +70,9 @@ public :
 
     /**
      * \brief Set sigma as a diagonal rank-2 tensor field
-     * 
-     * \param amrlev Level of the adapative mesh refinement
-     * \param a_sigma Input fields components to be copied
+     *
+     * \param amrlev Level of the adaptive mesh refinement
+     * \param a_sigma Input sigma field
      */
     void setSigma (int amrlev, const MultiFab& a_sigma);
 
@@ -98,10 +98,6 @@ public :
 
     void setCoarseningStrategy (CoarseningStrategy cs) noexcept {
         if (m_const_sigma == Real(0.0)) { m_coarsening_strategy = cs; }
-    }
-
-    void setSmoothNumSweeps (int nsweeps) noexcept {
-        m_smooth_num_sweeps = nsweeps;
     }
 
     BottomSolver getDefaultBottomSolver () const final {
