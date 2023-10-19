@@ -40,11 +40,21 @@ public:
         m_b_scalar = b;
     }
 
-    void setACoeffs (int amrlev, Real a_acoef);
-    void setACoeffs (int amrlev, const MultiFab& a_acoef);
+    void setAlphaCoeffs (int amrlev, Real a_acoef);
+    void setAlphaCoeffs (int amrlev, const MultiFab& a_acoef);
 
-    void setBCoeffs (int amrlev, Real a_bcoef);
-    void setBCoeffs (int amrlev, const MultiFab& a_bcoef);
+    void setBetaCoeffs (int amrlev, Real a_bcoef);
+    void setBetaCoeffs (int amrlev, const MultiFab& a_bcoef);
+
+    [[deprecated("Use setAlphaCoeffs instead.")]]
+    void setACoeffs (int amrlev, Real a_acoef) { setAlphaCoeffs(amrlev,a_acoef); }
+    [[deprecated("Use setAlphaCoeffs instead.")]]
+    void setACoeffs (int amrlev, const MultiFab& a_acoef) { setAlphaCoeffs(amrlev,a_acoef); }
+
+    [[deprecated("Use setBetaCoeffs instead.")]]
+    void setBCoeffs (int amrlev, Real a_bcoef) { setBetaCoeffs(amrlev,a_bcoef); }
+    [[deprecated("Use setBetaCoeffs instead.")]]
+    void setBCoeffs (int amrlev, const MultiFab& a_bcoef) { setBetaCoeffs(amrlev,a_bcoef); }
 
     void Fapply (int amrlev, int mglev, MultiFab& out, const MultiFab& in) const final;
     void Fsmooth (int amrlev, int mglev, MultiFab& sol, const MultiFab& rhs) const final;

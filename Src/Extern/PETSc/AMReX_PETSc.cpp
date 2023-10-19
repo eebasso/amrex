@@ -130,18 +130,6 @@ PETScABecLap::setBetaCoeffs (const Array<const MultiFab*, BL_SPACEDIM>& beta)
 }
 
 void
-PETScABecLap::setACoeffs (const MultiFab& alpha)
-{
-    PETScABecLap::setAlphaCoeffs(alpha);
-}
-
-void
-PETScABecLap::setBCoeffs (const Array<const MultiFab*, BL_SPACEDIM>& beta)
-{
-    PETScABecLap::setBetaCoeffs(beta);
-}
-
-void
 PETScABecLap::setVerbose (int _verbose)
 {
     verbose = _verbose;

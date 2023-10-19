@@ -38,7 +38,7 @@ public:
     void setBetaCoeffs (const Array<const MultiFab*,BL_SPACEDIM>& beta);
     // Equivalent to setAlphaCoeffs. Use of this method is discouraged to avoid confusion between A and alpha
     [[deprecated("Use setAlphaCoeffs instead.")]]
-    void setACoeffs (const MultiFab& alpha) { setAlphaCoeffs(alpha) };
+    void setACoeffs (const MultiFab& alpha) { setAlphaCoeffs(alpha); };
     // Equivalent to setBetaCoeffs. Use of this method is discouraged to avoid confusion between B and beta
     [[deprecated("Use setBetaCoeffs instead.")]]
     void setBCoeffs (const Array<const MultiFab*,BL_SPACEDIM>& beta) { setBetaCoeffs(beta); }

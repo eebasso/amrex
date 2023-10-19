@@ -446,8 +446,8 @@ MyTest::solveNodeABecLaplacian ()
 
             mlndabec.setScalars(ascalar, bscalar);
 
-            mlndabec.setACoeffs(0, acoef[ilev]);
-            mlndabec.setBCoeffs(0, bcoef[ilev]);
+            mlndabec.setAlphaCoeffs(0, acoef[ilev]);
+            mlndabec.setBetaCoeffs(0, bcoef[ilev]);
 
             MLMG mlmg(mlndabec);
             mlmg.setMaxIter(max_iter);
