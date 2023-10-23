@@ -13,18 +13,18 @@ namespace amrex {
  *
  * The system it solves is
  *
- *    A alpha v - B div dot tau = rhs ,
+ *    `A alpha v - B div dot tau = rhs` ,
  *
  * where A and B are scalar constants, alpha is a cell-centered field, and
  *
- *    tau = eta [grad v + (grad v)^T] + (kappa-(2/3)eta) (div v) I .
+ *    `tau = eta [grad v + (grad v)^T] + (kappa-(2/3)eta) (div v) I` .
  *
- * Here I is identity tensor, and eta and kappa are shear and bulk viscosity
+ * Here `I` is identity tensor, and `eta` and `kappa` are shear and bulk viscosity
  * and can be specified as either scalar constants or diagonal matrix fields.
  *
  * The user needs to provide `alpha` by `setAlphaCoeffs`, eta by `setShearViscosity`,
  * and kappa by `setBulkViscosity`.  If `setBulkViscosity` is not called,
- * kappa is set to zero.
+ * `kappa` is set to zero.
  *
  * The scalars `A` and `B` can be set with `setScalar(Real, Real)`.  If
  * they are not set, their default value is 1.

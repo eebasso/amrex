@@ -91,7 +91,7 @@ template <typename T> class MLPoissonT;
 template <typename T> class MLABecLaplacianT;
 
 /// \brief Multi-level linear operator template.
-/// \tparam MF typename that the linear operator acts on, typically MultiFab.
+/// \tparam MF The typename that the linear operator acts on, typically MultiFab.
 template <typename MF>
 class MLLinOpT
 {

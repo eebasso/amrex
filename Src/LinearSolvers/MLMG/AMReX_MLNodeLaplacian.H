@@ -11,7 +11,7 @@ namespace amrex {
  *
  * Solves
  *
- * del dot (sigma del phi) = rhs ,
+ * `del dot (sigma del phi) = rhs` ,
  *
  * where `phi` and `rhs` are nodal, and `sigma` is cell-centered.
  * Note that `sigma` is currently only implemented as a diagonal

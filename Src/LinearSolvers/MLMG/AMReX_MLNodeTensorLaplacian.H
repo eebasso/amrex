@@ -8,13 +8,25 @@ namespace amrex {
 
 // Multi-Level nodal tensor Laplacian solver:
 //
-// del dot (sigma grad phi) = rhs
+//   `del dot (sigma grad phi) = rhs`
 //
-// where phi and rhs are nodal multifab, and sigma is a constant 
+// where `phi` and `rhs` are nodal multifab, and `sigma` is a constant
 // rank-2 symmetric tensor with AMREX_SPACEDIM choose 2 components.
 // Only periodic and Dirichlet are supported.
 //
 // Inherits from MLNodeLinOp
+
+/**
+ * \brief Multi-Level nodal tensor Laplacian solver:
+ *
+ *   `del dot (sigma grad phi) = rhs`
+ *
+ * where `phi` and `rhs` are nodal multifab, and `sigma` is a constant
+ * rank-2 symmetric tensor with AMREX_SPACEDIM choose 2 components.
+ * Only periodic and Dirichlet are supported.
+ *
+ * Inherits from MLNodeLinOp
+ */
 class MLNodeTensorLaplacian
     : public MLNodeLinOp
 {
@@ -22,7 +34,7 @@ public:
 
 #if (AMREX_SPACEDIM == 2)
     // number of unique elements in sigma
-    static constexpr int nelems = 3;  
+    static constexpr int nelems = 3;
 #else
     // number of unique elements in sigma
     static constexpr int nelems = 6;

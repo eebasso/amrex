@@ -11,11 +11,11 @@ namespace amrex {
 
 /**
  * Multi-Level cell-centered embedded boundary AB coefficients Laplacian solver. 
- * 
+ *
  * (A * alpha - B * (del dot beta grad)) phi = rhs
- * 
+ *
  * where `A` and `B` are scalar constants, and `alpha` and `beta` are scalar fields.
- * 
+ *
  * Inherits from MLCellABecLapT<MultiFab>
  */
 class MLEBABecLap
@@ -53,7 +53,7 @@ public:
      * for the Multi-Level Embedded Boundary AB Laplacian Solver.
      */
     void setScalars (Real a, Real b);
-    
+
     /**
      * \brief Sets alpha as a scalar field to values from a single component
      * mutlifab.
@@ -79,7 +79,7 @@ public:
     /**
      * \brief Sets beta as a field with location specified by \p a_beta_loc to be
      * the values defined in the supplied multifabs (one for each space dimension).
-     * 
+     *
      * \param amrlev     The level of the multifab for the solver, with
      *                    \p amrlev = 0 always being the lowest level in the
      *                    AMR hierarchy represented in the solve.

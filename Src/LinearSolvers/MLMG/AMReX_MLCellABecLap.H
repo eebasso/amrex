@@ -9,9 +9,9 @@ namespace amrex {
 
 /**
  * \brief Multi-Level, cell-centered, AB coefficients, Laplacian solver template class.
- * 
+ *
  * Inherits from template class MLCellLinOpT<MF>.
- * 
+ *
  * \tparam MF typename, typically MultiFab.
  */
 template <typename MF>

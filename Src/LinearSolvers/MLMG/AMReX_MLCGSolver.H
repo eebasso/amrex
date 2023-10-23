@@ -9,7 +9,7 @@ namespace amrex {
 
 /**
  * \brief Multi-Level conjugate gradient method solver template class.
- * 
+ *
  * \tparam MF type acted on by linear operator, typically MultiFab
  */
 template <typename MF>

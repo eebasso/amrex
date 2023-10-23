@@ -10,11 +10,11 @@ namespace amrex {
 
 /**
  * \brief Multi-level cell-centered Poisson operator template class.
- * 
- * Solves del dot grad phi = rhs.
- * 
+ *
+ * `Solves del dot grad phi = rhs.`
+ *
  * Inherits from MLCellABecLapT<MF>.
- * 
+ *
  * \tparam MF Typename of phi and rhs, typically MultiFab
  */
 template <typename MF>

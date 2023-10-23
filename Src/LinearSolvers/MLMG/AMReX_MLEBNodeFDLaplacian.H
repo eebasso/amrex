@@ -12,18 +12,23 @@
 
 namespace amrex {
 
-// Multi-level embedded boundary nodal finite-difference Laplacian solver.
-// Although the class has EB in the name, it works for non-EB build too.
-//
-// del dot (sigma grad phi) = rhs, for non-RZ
-// where phi and rhs are nodal multifab, and sigma is a tensor constant
-// with only diagonal components.  The EB is assumed to be Dirichlet.
-//
-// del dot (simga grad phi) - alpha/r^2 phi = rhs, for RZ
-// where alpha is a scalar constant that is zero by default.
-//
-// Inherits from MLNodeLinOp.
-
+/**
+ * \brief Embedded boundary nodal finite-difference Laplacian solver.
+ *
+ * Although the class has EB in the name, it works for non-EB build too.
+ *
+ * The linear opeartor solves
+ *
+ *   `del dot (sigma grad phi) = rhs`, for non-RZ, and
+ *
+ *   `del dot (simga grad phi) - alpha/r^2 phi = rhs`, for RZ,
+ *
+ * where `phi` and `rhs` are nodal multifab, `sigma` is a tensor constant
+ * with only diagonal components, and `alpha` is a scalar constant that is
+ * zero by default. The EB is assumed to be Dirichlet.
+ *
+ * Inherits from MLNodeLinOp.
+ */
 class MLEBNodeFDLaplacian
     : public MLNodeLinOp
 {
@@ -53,7 +58,7 @@ public:
 
     /**
      * \brief Set sigma to be a constant diagonal rank-2 tensor
-     * 
+     *
      * \param a_sigma Input specifying the constant diagonal components of sigma.
      */
     void setSigma (Array<Real,AMREX_SPACEDIM> const& a_sigma) noexcept;
