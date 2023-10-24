@@ -8,16 +8,14 @@
 namespace amrex {
 
 /**
- * \brief Multi-level cell-centered AB coefficient Laplacian solver template class.
+ * \brief Cell-centered `A`,`alpha`,`B`,`beta` coefficient Laplacian operator template.
  *
- * Solves (A * alpha - B * (del dot beta grad)) phi = rhs ,
+ * Solves `(A * alpha - B * (del dot beta grad)) phi = rhs` ,
  *
  * where `A` and `B` are scalar constants, `alpha` is a cell-centered field,
  * and `beta` is a face-centered field.
  *
- * Inherits from MLCellABecLapT<MF>.
- *
- * \tparam MF typename of phi and rhs, typically MultiFab
+ * \tparam MF Typename of phi and rhs, typically MultiFab
  */
 template <typename MF>
 class MLABecLaplacianT
@@ -94,7 +92,7 @@ public:
                                std::is_convertible_v<typename AMF::value_type,
                                                      typename  MF::value_type>,
                                int> = 0>
-    void setAlphaCoeffs (int amrlev, const AMF& alpha);
+    void setACoeffs (int amrlev, const AMF& alpha);
 
     /**
      * \brief Sets alpha as a single scalar constant value across
@@ -108,7 +106,7 @@ public:
     template <typename T,
               std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,
                                int> = 0>
-    void setAlphaCoeffs (int amrlev, T alpha);
+    void setACoeffs (int amrlev, T alpha);
 
     /**
      * \brief Sets beta as a face-centered field to be the values defined
@@ -124,7 +122,7 @@ public:
                                std::is_convertible_v<typename AMF::value_type,
                                                      typename  MF::value_type>,
                                int> = 0>
-    void setBetaCoeffs (int amrlev, const Array<AMF const*,AMREX_SPACEDIM>& beta);
+    void setBCoeffs (int amrlev, const Array<AMF const*,AMREX_SPACEDIM>& beta);
 
     /**
      * \brief Sets beta as a single scalar constant value across
@@ -138,7 +136,7 @@ public:
     template <typename T,
               std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,
                                int> = 0>
-    void setBetaCoeffs (int amrlev, T beta);
+    void setBCoeffs (int amrlev, T beta);
 
     /**
      * \brief Set each beta component to a constant value corresponding to the
@@ -152,46 +150,7 @@ public:
     template <typename T,
               std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,
                                int> = 0>
-    void setBetaCoeffs (int amrlev, Vector<T> const& beta);
-
-    // Equivalent to setAlphaCoeffs. Use of this method is discouraged to avoid confusion between A and alpha
-    template <typename AMF,
-              std::enable_if_t<IsFabArray<AMF>::value &&
-                               std::is_convertible_v<typename AMF::value_type,
-                                                     typename  MF::value_type>,
-                               int> = 0>
-    [[deprecated("Use setAlphaCoeffs instead.")]]
-    void setACoeffs (int amrlev, const AMF& alpha) { setAlphaCoeffs(amrlev,alpha); }
-
-    // Equivalent to setAlphaCoeffs. Use of this method is discouraged to avoid confusion between A and alpha
-    template <typename T,
-              std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,
-                               int> = 0>
-    [[deprecated("Use setAlphaCoeffs instead.")]]
-    void setACoeffs (int amrlev, T alpha) { setAlphaCoeffs(amrlev,alpha); }
-
-    // Equivalent to setBetaCoeffs. Use of this method is discouraged to avoid confusion between B and beta
-    template <typename AMF,
-              std::enable_if_t<IsFabArray<AMF>::value &&
-                               std::is_convertible_v<typename AMF::value_type,
-                                                     typename  MF::value_type>,
-                               int> = 0>
-    [[deprecated("Use setBetaCoeffs instead.")]]
-    void setBCoeffs (int amrlev, const Array<AMF const*,AMREX_SPACEDIM>& beta) { setBetaCoeffs(amrlev,beta); }
-
-    // Equivalent to setBetaCoeffs. Use of this method is discouraged to avoid confusion between B and beta
-    template <typename T,
-              std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,
-                               int> = 0>
-    [[deprecated("Use setBetaCoeffs instead.")]]
-    void setBCoeffs (int amrlev, T beta) { setBetaCoeffs(amrlev,beta); }
-
-    // Equivalent to setBetaCoeffs. Use of this method is discouraged to avoid confusion between B and beta
-    template <typename T,
-              std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,
-                               int> = 0>
-    [[deprecated("Use setBetaCoeffs instead.")]]
-    void setBCoeffs (int amrlev, Vector<T> const& beta) { setBetaCoeffs(amrlev,beta); }
+    void setBCoeffs (int amrlev, Vector<T> const& beta);
 
     [[nodiscard]] int getNComp () const override { return m_ncomp; }
 
@@ -215,9 +174,9 @@ public:
     [[nodiscard]] RT getAScalar () const final { return m_a_scalar; }
     [[nodiscard]] RT getBScalar () const final { return m_b_scalar; }
     [[nodiscard]] MF const* getACoeffs (int amrlev, int mglev) const final
-        { return &(m_alpha_coeffs[amrlev][mglev]); }
+        { return &(m_a_coeffs[amrlev][mglev]); }
     [[nodiscard]] Array<MF const*,AMREX_SPACEDIM> getBCoeffs (int amrlev, int mglev) const final
-        { return amrex::GetArrOfConstPtrs(m_beta_coeffs[amrlev][mglev]); }
+        { return amrex::GetArrOfConstPtrs(m_b_coeffs[amrlev][mglev]); }
 
     [[nodiscard]] std::unique_ptr<MLLinOpT<MF>> makeNLinOp (int /*grid_size*/) const final;
 
@@ -245,8 +204,8 @@ protected:
 
     RT m_a_scalar = std::numeric_limits<RT>::quiet_NaN(); // A
     RT m_b_scalar = std::numeric_limits<RT>::quiet_NaN(); // B
-    Vector<Vector<MF> > m_alpha_coeffs; // alpha
-    Vector<Vector<Array<MF,AMREX_SPACEDIM> > > m_beta_coeffs; // beta
+    Vector<Vector<MF> > m_a_coeffs; // alpha
+    Vector<Vector<Array<MF,AMREX_SPACEDIM> > > m_b_coeffs; // beta
 
     Vector<int> m_is_singular;
 
@@ -321,22 +280,22 @@ template <typename MF>
 void
 MLABecLaplacianT<MF>::define_ab_coeffs ()
 {
-    m_alpha_coeffs.resize(this->m_num_amr_levels);
-    m_beta_coeffs.resize(this->m_num_amr_levels);
+    m_a_coeffs.resize(this->m_num_amr_levels);
+    m_b_coeffs.resize(this->m_num_amr_levels);
     for (int amrlev = 0; amrlev < this->m_num_amr_levels; ++amrlev)
     {
-        m_alpha_coeffs[amrlev].resize(this->m_num_mg_levels[amrlev]);
-        m_beta_coeffs[amrlev].resize(this->m_num_mg_levels[amrlev]);
+        m_a_coeffs[amrlev].resize(this->m_num_mg_levels[amrlev]);
+        m_b_coeffs[amrlev].resize(this->m_num_mg_levels[amrlev]);
         for (int mglev = 0; mglev < this->m_num_mg_levels[amrlev]; ++mglev)
         {
-            m_alpha_coeffs[amrlev][mglev].define
+            m_a_coeffs[amrlev][mglev].define
                 (this->m_grids[amrlev][mglev], this->m_dmap[amrlev][mglev],
                  1, 0, MFInfo(), *(this->m_factory[amrlev][mglev]));
             for (int idim = 0; idim < AMREX_SPACEDIM; ++idim)
             {
                 const BoxArray& ba = amrex::convert(this->m_grids[amrlev][mglev],
                                                     IntVect::TheDimensionVector(idim));
-                m_beta_coeffs[amrlev][mglev][idim].define
+                m_b_coeffs[amrlev][mglev][idim].define
                     (ba, this->m_dmap[amrlev][mglev], m_ncomp, 0, MFInfo(),
                      *(this->m_factory[amrlev][mglev]));
             }
@@ -355,7 +314,7 @@ MLABecLaplacianT<MF>::setScalars (T1 a, T2 b) noexcept
     m_b_scalar = RT(b);
     if (m_a_scalar == RT(0.0)) {
         for (int amrlev = 0; amrlev < this->m_num_amr_levels; ++amrlev) {
-            m_alpha_coeffs[amrlev][0].setVal(RT(0.0));
+            m_a_coeffs[amrlev][0].setVal(RT(0.0));
         }
     }
 }
@@ -366,11 +325,11 @@ template <typename AMF,
                            std::is_convertible_v<typename AMF::value_type,
                                                  typename  MF::value_type>, int>>
 void
-MLABecLaplacianT<MF>::setAlphaCoeffs (int amrlev, const AMF& alpha)
+MLABecLaplacianT<MF>::setACoeffs (int amrlev, const AMF& alpha)
 {
     AMREX_ASSERT_WITH_MESSAGE(alpha.nComp() == 1,
-                              "MLABecLaplacian::setAlphaCoeffs: alpha is supposed to be single component.");
-    m_alpha_coeffs[amrlev][0].LocalCopy(alpha, 0, 0, 1, IntVect(0));
+                              "MLABecLaplacian::setACoeffs: alpha is supposed to be single component.");
+    m_a_coeffs[amrlev][0].LocalCopy(alpha, 0, 0, 1, IntVect(0));
     m_needs_update = true;
 }
 
@@ -378,9 +337,9 @@ template <typename MF>
 template <typename T,
           std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,int>>
 void
-MLABecLaplacianT<MF>::setAlphaCoeffs (int amrlev, T alpha)
+MLABecLaplacianT<MF>::setACoeffs (int amrlev, T alpha)
 {
-    m_alpha_coeffs[amrlev][0].setVal(RT(alpha));
+    m_a_coeffs[amrlev][0].setVal(RT(alpha));
     m_needs_update = true;
 }
 
@@ -391,7 +350,7 @@ template <typename AMF,
                            std::is_convertible_v<typename AMF::value_type,
                                                  typename  MF::value_type>, int>>
 void
-MLABecLaplacianT<MF>::setBetaCoeffs (int amrlev,
+MLABecLaplacianT<MF>::setBCoeffs (int amrlev,
                                   const Array<AMF const*,AMREX_SPACEDIM>& beta)
 {
     const int ncomp = this->getNComp();
@@ -399,13 +358,13 @@ MLABecLaplacianT<MF>::setBetaCoeffs (int amrlev,
     if (beta[0]->nComp() == ncomp) {
         for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
             for (int icomp = 0; icomp < ncomp; ++icomp) {
-                m_beta_coeffs[amrlev][0][idim].LocalCopy(*beta[idim], icomp, icomp, 1, IntVect(0));
+                m_b_coeffs[amrlev][0][idim].LocalCopy(*beta[idim], icomp, icomp, 1, IntVect(0));
             }
         }
     } else {
         for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
             for (int icomp = 0; icomp < ncomp; ++icomp) {
-                m_beta_coeffs[amrlev][0][idim].LocalCopy(*beta[idim], 0, icomp, 1, IntVect(0));
+                m_b_coeffs[amrlev][0][idim].LocalCopy(*beta[idim], 0, icomp, 1, IntVect(0));
             }
         }
     }
@@ -416,10 +375,10 @@ template <typename MF>
 template <typename T,
           std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,int>>
 void
-MLABecLaplacianT<MF>::setBetaCoeffs (int amrlev, T beta)
+MLABecLaplacianT<MF>::setBCoeffs (int amrlev, T beta)
 {
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
-        m_beta_coeffs[amrlev][0][idim].setVal(RT(beta));
+        m_b_coeffs[amrlev][0][idim].setVal(RT(beta));
     }
     m_needs_update = true;
 }
@@ -428,12 +387,12 @@ template <typename MF>
 template <typename T,
           std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,int>>
 void
-MLABecLaplacianT<MF>::setBetaCoeffs (int amrlev, Vector<T> const& beta)
+MLABecLaplacianT<MF>::setBCoeffs (int amrlev, Vector<T> const& beta)
 {
     const int ncomp = this->getNComp();
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
         for (int icomp = 0; icomp < ncomp; ++icomp) {
-            m_beta_coeffs[amrlev][0][idim].setVal(RT(beta[icomp]));
+            m_b_coeffs[amrlev][0][idim].setVal(RT(beta[icomp]));
         }
     }
     m_needs_update = true;
@@ -487,10 +446,10 @@ MLABecLaplacianT<MF>::applyMetricTermsCoeffs ()
     for (int alev = 0; alev < this->m_num_amr_levels; ++alev)
     {
         const int mglev = 0;
-        this->applyMetricTerm(alev, mglev, m_alpha_coeffs[alev][mglev]);
+        this->applyMetricTerm(alev, mglev, m_a_coeffs[alev][mglev]);
         for (int idim = 0; idim < AMREX_SPACEDIM; ++idim)
         {
-            this->applyMetricTerm(alev, mglev, m_beta_coeffs[alev][mglev][idim]);
+            this->applyMetricTerm(alev, mglev, m_b_coeffs[alev][mglev][idim]);
         }
     }
 #endif
@@ -545,7 +504,7 @@ MLABecLaplacianT<MF>::applyRobinBCTermsCoeffs ()
         const RT dzi = static_cast<RT>((AMREX_SPACEDIM == 3) ? this->m_geom[amrlev][mglev].InvCellSize(2) : Real(1.0));
 
         if (reset_alpha) {
-            m_alpha_coeffs[amrlev][mglev].setVal(RT(0.0));
+            m_a_coeffs[amrlev][mglev].setVal(RT(0.0));
         }
 
         MFItInfo mfi_info;
@@ -554,12 +513,12 @@ MLABecLaplacianT<MF>::applyRobinBCTermsCoeffs ()
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (Gpu::notInLaunchRegion())
 #endif
-        for (MFIter mfi(m_alpha_coeffs[amrlev][mglev], mfi_info); mfi.isValid(); ++mfi)
+        for (MFIter mfi(m_a_coeffs[amrlev][mglev], mfi_info); mfi.isValid(); ++mfi)
         {
             const Box& vbx = mfi.validbox();
-            auto const& afab = m_alpha_coeffs[amrlev][mglev].array(mfi);
+            auto const& afab = m_a_coeffs[amrlev][mglev].array(mfi);
             for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
-                auto const& bfab = m_beta_coeffs[amrlev][mglev][idim].const_array(mfi);
+                auto const& bfab = m_b_coeffs[amrlev][mglev][idim].const_array(mfi);
                 const Box& blo = amrex::adjCellLo(vbx,idim);
                 const Box& bhi = amrex::adjCellHi(vbx,idim);
                 bool outside_domain_lo = !(domain.contains(blo));
@@ -637,14 +596,14 @@ MLABecLaplacianT<MF>::averageDownCoeffs ()
 
     for (int amrlev = this->m_num_amr_levels-1; amrlev > 0; --amrlev)
     {
-        auto& fine_a_coeffs = m_alpha_coeffs[amrlev];
-        auto& fine_b_coeffs = m_beta_coeffs[amrlev];
+        auto& fine_a_coeffs = m_a_coeffs[amrlev];
+        auto& fine_b_coeffs = m_b_coeffs[amrlev];
 
         averageDownCoeffsSameAmrLevel(amrlev, fine_a_coeffs, fine_b_coeffs);
         averageDownCoeffsToCoarseAmrLevel(amrlev);
     }
 
-    averageDownCoeffsSameAmrLevel(0, m_alpha_coeffs[0], m_beta_coeffs[0]);
+    averageDownCoeffsSameAmrLevel(0, m_a_coeffs[0], m_b_coeffs[0]);
 }
 
 template <typename MF>
@@ -716,10 +675,10 @@ template <typename MF>
 void
 MLABecLaplacianT<MF>::averageDownCoeffsToCoarseAmrLevel (int flev)
 {
-    auto& fine_a_coeffs = m_alpha_coeffs[flev  ].back();
-    auto& fine_b_coeffs = m_beta_coeffs[flev  ].back();
-    auto& crse_a_coeffs = m_alpha_coeffs[flev-1].front();
-    auto& crse_b_coeffs = m_beta_coeffs[flev-1].front();
+    auto& fine_a_coeffs = m_a_coeffs[flev  ].back();
+    auto& fine_b_coeffs = m_b_coeffs[flev  ].back();
+    auto& crse_a_coeffs = m_a_coeffs[flev-1].front();
+    auto& crse_b_coeffs = m_b_coeffs[flev-1].front();
 
     if (m_a_scalar != 0.0) {
         // We coarsen from the back of flev to the front of flev-1.
@@ -754,8 +713,8 @@ MLABecLaplacianT<MF>::update_singular_flags ()
                 }
                 else
                 {
-                    RT asum = m_alpha_coeffs[alev].back().sum(0,IntVect(0));
-                    RT amax = m_alpha_coeffs[alev].back().norminf(0,1,IntVect(0));
+                    RT asum = m_a_coeffs[alev].back().sum(0,IntVect(0));
+                    RT amax = m_a_coeffs[alev].back().norminf(0,1,IntVect(0));
                     m_is_singular[alev] = (std::abs(asum) <= amax * RT(1.e-12));
                 }
             }
@@ -769,10 +728,10 @@ MLABecLaplacianT<MF>::Fapply (int amrlev, int mglev, MF& out, const MF& in) cons
 {
     BL_PROFILE("MLABecLaplacian::Fapply()");
 
-    const MF& acoef = m_alpha_coeffs[amrlev][mglev];
-    AMREX_D_TERM(const MF& bxcoef = m_beta_coeffs[amrlev][mglev][0];,
-                 const MF& bycoef = m_beta_coeffs[amrlev][mglev][1];,
-                 const MF& bzcoef = m_beta_coeffs[amrlev][mglev][2];);
+    const MF& acoef = m_a_coeffs[amrlev][mglev];
+    AMREX_D_TERM(const MF& bxcoef = m_b_coeffs[amrlev][mglev][0];,
+                 const MF& bycoef = m_b_coeffs[amrlev][mglev][1];,
+                 const MF& bzcoef = m_b_coeffs[amrlev][mglev][2];);
 
     const GpuArray<RT,AMREX_SPACEDIM> dxinv
         {AMREX_D_DECL(static_cast<RT>(this->m_geom[amrlev][mglev].InvCellSize(0)),
@@ -855,11 +814,11 @@ MLABecLaplacianT<MF>::Fsmooth (int amrlev, int mglev, MF& sol, const MF& rhs, in
         regular_coarsening = this->mg_coarsen_ratio_vec[mglev-1] == this->mg_coarsen_ratio;
     }
 
-    const MF& acoef = m_alpha_coeffs[amrlev][mglev];
+    const MF& acoef = m_a_coeffs[amrlev][mglev];
     AMREX_ALWAYS_ASSERT(acoef.nGrowVect() == 0);
-    AMREX_D_TERM(const MF& bxcoef = m_beta_coeffs[amrlev][mglev][0];,
-                 const MF& bycoef = m_beta_coeffs[amrlev][mglev][1];,
-                 const MF& bzcoef = m_beta_coeffs[amrlev][mglev][2];);
+    AMREX_D_TERM(const MF& bxcoef = m_b_coeffs[amrlev][mglev][0];,
+                 const MF& bycoef = m_b_coeffs[amrlev][mglev][1];,
+                 const MF& bzcoef = m_b_coeffs[amrlev][mglev][2];);
     const auto& undrrelxr = this->m_undrrelxr[amrlev][mglev];
     const auto& maskvals  = this->m_maskvals [amrlev][mglev];
 
@@ -1059,9 +1018,9 @@ MLABecLaplacianT<MF>::FFlux (int amrlev, const MFIter& mfi,
     const Real* dxinv = this->m_geom[amrlev][mglev].InvCellSize();
     const int ncomp = this->getNComp();
     FFlux(box, dxinv, m_b_scalar,
-          Array<FAB const*,AMREX_SPACEDIM>{{AMREX_D_DECL(&(m_beta_coeffs[amrlev][mglev][0][mfi]),
-                                                         &(m_beta_coeffs[amrlev][mglev][1][mfi]),
-                                                         &(m_beta_coeffs[amrlev][mglev][2][mfi]))}},
+          Array<FAB const*,AMREX_SPACEDIM>{{AMREX_D_DECL(&(m_b_coeffs[amrlev][mglev][0][mfi]),
+                                                         &(m_b_coeffs[amrlev][mglev][1][mfi]),
+                                                         &(m_b_coeffs[amrlev][mglev][2][mfi]))}},
           flux, sol, face_only, ncomp);
 }
 
@@ -1141,10 +1100,10 @@ MLABecLaplacianT<MF>::normalize (int amrlev, int mglev, MF& mf) const
 {
     BL_PROFILE("MLABecLaplacian::normalize()");
 
-    const auto& acoef = m_alpha_coeffs[amrlev][mglev];
-    AMREX_D_TERM(const auto& bxcoef = m_beta_coeffs[amrlev][mglev][0];,
-                 const auto& bycoef = m_beta_coeffs[amrlev][mglev][1];,
-                 const auto& bzcoef = m_beta_coeffs[amrlev][mglev][2];);
+    const auto& acoef = m_a_coeffs[amrlev][mglev];
+    AMREX_D_TERM(const auto& bxcoef = m_b_coeffs[amrlev][mglev][0];,
+                 const auto& bycoef = m_b_coeffs[amrlev][mglev][1];,
+                 const auto& bzcoef = m_b_coeffs[amrlev][mglev][2];);
 
     const GpuArray<RT,AMREX_SPACEDIM> dxinv
         {AMREX_D_DECL(static_cast<RT>(this->m_geom[amrlev][mglev].InvCellSize(0)),
@@ -1246,16 +1205,16 @@ MLABecLaplacianT<MF>::makeNLinOp (int /*grid_size*/) const
 
     nop->setScalars(m_a_scalar, m_b_scalar);
 
-    MF const& alpha_bottom = m_alpha_coeffs[0].back();
+    MF const& alpha_bottom = m_a_coeffs[0].back();
     iMultiFab const& osm_bottom = *(this->m_overset_mask[0].back());
     const int ncomp = alpha_bottom.nComp();
     MF alpha(ba, dm, ncomp, 0);
 
     RT a_max = alpha_bottom.norminf(0, ncomp, IntVect(0), true, true);
-    const int ncomp_b = m_beta_coeffs[0].back()[0].nComp();
-    AMREX_D_TERM(RT bx_max = m_beta_coeffs[0].back()[0].norminf(0,ncomp_b,IntVect(0),true,true);,
-                 RT by_max = m_beta_coeffs[0].back()[1].norminf(0,ncomp_b,IntVect(0),true,true);,
-                 RT bz_max = m_beta_coeffs[0].back()[2].norminf(0,ncomp_b,IntVect(0),true,true));
+    const int ncomp_b = m_b_coeffs[0].back()[0].nComp();
+    AMREX_D_TERM(RT bx_max = m_b_coeffs[0].back()[0].norminf(0,ncomp_b,IntVect(0),true,true);,
+                 RT by_max = m_b_coeffs[0].back()[1].norminf(0,ncomp_b,IntVect(0),true,true);,
+                 RT bz_max = m_b_coeffs[0].back()[2].norminf(0,ncomp_b,IntVect(0),true,true));
     const GpuArray<RT,AMREX_SPACEDIM> dxinv
         {AMREX_D_DECL(static_cast<RT>(geom.InvCellSize(0)),
                       static_cast<RT>(geom.InvCellSize(1)),
@@ -1304,8 +1263,8 @@ MLABecLaplacianT<MF>::makeNLinOp (int /*grid_size*/) const
         }
     }
 
-    nop->setAlphaCoeffs(0, alpha);
-    nop->setBetaCoeffs(0, GetArrOfConstPtrs(m_beta_coeffs[0].back()));
+    nop->setACoeffs(0, alpha);
+    nop->setBCoeffs(0, GetArrOfConstPtrs(m_b_coeffs[0].back()));
 
     return r;
 }

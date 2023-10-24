@@ -28,11 +28,11 @@ void mlabeclap_adotx (int i, int j, int k, int n, Array4<T> const& y,
 }
 
 /**
- * \brief Outputs A alpha x - B del (beta del x), 
+ * \brief Outputs A alpha x - B del (beta del x)
  *
  * where A and B are scalar constants,
  * alpha is a scalar field, and beta is a diagonal matrix field
- * 
+ *
  * \tparam T Template typename, typically AMReX::Real
  * \param[in] i Dimension 1 index
  * \param[in] j Dimension 2 index
@@ -46,9 +46,8 @@ void mlabeclap_adotx (int i, int j, int k, int n, Array4<T> const& y,
  * \param[in] betaZ Dimension 3 diagonal component of beta
  * \param[in] osm Overset mask
  * \param[in] dxinv Constant array of 1/dx
- * \param[in] scalarA Uniform scalar A
- * \param[in] scalarB Uniform scalar B
- * \return AMREX_GPU_HOST_DEVICE 
+ * \param[in] scalarA Constant scalar A
+ * \param[in] scalarB Constant scalar B
  */
 template <typename T>
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE

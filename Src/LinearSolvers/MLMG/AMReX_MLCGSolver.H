@@ -33,12 +33,13 @@ public:
     void setSolver (Type _typ) noexcept { solver_type = _typ; }
 
     /**
-    * Solve the system, Lp(solnL)=rhsL to relative err, tolerance
-    * Returns an int indicating success or failure.
-    * 0 means success
-    * 1 means failed for loss of precision
-    * 2 means iterations exceeded
-    */
+     * \brief Solve the system, ` Lp( \p solnL ) = \p rhsL ` to relative error \p eps_rel or absolute tolerance \p eps_abs
+     *
+     * \return An int indicating success or failure.
+     *         0 means success.
+     *         1 means failed for loss of precision.
+     *         2 means iterations exceeded.
+     */
     int solve (MF& solnL, const MF& rhsL, RT eps_rel, RT eps_abs);
 
     void setVerbose (int _verbose) { verbose = _verbose; }

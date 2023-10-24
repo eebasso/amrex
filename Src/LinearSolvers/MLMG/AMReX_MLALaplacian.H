@@ -9,13 +9,15 @@
 namespace amrex {
 
 /**
- * \brief Multi-level cell-centered Laplacian A,B,alpha template solver.
+ * \brief Cell-centered `A`,`alpha`,`B` coefficient Laplacian operator template.
  *
- * Solves (A * alpha - B * (del dot grad)) phi = rhs ,
+ * Solves `(A * alpha - B * (del dot grad)) phi = rhs` ,
  *
  * where `A` and `B` are scalar constants, and `alpha` is a scalar field.
- * Use `setScalars` to set `A` and `B`, and use `setAlphaCoeffs` and
- * `setBetaCoeffs` to set `alpha` and `beta`, respectively.
+ * Use `setScalars` to set `A` and `B`, and use `setACoeffs` and
+ * `setBCoeffs` to set `alpha` and `beta`, respectively.
+ *
+ * Effectively the same as MLCellABecLapT with beta = 1.
  *
  * Inherits from MLCellABecLapT<MF>
  *
@@ -54,10 +56,7 @@ public:
                  const Vector<FabFactory<FAB> const*>& a_factory = {});
 
     void setScalars (RT a, RT b) noexcept;
-    void setAlphaCoeffs (int amrlev, const MF& alpha);
-    // Equivalent to setAlphaCoeffs. Use of this method is discouraged to avoid confusion between A and alpha
-    [[deprecated("Use setAlphaCoeffs instead.")]]
-    void setACoeffs (int amrlev, const MF& alpha) { setAlphaCoeffs(amrlev,alpha); }
+    void setACoeffs (int amrlev, const MF& alpha);
 
     [[nodiscard]] int getNComp () const override { return m_ncomp; }
 
@@ -81,7 +80,7 @@ public:
     [[nodiscard]] RT getAScalar () const final { return m_a_scalar; }
     [[nodiscard]] RT getBScalar () const final { return m_b_scalar; }
     [[nodiscard]] MF const* getACoeffs (int amrlev, int mglev) const final
-        { return &(m_alpha_coeffs[amrlev][mglev]); }
+        { return &(m_a_coeffs[amrlev][mglev]); }
     [[nodiscard]] Array<MF const*,AMREX_SPACEDIM> getBCoeffs (int /*amrlev*/, int /*mglev*/) const final
         { return {{ AMREX_D_DECL(nullptr,nullptr,nullptr)}}; }
 
@@ -100,7 +99,7 @@ private:
 
     RT m_a_scalar = std::numeric_limits<RT>::quiet_NaN();
     RT m_b_scalar = std::numeric_limits<RT>::quiet_NaN();
-    Vector<Vector<MF> > m_alpha_coeffs;
+    Vector<Vector<MF> > m_a_coeffs;
 
     Vector<int> m_is_singular;
 
@@ -135,13 +134,13 @@ MLALaplacianT<MF>::define (const Vector<Geometry>& a_geom,
 
     const int ncomp = this->getNComp();
 
-    m_alpha_coeffs.resize(this->m_num_amr_levels);
+    m_a_coeffs.resize(this->m_num_amr_levels);
     for (int amrlev = 0; amrlev < this->m_num_amr_levels; ++amrlev)
     {
-        m_alpha_coeffs[amrlev].resize(this->m_num_mg_levels[amrlev]);
+        m_a_coeffs[amrlev].resize(this->m_num_mg_levels[amrlev]);
         for (int mglev = 0; mglev < this->m_num_mg_levels[amrlev]; ++mglev)
         {
-            m_alpha_coeffs[amrlev][mglev].define(this->m_grids[amrlev][mglev],
+            m_a_coeffs[amrlev][mglev].define(this->m_grids[amrlev][mglev],
                                              this->m_dmap[amrlev][mglev], ncomp, 0);
         }
     }
@@ -160,17 +159,17 @@ MLALaplacianT<MF>::setScalars (RT a, RT b) noexcept
     {
         for (int amrlev = 0; amrlev < this->m_num_amr_levels; ++amrlev)
         {
-            m_alpha_coeffs[amrlev][0].setVal(RT(0.0));
+            m_a_coeffs[amrlev][0].setVal(RT(0.0));
         }
     }
 }
 
 template <typename MF>
 void
-MLALaplacianT<MF>::setAlphaCoeffs (int amrlev, const MF& alpha)
+MLALaplacianT<MF>::setACoeffs (int amrlev, const MF& alpha)
 {
     const int ncomp = this->getNComp();
-    m_alpha_coeffs[amrlev][0].LocalCopy(alpha, 0, 0, ncomp, IntVect(0));
+    m_a_coeffs[amrlev][0].LocalCopy(alpha, 0, 0, ncomp, IntVect(0));
     m_needs_update = true;
 }
 
@@ -182,13 +181,13 @@ MLALaplacianT<MF>::averageDownCoeffs ()
 
     for (int amrlev = this->m_num_amr_levels-1; amrlev > 0; --amrlev)
     {
-        auto& fine_a_coeffs = m_alpha_coeffs[amrlev];
+        auto& fine_a_coeffs = m_a_coeffs[amrlev];
 
         averageDownCoeffsSameAmrLevel(amrlev, fine_a_coeffs);
         averageDownCoeffsToCoarseAmrLevel(amrlev);
     }
 
-    averageDownCoeffsSameAmrLevel(0, m_alpha_coeffs[0]);
+    averageDownCoeffsSameAmrLevel(0, m_a_coeffs[0]);
 }
 
 template <typename MF>
@@ -217,8 +216,8 @@ void
 MLALaplacianT<MF>::averageDownCoeffsToCoarseAmrLevel (int flev)
 {
     const int ncomp = this->getNComp();
-    auto& fine_a_coeffs = m_alpha_coeffs[flev  ].back();
-    auto& crse_a_coeffs = m_alpha_coeffs[flev-1].front();
+    auto& fine_a_coeffs = m_a_coeffs[flev  ].back();
+    auto& crse_a_coeffs = m_a_coeffs[flev-1].front();
 
     if (m_a_scalar != RT(0.0)) {
         // We coarsen from the back of flev to the front of flev-1.
@@ -249,8 +248,8 @@ MLALaplacianT<MF>::updateSingularFlag ()
                 {
                     // We are only testing component 0 here, assuming the others
                     // are similar.
-                    RT asum = m_alpha_coeffs[alev].back().sum(0,IntVect(0));
-                    RT amax = m_alpha_coeffs[alev].back().norminf(0,1,IntVect(0));
+                    RT asum = m_a_coeffs[alev].back().sum(0,IntVect(0));
+                    RT amax = m_a_coeffs[alev].back().norminf(0,1,IntVect(0));
                     m_is_singular[alev] = (asum <= amax * RT(1.e-12));
                 }
             }
@@ -287,7 +286,7 @@ MLALaplacianT<MF>::Fapply (int amrlev, int mglev, MF& out, const MF& in) const
 
     const int ncomp = this->getNComp();
 
-    const MF& acoef = m_alpha_coeffs[amrlev][mglev];
+    const MF& acoef = m_a_coeffs[amrlev][mglev];
 
     const GpuArray<RT,AMREX_SPACEDIM> dxinv
         {AMREX_D_DECL(RT(this->m_geom[amrlev][mglev].InvCellSize(0)),
@@ -356,7 +355,7 @@ MLALaplacianT<MF>::normalize (int amrlev, int mglev, MF& mf) const
 
     const int ncomp = this->getNComp();
 
-    const MF& acoef = m_alpha_coeffs[amrlev][mglev];
+    const MF& acoef = m_a_coeffs[amrlev][mglev];
 
     const GpuArray<RT,AMREX_SPACEDIM> dxinv
         {AMREX_D_DECL(RT(this->m_geom[amrlev][mglev].InvCellSize(0)),
@@ -423,7 +422,7 @@ MLALaplacianT<MF>::Fsmooth (int amrlev, int mglev, MF& sol, const MF& rhs, int r
 
     const int ncomp = this->getNComp();
 
-    const MF& acoef = m_alpha_coeffs[amrlev][mglev];
+    const MF& acoef = m_a_coeffs[amrlev][mglev];
     const auto& undrrelxr = this->m_undrrelxr[amrlev][mglev];
     const auto& maskvals  = this->m_maskvals [amrlev][mglev];
 

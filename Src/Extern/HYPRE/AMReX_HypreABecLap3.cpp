@@ -405,7 +405,7 @@ HypreABecLap3::prepareSolver ()
                              auto const& fcz = fcent[2]->const_array(mfi);)
                 auto const& barea_a = barea->const_array(mfi);
                 auto const& bcent_a = bcent->const_array(mfi);
-                Array4<Real const> beb = (m_eb_beta_coeffs) ? m_eb_beta_coeffs->const_array(mfi)
+                Array4<Real const> beb = (m_eb_b_coeffs) ? m_eb_b_coeffs->const_array(mfi)
                                                          : Array4<Real const>();
 
                 constexpr int stencil_size = AMREX_D_TERM(3,*3,*3);

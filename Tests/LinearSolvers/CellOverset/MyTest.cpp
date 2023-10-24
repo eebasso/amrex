@@ -50,7 +50,7 @@ MyTest::solve ()
     mlabec->setLevelBC(0, &exact_phi);
 
     mlabec->setScalars(ascalar, bscalar);
-    mlabec->setAlphaCoeffs(0, acoef);
+    mlabec->setACoeffs(0, acoef);
 
     Array<MultiFab,AMREX_SPACEDIM> face_bcoef;
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim)
@@ -61,7 +61,7 @@ MyTest::solve ()
     }
     amrex::average_cellcenter_to_face(GetArrOfPtrs(face_bcoef),
                                       bcoef, geom);
-    mlabec->setBetaCoeffs(0, amrex::GetArrOfConstPtrs(face_bcoef));
+    mlabec->setBCoeffs(0, amrex::GetArrOfConstPtrs(face_bcoef));
 
     MLMG mlmg(*mlabec);
     mlmg.setVerbose(verbose);

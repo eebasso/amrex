@@ -25,14 +25,14 @@ class iMultiFab;
 
 /**
  * \brief A collection (stored as an array) of FArrayBox objects.
- * 
+ *
  * This class is useful for storing floating point data on a domain defined by
  * a union of rectangular regions embedded in a uniform index space.
  * MultiFab class extends the function of the underlying FabArray class just
  * as the FArrayBox class extends the function of BaseFab<Real>.
  * Additional member functions are defined for I/O and simple arithmetic
  * operations on these aggregate objects.
- * 
+ *
  * This class does NOT provide a copy constructor or assignment operator.
  */
 class MultiFab

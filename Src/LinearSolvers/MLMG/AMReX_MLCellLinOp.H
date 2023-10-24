@@ -16,7 +16,7 @@
 namespace amrex {
 
 /**
- * \brief Multi-level cell-centered linear operator template class
+ * \brief Multi-level cell-centered linear operator template
  *
  * \tparam MF Type acted on by operator, typically MultiFab
  */

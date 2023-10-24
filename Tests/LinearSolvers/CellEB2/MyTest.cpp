@@ -79,8 +79,8 @@ MyTest::solve ()
         mleb.setScalars(scalars[0], scalars[1]);
 
         for (int ilev = 0; ilev <= max_level; ++ilev) {
-            mleb.setAlphaCoeffs(ilev, acoef[ilev]);
-            mleb.setBetaCoeffs(ilev, amrex::GetArrOfConstPtrs(bcoef[ilev]));
+            mleb.setACoeffs(ilev, acoef[ilev]);
+            mleb.setBCoeffs(ilev, amrex::GetArrOfConstPtrs(bcoef[ilev]));
         }
 
         if (true) { // In this test we assume EB is Dirichlet.
@@ -124,8 +124,8 @@ MyTest::solve ()
 
             mleb.setScalars(scalars[0], scalars[1]);
 
-            mleb.setAlphaCoeffs(0, acoef[ilev]);
-            mleb.setBetaCoeffs(0, amrex::GetArrOfConstPtrs(bcoef[ilev]));
+            mleb.setACoeffs(0, acoef[ilev]);
+            mleb.setBCoeffs(0, amrex::GetArrOfConstPtrs(bcoef[ilev]));
 
             if (true) { // In this test we assume EB is Dirichlet.
                 mleb.setEBDirichlet(0, phieb[ilev], bcoef_eb[ilev]);

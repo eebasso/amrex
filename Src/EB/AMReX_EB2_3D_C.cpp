@@ -28,29 +28,28 @@ void set_covered (const int i, const int j, const int k,
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 /**
  * \brief Set vfrac, vcent, barea, bcent, and bnorm for an EB
- * 
- * \param[in] i Dimension 1 index
- * \param[in] j Dimension 2 index
- * \param[in] k Dimension 3 index
- * \param[in] cell EBCellFlag
- * \param[in] apx Area fractions on the yz face
- * \param[in] apy Area fractions on the xz face
- * \param[in] apz Area fractions on the xy face
- * \param[in] fcx Face centroid, (y,z)
- * \param[in] fcy Face centroid, (x,z)
- * \param[in] fcz Face centroid, (x,y)
- * \param[in] m2x 
- * \param[in] m2y 
- * \param[in] m2z 
- * \param[out] vfrac Output: cell volume fraction
- * \param[out] vcent Output: cell volume centroid
- * \param[out] barea Output: EB boundary area fraction
- * \param[out] bcent Output: EB boundary centroid
- * \param[out] bnorm Output: unit vector normal to EB surface
- * \param[in] small_volfrac Threshold for vfrac to be considered a "small cell"
- * \param[out] is_small_cell Output: If true, it means vfrac(i,j,k) < small_volfrac
- * \param[out] is_multicut Output: If true, it means there are two cuts at the opposite corners.
- * \return 
+ *
+ * \param[in]  i Dimension `x` index
+ * \param[in]  j Dimension `y` index
+ * \param[in]  k Dimension `z` index
+ * \param[in]  cell EBCellFlag
+ * \param[in]  apx Area fractions on the `y,z` face
+ * \param[in]  apy Area fractions on the `x,z` face
+ * \param[in]  apz Area fractions on the `x,y` face
+ * \param[in]  fcx Face centroid, specifies `(y,z)` position with n=2 components
+ * \param[in]  fcy Face centroid, specifies `(x,z)` position with n=2 components
+ * \param[in]  fcz Face centroid, specifies `(x,y)` position with n=2 components
+ * \param[in]  m2x Necessary to compute \p vcent via least squares
+ * \param[in]  m2y Necessary to compute \p vcent via least squares
+ * \param[in]  m2z Necessary to compute \p vcent via least squares
+ * \param[out] vfrac Cell volume fraction
+ * \param[out] vcent Cell volume centroid
+ * \param[out] barea Embedded boundary normalized area
+ * \param[out] bcent Embedded boundary centroid
+ * \param[out] bnorm Unit vector normal to embedded boundary surface
+ * \param[in]  small_volfrac Threshold for vfrac to be considered a "small cell"
+ * \param[out] is_small_cell True means at least 5 out of 6 faces are fully covered or \p vfrac < \p small_volfrac .
+ * \param[out] is_multicut True means there are two cuts at the opposite corners.
  */
 void set_eb_data (const int i, const int j, const int k,
                   Array4<EBCellFlag> const& cell, Array4<Real> const& apx,
@@ -374,6 +373,35 @@ void set_eb_cell (int i, int j, int k,
 
 }
 
+/**
+ * \brief Build face area fractions, centroids, and pre-reqs for volume centroids
+ * 
+ * \param[in]  bx Box
+ * \param[in]  cell 
+ * \param[in]  fx EB2::Type for `y,z` faces
+ * \param[in]  fy EB2::Type for `x,z` faces
+ * \param[in]  fz EB2::Type for `x,y` faces
+ * \param[in]  ex EB2::Type for `x` edges
+ * \param[in]  ey EB2::Type for `y` edges
+ * \param[in]  ez EB2::Type for `z` edges
+ * \param[in]  levset EB levelset. Negative values mean covered, positive uncovered.
+ * \param[in]  interx Intercept along `x` edges where \p levset = 0
+ * \param[in]  intery Intercept along `y` edges where \p levset = 0
+ * \param[in]  interz Intercept along `z` edges where \p levset = 0
+ * \param[out] apx 
+ * \param[out] apy 
+ * \param[out] apz 
+ * \param[out] fcx 
+ * \param[out] fcy 
+ * \param[out] fcz 
+ * \param[out] m2x 
+ * \param[out] m2y 
+ * \param[out] m2z 
+ * \param[in]  dx 
+ * \param[in]  problo 
+ * \param[in]  cover_multiple_cuts 
+ * \return int 
+ */
 int build_faces (Box const& bx, Array4<EBCellFlag> const& cell,
                  Array4<Type_t> const& fx, Array4<Type_t> const& fy,
                  Array4<Type_t> const& fz, Array4<Type_t const> const& ex,

@@ -520,10 +520,11 @@ class AmrMesh;
 class FabArrayBase;
 
 /**
-* \brief A collection of Boxes stored in an Array.  It is a
-* reference-counted concrete class, not a polymorphic one; i.e. you
-* cannot use any of the List member functions with a BoxList.
-*/
+ * \brief A collection of Boxes stored in an Array.
+ *
+ * It is a reference-counted concrete class, not a polymorphic one; i.e. you
+ * cannot use any of the List member functions with a BoxList.
+ */
 class BoxArray
 {
 public:

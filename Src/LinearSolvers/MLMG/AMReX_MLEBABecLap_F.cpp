@@ -13,10 +13,10 @@ MLEBABecLap::Fapply (int amrlev, int mglev, MultiFab& out, const MultiFab& in) c
 {
     BL_PROFILE("MLEBABecLap::Fapply()");
 
-    const MultiFab& acoef = m_alpha_coeffs[amrlev][mglev];
-    AMREX_D_TERM(const MultiFab& bxcoef = m_beta_coeffs[amrlev][mglev][0];,
-                 const MultiFab& bycoef = m_beta_coeffs[amrlev][mglev][1];,
-                 const MultiFab& bzcoef = m_beta_coeffs[amrlev][mglev][2];);
+    const MultiFab& acoef = m_a_coeffs[amrlev][mglev];
+    AMREX_D_TERM(const MultiFab& bxcoef = m_b_coeffs[amrlev][mglev][0];,
+                 const MultiFab& bycoef = m_b_coeffs[amrlev][mglev][1];,
+                 const MultiFab& bzcoef = m_b_coeffs[amrlev][mglev][2];);
     const iMultiFab& ccmask = m_cc_mask[amrlev][mglev];
 
     const auto dxinvarr = m_geom[amrlev][mglev].InvCellSizeArray();
@@ -100,7 +100,7 @@ MLEBABecLap::Fapply (int amrlev, int mglev, MultiFab& out, const MultiFab& in) c
             Array4<Real const> const& bcfab = bcent->const_array(mfi);
             Array4<Real const> const& ccfab = ccent->const_array(mfi);
             Array4<Real const> const& bebfab = (is_eb_dirichlet)
-                ? m_eb_beta_coeffs[amrlev][mglev]->const_array(mfi) : foo;
+                ? m_eb_b_coeffs[amrlev][mglev]->const_array(mfi) : foo;
             Array4<Real const> const& phiebfab = (is_eb_dirichlet && is_eb_inhomog)
                 ? m_eb_phi[amrlev]->const_array(mfi) : foo;
 
@@ -158,10 +158,10 @@ MLEBABecLap::Fsmooth (int amrlev, int mglev, MultiFab& sol, const MultiFab& rhs,
 {
     BL_PROFILE("MLEBABecLap::Fsmooth()");
 
-    const MultiFab& acoef = m_alpha_coeffs[amrlev][mglev];
-    AMREX_D_TERM(const MultiFab& bxcoef = m_beta_coeffs[amrlev][mglev][0];,
-                 const MultiFab& bycoef = m_beta_coeffs[amrlev][mglev][1];,
-                 const MultiFab& bzcoef = m_beta_coeffs[amrlev][mglev][2];);
+    const MultiFab& acoef = m_a_coeffs[amrlev][mglev];
+    AMREX_D_TERM(const MultiFab& bxcoef = m_b_coeffs[amrlev][mglev][0];,
+                 const MultiFab& bycoef = m_b_coeffs[amrlev][mglev][1];,
+                 const MultiFab& bzcoef = m_b_coeffs[amrlev][mglev][2];);
     const iMultiFab& ccmask = m_cc_mask[amrlev][mglev];
     const auto& undrrelxr = m_undrrelxr[amrlev][mglev];
     const auto& maskvals  = m_maskvals [amrlev][mglev];
@@ -290,7 +290,7 @@ MLEBABecLap::Fsmooth (int amrlev, int mglev, MultiFab& sol, const MultiFab& rhs,
             Array4<Real const> const& bafab = barea->const_array(mfi);
             Array4<Real const> const& bcfab = bcent->const_array(mfi);
             Array4<Real const> const& bebfab = (is_eb_dirichlet)
-                ? m_eb_beta_coeffs[amrlev][mglev]->const_array(mfi) : foo;
+                ? m_eb_b_coeffs[amrlev][mglev]->const_array(mfi) : foo;
 
             bool beta_on_centroid = (m_beta_loc == Location::FaceCentroid);
             bool  phi_on_centroid = (m_phi_loc  == Location::CellCentroid);
@@ -332,9 +332,9 @@ MLEBABecLap::FFlux (int amrlev, const MFIter& mfi, const Array<FArrayBox*,AMREX_
     const FabArray<EBCellFlagFab>* flags = (factory) ? &(factory->getMultiEBCellFlagFab()) : nullptr;
 
     const Real* dxinv = m_geom[amrlev][mglev].InvCellSize();
-    AMREX_D_TERM(const auto& bx = m_beta_coeffs[amrlev][mglev][0][mfi];,
-                 const auto& by = m_beta_coeffs[amrlev][mglev][1][mfi];,
-                 const auto& bz = m_beta_coeffs[amrlev][mglev][2][mfi];);
+    AMREX_D_TERM(const auto& bx = m_b_coeffs[amrlev][mglev][0][mfi];,
+                 const auto& by = m_b_coeffs[amrlev][mglev][1][mfi];,
+                 const auto& bz = m_b_coeffs[amrlev][mglev][2][mfi];);
     const iMultiFab& ccmask = m_cc_mask[amrlev][mglev];
 
     AMREX_D_TERM(Box const& xbx = amrex::surroundingNodes(box,0);,

@@ -9,9 +9,9 @@
 namespace amrex {
 
 /**
- * \brief Multi-level cell-centered Poisson operator template class.
+ * \brief Cell-centered Poisson operator template class.
  *
- * `Solves del dot grad phi = rhs.`
+ * Solves `del dot grad phi = rhs.`
  *
  * Inherits from MLCellABecLapT<MF>.
  *
@@ -941,7 +941,7 @@ MLPoissonT<MF>::makeNLinOp (int grid_size) const
     const FabArrayBase::CPC& cpc = alpha.getCPC(IntVect(0),foo,IntVect(0),Periodicity::NonPeriodic());
     alpha.setVal(RT(0.0), cpc, 0, 1);
 
-    nop->setAlphaCoeffs(0, alpha);
+    nop->setACoeffs(0, alpha);
 
     return r;
 }

@@ -8,8 +8,9 @@
 namespace amrex {
 
 /**
- * \brief Multi-Level, cell-centered, AB coefficients, Laplacian solver template class.
+ * \brief Base class for cell-centered `A`-`B` coefficient Laplacian operator templates.
  *
+ * Base class for MLABecLaplacianT, MLALaplacianT, and MLPoissonT.
  * Inherits from template class MLCellLinOpT<MF>.
  *
  * \tparam MF typename, typically MultiFab.
@@ -672,19 +673,19 @@ MLCellABecLapT<MF>::makeHypre (Hypre::Interface hypre_interface) const
         auto ac = getACoeffs(0, mglev);
         if (ac)
         {
-            hypre_solver->setAlphaCoeffs(*ac);
+            hypre_solver->setACoeffs(*ac);
         }
         else
         {
             MultiFab alpha(ba,dm,1,0,MFInfo(),factory);
             alpha.setVal(0.0);
-            hypre_solver->setAlphaCoeffs(alpha);
+            hypre_solver->setACoeffs(alpha);
         }
 
         auto bc = getBCoeffs(0, mglev);
         if (bc[0])
         {
-            hypre_solver->setBetaCoeffs(bc);
+            hypre_solver->setBCoeffs(bc);
         }
         else
         {
@@ -695,7 +696,7 @@ MLCellABecLapT<MF>::makeHypre (Hypre::Interface hypre_interface) const
                               dm, 1, 0, MFInfo(), factory);
                 beta[idim].setVal(1.0);
             }
-            hypre_solver->setBetaCoeffs(amrex::GetArrOfConstPtrs(beta));
+            hypre_solver->setBCoeffs(amrex::GetArrOfConstPtrs(beta));
         }
         hypre_solver->setIsMatrixSingular(this->isBottomSingular());
 
@@ -727,19 +728,19 @@ MLCellABecLapT<MF>::makePETSc () const
         auto ac = getACoeffs(0, mglev);
         if (ac)
         {
-            petsc_solver->setAlphaCoeffs(*ac);
+            petsc_solver->setACoeffs(*ac);
         }
         else
         {
             MultiFab alpha(ba,dm,1,0,MFInfo(),factory);
             alpha.setVal(0.0);
-            petsc_solver->setAlphaCoeffs(alpha);
+            petsc_solver->setACoeffs(alpha);
         }
 
         auto bc = getBCoeffs(0, mglev);
         if (bc[0])
         {
-            petsc_solver->setBetaCoeffs(bc);
+            petsc_solver->setBCoeffs(bc);
         }
         else
         {
@@ -750,7 +751,7 @@ MLCellABecLapT<MF>::makePETSc () const
                                   dm, 1, 0, MFInfo(), factory);
                 beta[idim].setVal(1.0);
             }
-            petsc_solver->setBetaCoeffs(amrex::GetArrOfConstPtrs(beta));
+            petsc_solver->setBCoeffs(amrex::GetArrOfConstPtrs(beta));
         }
         return petsc_solver;
     }

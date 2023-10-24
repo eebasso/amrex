@@ -52,14 +52,14 @@ MLNodeABecLaplacian::define (const Vector<Geometry>& a_geom,
 }
 
 void
-MLNodeABecLaplacian::setAlphaCoeffs (int amrlev, Real a_acoef)
+MLNodeABecLaplacian::setACoeffs (int amrlev, Real a_acoef)
 {
     m_a_coeffs[amrlev][0].setVal(a_acoef);
     m_needs_update = true;
 }
 
 void
-MLNodeABecLaplacian::setAlphaCoeffs (int amrlev, const MultiFab& a_acoef)
+MLNodeABecLaplacian::setACoeffs (int amrlev, const MultiFab& a_acoef)
 {
     const int ncomp = getNComp();
     m_a_coeffs[amrlev][0].LocalCopy(a_acoef, 0, 0, ncomp, IntVect(0));
@@ -67,14 +67,14 @@ MLNodeABecLaplacian::setAlphaCoeffs (int amrlev, const MultiFab& a_acoef)
 }
 
 void
-MLNodeABecLaplacian::setBetaCoeffs (int amrlev, Real a_bcoef)
+MLNodeABecLaplacian::setBCoeffs (int amrlev, Real a_bcoef)
 {
     m_b_coeffs[amrlev][0].setVal(a_bcoef);
     m_needs_update = true;
 }
 
 void
-MLNodeABecLaplacian::setBetaCoeffs (int amrlev, const MultiFab& a_bcoef)
+MLNodeABecLaplacian::setBCoeffs (int amrlev, const MultiFab& a_bcoef)
 {
     const int ncomp = getNComp();
     m_b_coeffs[amrlev][0].LocalCopy(a_bcoef, 0, 0, ncomp, IntVect(0));

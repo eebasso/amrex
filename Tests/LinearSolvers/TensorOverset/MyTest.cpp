@@ -45,7 +45,7 @@ MyTest::solve ()
         MultiFab tmp(grids, dmap, 1, 0);
         tmp.setVal(a);
 
-        mltensor->setAlphaCoeffs(0, tmp);
+        mltensor->setACoeffs(0, tmp);
 
         Array<MultiFab,AMREX_SPACEDIM> face_bcoef;
         for (int idim = 0; idim < AMREX_SPACEDIM; ++idim)

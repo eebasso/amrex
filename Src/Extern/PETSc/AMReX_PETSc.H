@@ -32,22 +32,14 @@ public:
     PETScABecLap& operator= (PETScABecLap &&) noexcept = delete;
 
     void setScalars (Real sa, Real sb);
-    //! set alpha coefficients
-    void setAlphaCoeffs (const MultiFab& alpha);
-    //! set beta coefficients
-    void setBetaCoeffs (const Array<const MultiFab*,BL_SPACEDIM>& beta);
-    // Equivalent to setAlphaCoeffs. Use of this method is discouraged to avoid confusion between A and alpha
-    [[deprecated("Use setAlphaCoeffs instead.")]]
-    void setACoeffs (const MultiFab& alpha) { setAlphaCoeffs(alpha); };
-    // Equivalent to setBetaCoeffs. Use of this method is discouraged to avoid confusion between B and beta
-    [[deprecated("Use setBetaCoeffs instead.")]]
-    void setBCoeffs (const Array<const MultiFab*,BL_SPACEDIM>& beta) { setBetaCoeffs(beta); }
+    void setACoeffs (const MultiFab& alpha);
+    void setBCoeffs (const Array<const MultiFab*,BL_SPACEDIM>& beta);
     void setVerbose (int _verbose);
     void solve (MultiFab& soln, const MultiFab& rhs, Real rel_tol, Real abs_tol,
                 int max_iter, const BndryData& bndry, int max_bndry_order);
 
 #ifdef AMREX_USE_EB
-    void setEBDirichlet (MultiFab const* beb) { m_eb_beta_coeffs = beb; }
+    void setEBDirichlet (MultiFab const* beb) { m_eb_b_coeffs = beb; }
 #endif
 
 private:
@@ -79,7 +71,7 @@ private:
     FabArray<BaseFab<PetscInt> > cell_id;
     FabArray<BaseFab<PetscInt> > cell_id_vec;
 
-    MultiFab const* m_eb_beta_coeffs = nullptr;
+    MultiFab const* m_eb_b_coeffs = nullptr;
 
 public: // for cuda
     void prepareSolver ();

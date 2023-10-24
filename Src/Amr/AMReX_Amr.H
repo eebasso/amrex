@@ -24,12 +24,12 @@ class AmrInSituBridge;
 #endif
 
 /**
- * \brief Manage hierarchy of levels for time-dependent AMR computations.
- * 
- * The Amr class is designed to manage parts of the computation which do
- * not belong on a single level, like establishing and updating the hierarchy
- * of levels, global timestepping, and managing the different AmrLevels
- */
+* \brief Manage hierarchy of levels for time-dependent AMR computations.
+*
+* The Amr class is designed to manage parts of the computation  which do
+* not belong on a single level, like establishing and updating the hierarchy
+* of levels, global timestepping, and managing the different AmrLevels
+*/
 class Amr
     : public AmrCore
 {

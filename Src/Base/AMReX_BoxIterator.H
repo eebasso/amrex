@@ -13,13 +13,13 @@
 namespace amrex
 {
   /**
-   * \brief Iterates through the IntVects of a Box.
-   * 
-   * BoxIterator iterates through the IntVects of a box.  The actual
+   * \brief Iterates through the IntVect's of a Box.
+   *
+   * BoxIterator iterates through the IntVect's of a box.  The actual
    * sequence of IntVects is implementation-specific.
-   * 
+   *
    * Typical usage:
-   * 
+   *
    * Box b;
    * ...
    * BoxIterator bit (b);
@@ -28,8 +28,8 @@ namespace amrex
    *     IntVect iv = bit();
    *     (do operations involving iv)
    * }
-   * 
-   * 
+   *
+   *
    */
   class BoxIterator
   {

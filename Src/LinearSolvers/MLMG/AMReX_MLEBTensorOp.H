@@ -17,9 +17,9 @@ namespace amrex {
  *
  *   `tau = eta [grad v + (grad v)^T] + (kappa-(2/3)eta) (div v) I`.
  *
- * Here `eta` and `kappa` are shear and bulk viscosity fields, and `I` is identity tensor.
+ * Here `eta` and `kappa` are shear and bulk viscosity fields, and `I` is the identity tensor.
  *
- * The user needs to provide `alpha` by `setAlphaCoeffs`, `eta` by `setShearViscosity`,
+ * The user needs to provide `alpha` by `setACoeffs`, `eta` by `setShearViscosity`,
  * and `kappa` by `setBulkViscosity`.  If `setBulkViscosity` is not called,
  * `kappa` is set to zero.  The user must also call `setEBShearViscosity` to set
  * viscosity on EB.  Optionally, `setEBBulkViscosity` can be used to set
@@ -93,8 +93,6 @@ public:
     void compVelGrad (int amrlev, const Array<MultiFab*,AMREX_SPACEDIM>& grads,
                       MultiFab& sol, Location loc) const;
     void setBCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta,
-                     Location a_beta_loc) = delete;
-    void setBetaCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta,
                      Location a_beta_loc) = delete;
     void setEBDirichlet (int amrlev, const MultiFab& phi, const MultiFab& beta) = delete;
     void setEBHomogDirichlet (int amrlev, const MultiFab& beta) = delete;

@@ -25,12 +25,11 @@ namespace amrex
 
     /**
      * \brief Initialize, Finalize, Error Reporting, and Version String Functions
-     * 
+     *
      * The system namespace consists of initialize, finalize, error-reporting, and version
      * functions that are used throughout AMReX.  Note that all the output functions
      * add a terminating exclamation mark, so there is no need to add any punctuation
      * to sentences that get output explicitly.
-     * 
      */
     namespace system
     {

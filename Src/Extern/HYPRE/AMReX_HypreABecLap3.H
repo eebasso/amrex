@@ -32,7 +32,7 @@ public:
                 int max_iter, const BndryData& bndry, int max_bndry_order) override;
 
 #ifdef AMREX_USE_EB
-    void setEBDirichlet (MultiFab const* beb) { m_eb_beta_coeffs = beb; }
+    void setEBDirichlet (MultiFab const* beb) { m_eb_b_coeffs = beb; }
 #endif
 
 private :
@@ -47,7 +47,7 @@ private :
     FabArray<BaseFab<HYPRE_Int> > cell_id;
     FabArray<BaseFab<HYPRE_Int> > cell_id_vec;
 
-    MultiFab const* m_eb_beta_coeffs = nullptr;
+    MultiFab const* m_eb_b_coeffs = nullptr;
 
     iMultiFab const* m_overset_mask = nullptr;
 

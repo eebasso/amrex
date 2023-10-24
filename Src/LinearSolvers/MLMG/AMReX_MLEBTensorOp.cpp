@@ -74,13 +74,13 @@ void
 MLEBTensorOp::setShearViscosity (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& eta,
                                  Location a_beta_loc)
 {
-    MLEBABecLap::setBetaCoeffs(amrlev, eta, a_beta_loc);
+    MLEBABecLap::setBCoeffs(amrlev, eta, a_beta_loc);
 }
 
 void
 MLEBTensorOp::setShearViscosity (int amrlev, Real eta)
 {
-    MLEBABecLap::setBetaCoeffs(amrlev, eta);
+    MLEBABecLap::setBCoeffs(amrlev, eta);
 }
 
 void
@@ -188,7 +188,7 @@ MLEBTensorOp::prepareForSolve ()
     for (int amrlev = 0; amrlev < NAMRLevels(); ++amrlev) {
         for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
             int icomp = idim;
-            MultiFab::Xpay(m_beta_coeffs[amrlev][0][idim], 4./3.,
+            MultiFab::Xpay(m_b_coeffs[amrlev][0][idim], 4./3.,
                            m_kappa[amrlev][0][idim], 0, icomp, 1, 0);
         }
     }
@@ -221,7 +221,7 @@ MLEBTensorOp::apply (int amrlev, int mglev, MultiFab& out, MultiFab& in, BCMode 
 
     Array<MultiFab,AMREX_SPACEDIM>& fluxmf = m_tauflux[amrlev][mglev];
     iMultiFab const& mask = m_cc_mask[amrlev][mglev];
-    MultiFab const& etaebmf = *m_eb_beta_coeffs[amrlev][mglev];
+    MultiFab const& etaebmf = *m_eb_b_coeffs[amrlev][mglev];
     MultiFab const& kapebmf = m_eb_kappa[amrlev][mglev];
     Real bscalar = m_b_scalar;
 
@@ -306,7 +306,7 @@ MLEBTensorOp::compCrossTerms(int amrlev, int mglev, MultiFab const& mf,
     const auto dlo = amrex::lbound(domain);
     const auto dhi = amrex::ubound(domain);
 
-    Array<MultiFab,AMREX_SPACEDIM> const& etamf = m_beta_coeffs[amrlev][mglev];
+    Array<MultiFab,AMREX_SPACEDIM> const& etamf = m_b_coeffs[amrlev][mglev];
     Array<MultiFab,AMREX_SPACEDIM> const& kapmf = m_kappa[amrlev][mglev];
     Array<MultiFab,AMREX_SPACEDIM>& fluxmf = m_tauflux[amrlev][mglev];
 

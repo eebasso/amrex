@@ -166,7 +166,7 @@ MyTest::solveABecLaplacian ()
 
         for (int ilev = 0; ilev < nlevels; ++ilev)
         {
-            mlabec.setAlphaCoeffs(ilev, acoef[ilev]);
+            mlabec.setACoeffs(ilev, acoef[ilev]);
 
             Array<MultiFab,AMREX_SPACEDIM> face_bcoef;
             for (int idim = 0; idim < AMREX_SPACEDIM; ++idim)
@@ -177,7 +177,7 @@ MyTest::solveABecLaplacian ()
             }
             amrex::average_cellcenter_to_face(GetArrOfPtrs(face_bcoef),
                                               bcoef[ilev], geom[ilev]);
-            mlabec.setBetaCoeffs(ilev, amrex::GetArrOfConstPtrs(face_bcoef));
+            mlabec.setBCoeffs(ilev, amrex::GetArrOfConstPtrs(face_bcoef));
         }
 
         MLMG mlmg(mlabec);
@@ -224,7 +224,7 @@ MyTest::solveABecLaplacian ()
 
             mlabec.setScalars(ascalar, bscalar);
 
-            mlabec.setAlphaCoeffs(0, acoef[ilev]);
+            mlabec.setACoeffs(0, acoef[ilev]);
 
             Array<MultiFab,AMREX_SPACEDIM> face_bcoef;
             for (int idim = 0; idim < AMREX_SPACEDIM; ++idim)
@@ -235,7 +235,7 @@ MyTest::solveABecLaplacian ()
             }
             amrex::average_cellcenter_to_face(GetArrOfPtrs(face_bcoef),
                                               bcoef[ilev], geom[ilev]);
-            mlabec.setBetaCoeffs(0, amrex::GetArrOfConstPtrs(face_bcoef));
+            mlabec.setBCoeffs(0, amrex::GetArrOfConstPtrs(face_bcoef));
 
             MLMG mlmg(mlabec);
             mlmg.setMaxIter(max_iter);
@@ -308,7 +308,7 @@ MyTest::solveABecLaplacianInhomNeumann ()
 
         for (int ilev = 0; ilev < nlevels; ++ilev)
         {
-            mlabec.setAlphaCoeffs(ilev, acoef[ilev]);
+            mlabec.setACoeffs(ilev, acoef[ilev]);
 
             Array<MultiFab,AMREX_SPACEDIM> face_bcoef;
             for (int idim = 0; idim < AMREX_SPACEDIM; ++idim)
@@ -319,7 +319,7 @@ MyTest::solveABecLaplacianInhomNeumann ()
             }
             amrex::average_cellcenter_to_face(GetArrOfPtrs(face_bcoef),
                                               bcoef[ilev], geom[ilev]);
-            mlabec.setBetaCoeffs(ilev, amrex::GetArrOfConstPtrs(face_bcoef));
+            mlabec.setBCoeffs(ilev, amrex::GetArrOfConstPtrs(face_bcoef));
         }
 
         MLMG mlmg(mlabec);
@@ -366,7 +366,7 @@ MyTest::solveABecLaplacianInhomNeumann ()
 
             mlabec.setScalars(ascalar, bscalar);
 
-            mlabec.setAlphaCoeffs(0, acoef[ilev]);
+            mlabec.setACoeffs(0, acoef[ilev]);
 
             Array<MultiFab,AMREX_SPACEDIM> face_bcoef;
             for (int idim = 0; idim < AMREX_SPACEDIM; ++idim)
@@ -377,7 +377,7 @@ MyTest::solveABecLaplacianInhomNeumann ()
             }
             amrex::average_cellcenter_to_face(GetArrOfPtrs(face_bcoef),
                                               bcoef[ilev], geom[ilev]);
-            mlabec.setBetaCoeffs(0, amrex::GetArrOfConstPtrs(face_bcoef));
+            mlabec.setBCoeffs(0, amrex::GetArrOfConstPtrs(face_bcoef));
 
             MLMG mlmg(mlabec);
             mlmg.setMaxIter(max_iter);
@@ -446,8 +446,8 @@ MyTest::solveNodeABecLaplacian ()
 
             mlndabec.setScalars(ascalar, bscalar);
 
-            mlndabec.setAlphaCoeffs(0, acoef[ilev]);
-            mlndabec.setBetaCoeffs(0, bcoef[ilev]);
+            mlndabec.setACoeffs(0, acoef[ilev]);
+            mlndabec.setBCoeffs(0, bcoef[ilev]);
 
             MLMG mlmg(mlndabec);
             mlmg.setMaxIter(max_iter);
