@@ -185,8 +185,12 @@ void mlebabeclap_adotx_centroid (Box const& box, Array4<Real> const& y,
                 fzp *= bZ(i,j,k+1,n);
             }
 
+            // The contribution to `y` from `feb` should be B times the
+            // the area integral on the EB surface of the flux `-beta grad phi`
+            // divided by the cell volume
             Real feb = Real(0.0);
             if (is_eb_dirichlet && flag(i,j,k).isSingleValued()) {
+
                 Real dapx = apxm-apxp;
                 Real dapy = apym-apyp;
                 Real dapz = apzm-apzp;
@@ -195,22 +199,29 @@ void mlebabeclap_adotx_centroid (Box const& box, Array4<Real> const& y,
                 // Real anrmx = dapx * anorminv;
                 // Real anrmy = dapy * anorminv;
                 // Real anrmz = dapz * anorminv;
-                Real anrmx = dapx * dxinv[0];
-                Real anrmy = dapy * dxinv[1];
-                Real anrmz = dapz * dxinv[2];
+
+                Real anrmx = dhx*dapx;
+                Real anrmy = dhy*dapy;
+                Real anrmz = dhz*dapz;
+
+                // Real anrmx = dhx*(bX(i,j,k,n)*apxm - bX(i+1,j,k,n)*apxp);
+                // Real anrmy = dhy*(bY(i,j,k,n)*apym - bY(i,j+1,k,n)*apyp);
+                // Real anrmz = dhz*(bZ(i,j,k,n)*apzm - bZ(i,j,k+1,n)*apzp);
 
                 feb = grad_eb_of_phi_on_centroids_extdir(i,j,k,n,x,phieb,flag,ccent,bcent,vfrc,
                                                          anrmx,anrmy,anrmz,is_eb_inhomog,
                                                          on_x_face,domlo_x,domhi_x,
                                                          on_y_face,domlo_y,domhi_y,
                                                          on_z_face,domlo_z,domhi_z);
-                feb *= ba(i,j,k) * beb(i,j,k,n);
+                // feb *= ba(i,j,k) * beb(i,j,k,n);
+                feb *= beb(i,j,k,n);
             }
 
             y(i,j,k,n) = alpha*a(i,j,k)*x(i,j,k,n) + (Real(1.0)/kappa) *
                 (dhx*(apxm*fxm - apxp*fxp) +
                  dhy*(apym*fym - apyp*fyp) +
-                 dhz*(apzm*fzm - apzp*fzp) - dhx*feb);
+                 dhz*(apzm*fzm - apzp*fzp) - feb);
+                //  dhz*(apzm*fzm - apzp*fzp) - dhx*feb);
         }
     });
 }
@@ -315,7 +326,7 @@ void mlebabeclap_ebflux (int i, int j, int k, int n,
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 Real mlebabeclap_ebflux (int i, int j, int k, int n,
-                         Array4<Real const> const& x, Real kappa, 
+                         Array4<Real const> const& x, Real kappa,
                          Real anrmx, Real anrmy, Real anrmz,
                          Array4<Real const> const& bc,
                          Array4<Real const> const& phieb, bool is_inhomog) noexcept

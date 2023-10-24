@@ -27,7 +27,10 @@ void intercept_to_edge_centroid (AMREX_D_DECL(Array4<Real> const& excent,
                     if (levset(i,j,k) < levset(i+1,j,k)) { // right side covered
                         xcut -= Real(0.5);
                     }
-                    excent(i,j,k) = amrex::min(Real(0.5),amrex::max(Real(-0.5),xcut));
+                    if (xcut <= Real(-0.5) || xcut >= Real(0.5)) {
+                        amrex::Abort("EB2::intercept_to_edge_centroid: x-edge is cut but xcut is outside of range [-0.5, 0.5]");
+                    }
+                    // excent(i,j,k) = amrex::min(Real(0.5),amrex::max(Real(-0.5),xcut));
                 }
             });
         },
@@ -42,7 +45,10 @@ void intercept_to_edge_centroid (AMREX_D_DECL(Array4<Real> const& excent,
                     if (levset(i,j,k) < levset(i,j+1,k)) { // right side covered
                         ycut -= Real(0.5);
                     }
-                    eycent(i,j,k) = amrex::min(Real(0.5),amrex::max(Real(-0.5),ycut));
+                    if (ycut <= Real(-0.5) || ycut >= Real(0.5)) {
+                        amrex::Abort("EB2::intercept_to_edge_centroid: y-edge is cut but ycut is outside of range [-0.5, 0.5]");
+                    }
+                    // eycent(i,j,k) = amrex::min(Real(0.5),amrex::max(Real(-0.5),ycut));
                 }
             });
         },
@@ -57,7 +63,10 @@ void intercept_to_edge_centroid (AMREX_D_DECL(Array4<Real> const& excent,
                     if (levset(i,j,k) < levset(i,j,k+1)) { // right side covered
                         zcut -= Real(0.5);
                     }
-                    ezcent(i,j,k) = amrex::min(Real(0.5),amrex::max(Real(-0.5),zcut));
+                    if (zcut <= Real(-0.5) || zcut >= Real(0.5)) {
+                        amrex::Abort("EB2::intercept_to_edge_centroid: z-edge is cut but zcut is outside of range [-0.5, 0.5]");
+                    }
+                    // ezcent(i,j,k) = amrex::min(Real(0.5),amrex::max(Real(-0.5),zcut));
                 }
             });
         }
