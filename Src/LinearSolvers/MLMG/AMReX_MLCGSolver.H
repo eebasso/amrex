@@ -8,7 +8,9 @@
 namespace amrex {
 
 /**
- * \brief Multi-Level conjugate gradient method solver template class.
+ * \brief Multi-Level conjugate gradient methods solver.
+ *
+ * Implements both conjugate gradient (CG) and BiCGStab methods
  *
  * \tparam MF type acted on by linear operator, typically MultiFab
  */

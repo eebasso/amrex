@@ -5,6 +5,11 @@
 
 namespace amrex::EB2 {
 
+/**
+ * \brief Build cell, face, and edge types from \p m_levelset
+ *
+ * \param[out] celltype Stores cell flags
+ */
 void
 GFab::buildTypes (EBCellFlagFab& celltype)
 {

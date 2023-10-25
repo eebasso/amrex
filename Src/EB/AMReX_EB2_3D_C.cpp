@@ -374,33 +374,33 @@ void set_eb_cell (int i, int j, int k,
 }
 
 /**
- * \brief Build face area fractions, centroids, and pre-reqs for volume centroids
- * 
- * \param[in]  bx Box
- * \param[in]  cell 
- * \param[in]  fx EB2::Type for `y,z` faces
- * \param[in]  fy EB2::Type for `x,z` faces
- * \param[in]  fz EB2::Type for `x,y` faces
- * \param[in]  ex EB2::Type for `x` edges
- * \param[in]  ey EB2::Type for `y` edges
- * \param[in]  ez EB2::Type for `z` edges
- * \param[in]  levset EB levelset. Negative values mean covered, positive uncovered.
- * \param[in]  interx Intercept along `x` edges where \p levset = 0
- * \param[in]  intery Intercept along `y` edges where \p levset = 0
- * \param[in]  interz Intercept along `z` edges where \p levset = 0
- * \param[out] apx 
- * \param[out] apy 
- * \param[out] apz 
- * \param[out] fcx 
- * \param[out] fcy 
- * \param[out] fcz 
- * \param[out] m2x 
- * \param[out] m2y 
- * \param[out] m2z 
- * \param[in]  dx 
- * \param[in]  problo 
- * \param[in]  cover_multiple_cuts 
- * \return int 
+ * \brief Build area types, fractions, and centroids for faces, flags for cells,
+ * and pre-reqs for volume centroids.
+ *
+ * \param[in] bx Box
+ * \param[out] cell Flag indicates whether the cell is cut, regular, or covered.
+ * \param[out] fx EB2::Type for `y,z` faces
+ * \param[out] fy EB2::Type for `x,z` faces
+ * \param[out] fz EB2::Type for `x,y` faces
+ * \param[in] ex EB2::Type for `x` edges
+ * \param[in] ey EB2::Type for `y` edges
+ * \param[in] ez EB2::Type for `z` edges
+ * \param[in,out] levset EB levelset. Negative values mean covered, positive uncovered.
+ * \param[in] interx Intercept along `x` edges where \p levset = 0
+ * \param[in] intery Intercept along `y` edges where \p levset = 0
+ * \param[in] interz Intercept along `z` edges where \p levset = 0
+ * \param[out] apx Area fractions of `y,z` faces
+ * \param[out] apy Area fractions of `x,z` faces
+ * \param[out] apz Area fractions of `x,y` faces
+ * \param[out] fcx Area centroids on `y,z` faces
+ * \param[out] fcy Area fractions of `x,z` faces
+ * \param[out] fcz Area fractions of `x,y` faces
+ * \param[out] m2x Pre-req for volume centroid calculations
+ * \param[out] m2y Pre-req for volume centroid calculations
+ * \param[out] m2z Pre-req for volume centroid calculations
+ * \param[in]  dx Mesh size
+ * \param[in]  problo Problem domain lowest coordinates
+ * \return Pointer to host data, int number of multicuts
  */
 int build_faces (Box const& bx, Array4<EBCellFlag> const& cell,
                  Array4<Type_t> const& fx, Array4<Type_t> const& fy,

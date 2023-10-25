@@ -6,24 +6,16 @@
 
 namespace amrex {
 
-// Multi-Level nodal tensor Laplacian solver:
-//
-//   `del dot (sigma grad phi) = rhs`
-//
-// where `phi` and `rhs` are nodal multifab, and `sigma` is a constant
-// rank-2 symmetric tensor with AMREX_SPACEDIM choose 2 components.
-// Only periodic and Dirichlet are supported.
-//
-// Inherits from MLNodeLinOp
-
 /**
  * \brief Multi-Level nodal tensor Laplacian solver:
  *
  *   `del dot (sigma grad phi) = rhs`
  *
  * where `phi` and `rhs` are nodal multifab, and `sigma` is a constant
- * rank-2 symmetric tensor with AMREX_SPACEDIM choose 2 components.
- * Only periodic and Dirichlet are supported.
+ * rank-2 symmetric tensor with AMREX_SPACEDIM*(AMREX_SPACEDIM+1)/2
+ * components.
+ *
+ * Only periodic and Dirichlet BCs are supported.
  *
  * Inherits from MLNodeLinOp
  */
@@ -54,10 +46,10 @@ public:
 
     /**
      * \brief  The user can set the constant tensor by calling either setSigma or setBeta.
-     * 
-     * \param[in] a_sigma Input to be copied to sigma. 
-     * For 2d, a_sigma contains components xx, xy, and yy.
-     * For 3d, a_sigma contains components xx, xy, xz, yy, yz, and zz.
+     *
+     * \param[in] a_sigma Input to be copied to sigma.
+     *            For 2d, \p a_sigma contains components xx, xy, and yy.
+     *            For 3d, \p a_sigma contains components xx, xy, xz, yy, yz, and zz.
      */
     void setSigma (Array<Real,nelems> const& a_sigma) noexcept;
 

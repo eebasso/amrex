@@ -4,6 +4,11 @@
 
 namespace amrex::EB2 {
 
+/**
+ * \brief Given level set \p s , build cell, face and edge types.
+ *
+ * These types flag whether the geometric object is regular, covered, or cut.
+ */
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 void
 amrex_eb2_build_types (Box const& tbx, Box const& bxg2,

@@ -17,15 +17,18 @@ namespace amrex {
  *
  * Although the class has EB in the name, it works for non-EB build too.
  *
- * The linear opeartor solves
+ * For non-RZ coordinates, the linear operator solves
  *
- *   `del dot (sigma grad phi) = rhs`, for non-RZ, and
+ *   `del dot (sigma grad phi) = rhs'
+ *
+ * where `phi` and `rhs` are nodal multifab, and `sigma` is a tensor constant
+ * with only diagonal components. The EB is assumed to be Dirichlet.
+ *
+ * For RZ coordinates, the linear operator solve
  *
  *   `del dot (simga grad phi) - alpha/r^2 phi = rhs`, for RZ,
  *
- * where `phi` and `rhs` are nodal multifab, `sigma` is a tensor constant
- * with only diagonal components, and `alpha` is a scalar constant that is
- * zero by default. The EB is assumed to be Dirichlet.
+ * where `alpha` is a scalar constant that is zero by default.
  *
  * Inherits from MLNodeLinOp.
  */
@@ -71,7 +74,7 @@ public:
 
     // Phi on EB
     void setEBDirichlet (Real a_phi_eb);
-
+    // Phi on EB
     template <typename F>
     std::enable_if_t<IsCallableR<Real,F,AMREX_D_DECL(Real,Real,Real)>::value>
     setEBDirichlet (F&& f);

@@ -9,6 +9,7 @@ namespace amrex {
 
 /**
  * \brief Multi-Level Multi-Grid solver template class.
+ *
  * \tparam MF typename, typically MultiFab.
  */
 template <typename MF>

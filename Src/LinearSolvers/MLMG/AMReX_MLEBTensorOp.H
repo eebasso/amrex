@@ -7,7 +7,8 @@
 namespace amrex {
 
 /**
- * \brief Embedded boundary tensor solver for high Reynolds flows with small gradient in viscosity.
+ * \brief Cell-centered embedded boundary tensor solver for
+ * high Reynolds flows with small gradient in viscosity.
  *
  * The system it solves is
  *
@@ -92,6 +93,7 @@ public:
 
     void compVelGrad (int amrlev, const Array<MultiFab*,AMREX_SPACEDIM>& grads,
                       MultiFab& sol, Location loc) const;
+
     void setBCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta,
                      Location a_beta_loc) = delete;
     void setEBDirichlet (int amrlev, const MultiFab& phi, const MultiFab& beta) = delete;
