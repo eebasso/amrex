@@ -27,6 +27,7 @@ void mlebabeclap_adotx_centroid (Box const& box, Array4<Real> const& y,
                         GpuArray<Real,AMREX_SPACEDIM> const& dxinv,
                         Real alpha, Real beta, int ncomp) noexcept
 {
+    amrex::ignore_unused(ba);
     Real dhx = beta*dxinv[0]*dxinv[0];
     Real dhy = beta*dxinv[1]*dxinv[1];
     Real dhz = beta*dxinv[2]*dxinv[2];
@@ -190,24 +191,22 @@ void mlebabeclap_adotx_centroid (Box const& box, Array4<Real> const& y,
                 Real dapx = apxm-apxp;
                 Real dapy = apym-apyp;
                 Real dapz = apzm-apzp;
-                Real anorm = std::sqrt(dapx*dapx+dapy*dapy+dapz*dapz);
-                Real anorminv = Real(1.0)/anorm;
-                Real anrmx = dapx * anorminv;
-                Real anrmy = dapy * anorminv;
-                Real anrmz = dapz * anorminv;
+                Real anrmx = dapx * dhx;
+                Real anrmy = dapy * dhy;
+                Real anrmz = dapz * dhz;
 
                 feb = grad_eb_of_phi_on_centroids_extdir(i,j,k,n,x,phieb,flag,ccent,bcent,vfrc,
                                                          anrmx,anrmy,anrmz,is_eb_inhomog,
                                                          on_x_face,domlo_x,domhi_x,
                                                          on_y_face,domlo_y,domhi_y,
                                                          on_z_face,domlo_z,domhi_z);
-                feb *= ba(i,j,k) * beb(i,j,k,n);
+                feb *= beb(i,j,k,n);
             }
 
             y(i,j,k,n) = alpha*a(i,j,k)*x(i,j,k,n) + (Real(1.0)/kappa) *
                 (dhx*(apxm*fxm - apxp*fxp) +
                  dhy*(apym*fym - apyp*fyp) +
-                 dhz*(apzm*fzm - apzp*fzp) - dhx*feb);
+                 dhz*(apzm*fzm - apzp*fzp) - feb);
         }
     });
 }
@@ -228,6 +227,7 @@ void mlebabeclap_adotx (Box const& box, Array4<Real> const& y,
                         Real alpha, Real beta, int ncomp,
                         bool beta_on_centroid, bool phi_on_centroid) noexcept
 {
+    amrex::ignore_unused(ba);
     Real dhx = beta*dxinv[0]*dxinv[0];
     Real dhy = beta*dxinv[1]*dxinv[1];
     Real dhz = beta*dxinv[2]*dxinv[2];
@@ -409,11 +409,9 @@ void mlebabeclap_adotx (Box const& box, Array4<Real> const& y,
                 Real dapx = apxm-apxp;
                 Real dapy = apym-apyp;
                 Real dapz = apzm-apzp;
-                Real anorm = std::sqrt(dapx*dapx+dapy*dapy+dapz*dapz);
-                Real anorminv = Real(1.0)/anorm;
-                Real anrmx = dapx * anorminv;
-                Real anrmy = dapy * anorminv;
-                Real anrmz = dapz * anorminv;
+                Real anrmx = dapx * dhx;
+                Real anrmy = dapy * dhy;
+                Real anrmz = dapz * dhz;
 
                 Real phib = is_inhomog ? phieb(i,j,k,n) : Real(0.0);
 
@@ -452,13 +450,13 @@ void mlebabeclap_adotx (Box const& box, Array4<Real> const& y,
 
                 Real dphidn = (phib-phig)/dg;
 
-                feb = dphidn * ba(i,j,k) * beb(i,j,k,n);
+                feb = dphidn * beb(i,j,k,n);
             }
 
             y(i,j,k,n) = alpha*a(i,j,k)*x(i,j,k,n) + (Real(1.0)/kappa) *
                 (dhx*(apxm*fxm - apxp*fxp) +
                  dhy*(apym*fym - apyp*fyp) +
-                 dhz*(apzm*fzm - apzp*fzp) - dhx*feb);
+                 dhz*(apzm*fzm - apzp*fzp) - feb);
         }
     });
 }
@@ -479,6 +477,8 @@ void mlebabeclap_ebflux (int i, int j, int k, int n,
                          GpuArray<Real,AMREX_SPACEDIM> const& dxinv) noexcept
 {
     Real dhx = dxinv[0];
+    Real dhy = dxinv[1];
+    Real dhz = dxinv[2];
 
     if (!flag(i,j,k).isSingleValued())
     {
@@ -497,11 +497,9 @@ void mlebabeclap_ebflux (int i, int j, int k, int n,
         Real dapx = apxm-apxp;
         Real dapy = apym-apyp;
         Real dapz = apzm-apzp;
-        Real anorm = std::sqrt(dapx*dapx+dapy*dapy+dapz*dapz);
-        Real anorminv = Real(1.0)/anorm;
-        Real anrmx = dapx * anorminv;
-        Real anrmy = dapy * anorminv;
-        Real anrmz = dapz * anorminv;
+        Real anrmx = dapx * dhx;
+        Real anrmy = dapy * dhy;
+        Real anrmz = dapz * dhz;
 
         Real phib = is_inhomog ? phieb(i,j,k,n) : Real(0.0);
 
@@ -537,7 +535,7 @@ void mlebabeclap_ebflux (int i, int j, int k, int n,
             +       (gxy + gxyz)                    * x(ii,jj,k ,n)
             +       (-gxyz)                         * x(ii,jj,kk,n);
 
-        Real dphidn = dhx*(phib-phig)/dg;
+        Real dphidn = (phib-phig)/dg;
         feb(i,j,k,n) = -beb(i,j,k,n) * dphidn;
     }
 }
@@ -568,6 +566,7 @@ void mlebabeclap_gsrb (Box const& box,
                        bool is_dirichlet, bool beta_on_centroid, bool phi_on_centroid,
                        Box const& vbox, int redblack, int ncomp) noexcept
 {
+    amrex::ignore_unused(ba);
     constexpr Real omega = 1.15;
 
     const auto vlo = amrex::lbound(vbox);
@@ -835,11 +834,9 @@ void mlebabeclap_gsrb (Box const& box,
                         Real dapx = apxm-apxp;
                         Real dapy = apym-apyp;
                         Real dapz = apzm-apzp;
-                        Real anorm = std::sqrt(dapx*dapx+dapy*dapy+dapz*dapz);
-                        Real anorminv = Real(1.0)/anorm;
-                        Real anrmx = dapx * anorminv;
-                        Real anrmy = dapy * anorminv;
-                        Real anrmz = dapz * anorminv;
+                        Real anrmx = dapx * dhx;
+                        Real anrmy = dapy * dhy;
+                        Real anrmz = dapz * dhz;
                         Real bctx = bc(i,j,k,0);
                         Real bcty = bc(i,j,k,1);
                         Real bctz = bc(i,j,k,2);
@@ -875,10 +872,10 @@ void mlebabeclap_gsrb (Box const& box,
                             + (-gxyz) * phi(ii,jj,kk,n);
 
                         Real dphidn    = (    -phig)/dg;
-                        Real feb_gamma = -phig_gamma/dg * ba(i,j,k) * beb(i,j,k,n);
-                        gamma += vfrcinv*(-dhx)*feb_gamma;
-                        Real feb = dphidn * ba(i,j,k) * beb(i,j,k,n);
-                        rho += -vfrcinv*(-dhx)*feb;
+                        Real feb_gamma = -phig_gamma/dg * beb(i,j,k,n);
+                        gamma += vfrcinv * feb_gamma;
+                        Real feb = dphidn * beb(i,j,k,n);
+                        rho += -vfrcinv * feb;
                     }
 
                     Real res = rhs(i,j,k,n) - (gamma*phi(i,j,k,n) - rho);
@@ -1228,6 +1225,7 @@ void mlebabeclap_normalize (Box const& box, Array4<Real> const& phi,
                             Array4<Real const> const& beb,
                             bool is_dirichlet, bool beta_on_centroid, int ncomp) noexcept
 {
+    amrex::ignore_unused(ba);
     amrex::Loop(box, ncomp, [=] (int i, int j, int k, int n) noexcept
     {
         if (flag(i,j,k).isRegular())
@@ -1322,11 +1320,9 @@ void mlebabeclap_normalize (Box const& box, Array4<Real> const& phi,
                 Real dapx = apxm-apxp;
                 Real dapy = apym-apyp;
                 Real dapz = apzm-apzp;
-                Real anorm = std::sqrt(dapx*dapx+dapy*dapy+dapz*dapz);
-                Real anorminv = Real(1.0)/anorm;
-                Real anrmx = dapx * anorminv;
-                Real anrmy = dapy * anorminv;
-                Real anrmz = dapz * anorminv;
+                Real anrmx = dapx * dhx;
+                Real anrmy = dapy * dhy;
+                Real anrmz = dapz * dhz;
                 Real bctx = bc(i,j,k,0);
                 Real bcty = bc(i,j,k,1);
                 Real bctz = bc(i,j,k,2);
@@ -1350,8 +1346,8 @@ void mlebabeclap_normalize (Box const& box, Array4<Real> const& phi,
                 Real gyz = gy*gz;
                 Real gxyz = gx*gy*gz;
                 Real phig_gamma = (Real(1.0)+gx+gy+gz+gxy+gxz+gyz+gxyz);
-                Real feb_gamma = -phig_gamma/dg * ba(i,j,k) * beb(i,j,k,n);
-                gamma += vfrcinv*(-dhx)*feb_gamma;
+                Real feb_gamma = -phig_gamma/dg * beb(i,j,k,n);
+                gamma += vfrcinv*feb_gamma;
             }
 
             phi(i,j,k,n) /= gamma;
