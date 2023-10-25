@@ -42,34 +42,36 @@ class MultiFab
 public:
 
     /**
-    * \brief Constructs an empty MultiFab.  Data can be defined at a later
-    * time using the define member functions inherited
-    * from FabArray.
+    * \brief Constructs an empty MultiFab.
+    *
+    * Data can be defined at a later time using the define member functions
+    * inherited from FabArray.
     */
     MultiFab () noexcept;
 
     /**
-    * \brief Constructs an empty MultiFab.  Data can be defined at a later
-    * time using the define member functions inherited from FabArray.  If
-    * `define` is called later with a nullptr as MFInfo's arena, the default
-    * Arena `a` will be used.  If the arena in MFInfo is not a nullptr, the
-    * MFInfo's arena will be used.
+    * \brief Constructs an empty MultiFab.
+    *
+    * Data can be defined at a later time using the define member functions
+    * inherited from FabArray.  If `define` is called later with a nullptr
+    * as MFInfo's arena, the default Arena `a` will be used.  If the arena
+    * in MFInfo is not a nullptr, the MFInfo's arena will be used.
     */
     explicit MultiFab (Arena* a) noexcept;
 
     /**
-    * \brief
-    * Constructs a MultiFab
-    * \param bs a valid region
+    * \brief Constructs a MultiFab
+    *
+    * The size of the FArrayBox is given by the Box grown by \p ngrow, and
+    * the number of components is given by \p ncomp. If \p info is set to
+    * not allocating memory, then no FArrayBoxes are allocated at
+    * this time but can be defined later.
+    *
+    * \param bxs a valid region
     * \param dm a DistribuionMapping
     * \param ncomp number of components
     * \param ngrow number of cells the region grows
     * \param info MFInfo
-    * 
-    * The size of the FArrayBox is given by the Box grown by ngrow, and
-    * the number of components is given by ncomp. If info is set to
-    * not allocating memory, then no FArrayBoxes are allocated at
-    * this time but can be defined later.
     */
     MultiFab (const BoxArray&            bxs,
               const DistributionMapping& dm,
@@ -96,10 +98,11 @@ public:
 #endif
 
     /**
-     * \brief Make an alias MultiFab. maketype must be
-     * amrex::make_alias.  scomp is the starting component of the
-     * alias and ncomp is the number of components in the new aliasing
-     * MultiFab.
+     * \brief Make an alias MultiFab.
+     *
+     * \p maketype must be `amrex::make_alias`.
+     * \p scomp is the starting component of the alias and
+     * \p ncomp is the number of components in the new aliasing MultiFab.
      */
     MultiFab (const MultiFab& rhs, MakeType maketype, int scomp, int ncomp);
 
@@ -136,11 +139,13 @@ public:
 #endif
 
     MultiFab& operator= (Real r);
-    //
+
     /**
-    * \brief Returns the minimum value contained in component comp of the
-    * MultiFab.  The parameter nghost determines the number of
-    * boundary cells to search for the minimum.  The default is to
+    * \brief Returns the minimum value contained in component \p comp of the
+    * MultiFab.
+    *
+    * The parameter \p nghost determines the number of
+    * boundary cells to search for the minimum. The default is to
     * search only the valid regions of the FArrayBoxes.
     */
     [[nodiscard]] Real min (int comp,
@@ -155,26 +160,28 @@ public:
               int        nghost = 0,
               bool       local = false) const;
     /**
-    * \brief Returns the maximum value contained in component comp of the
-    * MultiFab.  The parameter nghost determines the number of
-    * boundary cells to search for the maximum.  The default is to
-    * search only the valid regions of the FArrayBoxes.
-    */
+     * \brief Returns the maximum value contained in component \p comp of the
+     * MultiFab.
+     *
+     * The parameter \p nghost determines the number of
+     * boundary cells to search for the maximum. The default is to
+     * search only the valid regions of the FArrayBoxes.
+     */
     [[nodiscard]] Real max (int comp,
               int nghost = 0,
               bool local = false) const;
     /**
-    * \brief Identical to the previous max() function, but confines its
-    * search to intersection of Box b and the MultiFab.
-    */
+     * \brief Identical to the previous `max()` function, but confines its
+     * search to intersection of Box b and the MultiFab.
+     */
     [[nodiscard]] Real max (const Box& region,
               int        comp,
               int        nghost = 0,
               bool       local = false) const;
     /**
-    * \brief Returns the maximum *absolute* value contained in
-    * component comp of the MultiFab.
-    */
+     * \brief Returns the maximum *absolute* value contained in
+     * component comp of the MultiFab.
+     */
     [[nodiscard]] Real norm0 (int comp = 0, int nghost = 0, bool local = false, bool ignore_covered = false ) const;
     [[nodiscard]] Real norminf (int comp = 0, int nghost = 0, bool local = false, bool ignore_covered = false ) const {
         return norm0(comp,nghost,local,ignore_covered);
@@ -191,95 +198,96 @@ public:
     using FabArray<FArrayBox>::norminf;
 
     /**
-    * \brief Returns the maximum *absolute* values contained in
-    * each component of "comps" of the MultiFab.  "nghost" ghost cells are used.
-    */
+     * \brief Returns the maximum *absolute* values contained in
+     * each component of \p comps of the MultiFab. \p nghost ghost cells are used.
+     */
     [[nodiscard]] Vector<Real> norm0 (const Vector<int>& comps, int nghost = 0, bool local = false, bool ignore_covered = false ) const;
     [[nodiscard]] Vector<Real> norminf (const Vector<int>& comps, int nghost = 0, bool local = false, bool ignore_covered = false) const {
         return norm0(comps,nghost,local,ignore_covered);
     }
 
     /**
-    * \brief Returns the L1 norm of component "comp" over the MultiFab.
-    * No ghost cells are used.  This version has no double counting for nodal data.
-    */
+     * \brief Returns the L1 norm of component \p comp over the MultiFab.
+     * No ghost cells are used.  This version has no double counting for nodal data.
+     */
     [[nodiscard]] Real norm1 (int comp, const Periodicity& period, bool ignore_covered = false) const;
     /**
-    * \brief Returns the L1 norm of component "comp" over the MultiFab.
-    * ngrow ghost cells are used.
-    */
+     * \brief Returns the L1 norm of component \p comp over the MultiFab.
+     * \p ngrow ghost cells are used.
+     */
     [[nodiscard]] Real norm1 (int comp = 0, int ngrow = 0, bool local = false) const;
     /**
-    * \brief Returns the L1 norm of each component of "comps" over the MultiFab.
-    * ngrow ghost cells are used.
-    */
+     * \brief Returns the L1 norm of each component of "comps" over the MultiFab.
+     * ngrow ghost cells are used.
+     */
     [[nodiscard]] Vector<Real> norm1 (const Vector<int>& comps, int ngrow = 0, bool local = false) const;
     /**
-    * \brief Returns the L2 norm of component "comp" over the MultiFab.
-    * No ghost cells are used.
-    */
+     * \brief Returns the L2 norm of component \p comp over the MultiFab.
+     * No ghost cells are used.
+     */
     [[nodiscard]] Real norm2 (int comp = 0) const;
     /**
-    * \brief Returns the L2 norm of component "comp" over the MultiFab.
-    * No ghost cells are used. This version has no double counting for nodal data.
-    */
+     * \brief Returns the L2 norm of component \p comp over the MultiFab.
+     * No ghost cells are used. This version has no double counting for nodal data.
+     */
     [[nodiscard]] Real norm2 (int comp, const Periodicity& period) const;
     /**
-    * \brief Returns the L2 norm of each component of "comps" over the MultiFab.
-    * No ghost cells are used.
-    */
+     * \brief Returns the L2 norm of each component of \p comps over the MultiFab.
+     * No ghost cells are used.
+     */
     [[nodiscard]] Vector<Real> norm2 (const Vector<int>& comps) const;
     /**
-    * \brief Returns the sum of component "comp" over the MultiFab -- no ghost cells are included.
-    */
+     * \brief Returns the sum of component \p comp over the MultiFab -- no ghost cells are included.
+     */
     [[nodiscard]] Real sum (int comp = 0, bool local = false) const;
 
     using FabArray<FArrayBox>::sum;
 
     /**
-    * \brief Same as sum with local=false, but for non-cell-centered data, this
-    *        skips non-unique points that are owned by multiple boxes.
-    */
+     * \brief Same as sum with \p local =false, but for non-cell-centered data, this
+     * skips non-unique points that are owned by multiple boxes.
+     */
     [[nodiscard]] Real sum_unique (int comp = 0,
                      bool local = false,
                      const Periodicity& period = Periodicity::NonPeriodic()) const;
     /**
-    * \brief Adds the scalar value val to the value of each cell in the
-    * specified subregion of the MultiFab.  The subregion consists
-    * of the num_comp components starting at component comp.
-    * The value of nghost specifies the number of cells in the
-    * boundary region of each FArrayBox in the subregion that should
-    * be modified.
-    */
+     * \brief Adds the scalar value \p val to the value of each cell in the
+     * specified subregion of the MultiFab.
+     *
+     * The subregion consists of the \p num_comp components starting at component \p comp.
+     * The value of nghost specifies the number of cells in the
+     * boundary region of each FArrayBox in the subregion that should
+     * be modified.
+     */
     void plus (Real val,
                int  comp,
                int  num_comp,
                int  nghost = 0);
     /**
-    * \brief Identical to the previous version of plus(), with the
-    * restriction that the subregion is further constrained to
-    * the intersection with Box region.
-    */
+     * \brief Identical to the previous version of plus(), with the
+     * restriction that the subregion is further constrained to
+     * the intersection with Box region.
+     */
     void plus (Real       val,
                const Box& region,
                int        comp,
                int        num_comp,
                int        nghost = 0);
     /**
-    * \brief Adds the scalar value val to the value of each cell in the
-    * valid region of each component of the MultiFab.  The value
-    * of nghost specifies the number of cells in the boundary
-    * region that should be modified.
-    */
+     * \brief Adds the scalar value \p val to the value of each cell in the
+     * valid region of each component of the MultiFab. The value
+     * of \p nghost specifies the number of cells in the boundary
+     * region that should be modified.
+     */
     void plus (Real val,
                int  nghost);
     /**
-    * \brief Adds the scalar value val to the value of each cell in the
-    * valid region of each component of the MultiFab, that also
-    * intersects the Box region.  The value of nghost specifies the
-    * number of cells in the boundary region of each FArrayBox in
-    * the subregion that should be modified.
-    */
+     * \brief Adds the scalar value \p val to the value of each cell in the
+     * valid region of each component of the MultiFab, that also
+     * intersects the Box region. The value of nghost specifies the
+     * number of cells in the boundary region of each FArrayBox in
+     * the subregion that should be modified.
+     */
     void plus (Real       val,
                const Box& region,
                int        nghost);

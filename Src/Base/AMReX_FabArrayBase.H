@@ -31,7 +31,7 @@ namespace EB2 { class IndexSpace; }
 /**
  * \brief Base class for FabArray.
  *
- * Not to be confused with FArrayBox or `FAB` shorthands. 
+ * Not to be confused with FArrayBox or `FAB` shorthands.
  * Can be read as FArrayBox-like Array Base.
  *
  */
