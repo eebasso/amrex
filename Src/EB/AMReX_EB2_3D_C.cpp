@@ -850,37 +850,6 @@ int build_faces (Box const& bx, Array4<EBCellFlag> const& cell,
 }
 
 /**
- * \brief Build cells
- *
- * 
- */
-/**
- * \brief
- *
- * Calls on EB2::set_eb_cell and EB2::set_connection_flags
- *
- * \param[in,out] cell 
- * \param[in] apx Area fraction on the `y,z` face
- * \param[in] apy Area fraction on the `x,z` face
- * \param[in] apz Area fraction on the `x,y` face
- * \param[in] fcx Face centroid, specifies `(y,z)` position with n=2 components
- * \param[in] fcy Face centroid, specifies `(x,z)` position with n=2 components
- * \param[in] fcz Face centroid, specifies `(x,y)` position with n=2 components
- * \param[in] m2x Necessary to compute \p vcent via least squares
- * \param[in] m2y Necessary to compute \p vcent via least squares
- * \param[in] m2z Necessary to compute \p vcent via least squares
- * \param[out] vfrac Cell volume fraction
- * \param[out] vcent Cell volume centroid
- * \param[out] barea Embedded boundary normalized area
- * \param[out] bcent Embedded boundary centroid
- * \param[out] bnorm Unit vector normal to embedded boundary surface
- * \param[in] small_volfrac 
- * \param[out] is_small_cell True means at least 5 out of 6 faces are fully covered or \p vfrac < \p small_volfrac .
- * \param[out] is_multicut True means there are two cuts at the opposite corners.
- */
-
-
-/**
  * \brief Build cell volume fractions and centroids, EB areas, centroids, and normal vectors
  * , and set connection flags
  *
@@ -902,7 +871,7 @@ int build_faces (Box const& bx, Array4<EBCellFlag> const& cell,
  * \param[out] barea Embedded boundary normalized area
  * \param[out] bcent Embedded boundary centroid
  * \param[out] bnorm Unit vector normal to embedded boundary surface
- * \param ctmp 
+ * \param ctmp Temporary copy of \p cell
  * \param[in,out] levset Levelset, negative indicate covered
  * \param[in] small_volfrac Threshold for \p vfrac to be considered a "small cell"
  * \param[out] nsmallcells Number of small cells

@@ -55,7 +55,7 @@ public:
 
     /**
      * \brief Sets sigma = I - beta beta^T
-     * 
+     *
      * \param[in] a_beta AMREX_SPACEDIM vector, typically v/c
      */
     void setBeta (Array<Real,AMREX_SPACEDIM> const& a_beta) noexcept;
