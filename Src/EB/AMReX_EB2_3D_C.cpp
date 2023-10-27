@@ -27,27 +27,24 @@ void set_covered (const int i, const int j, const int k,
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 /**
- * \brief Set vfrac, vcent, barea, bcent, and bnorm for an EB
+ * \brief Set cell volume fractions and centroids, and EB area, centroid, and normal vector.
  *
- * \param[in]  i Dimension `x` index
- * \param[in]  j Dimension `y` index
- * \param[in]  k Dimension `z` index
- * \param[in]  cell EBCellFlag
- * \param[in]  apx Area fractions on the `y,z` face
- * \param[in]  apy Area fractions on the `x,z` face
- * \param[in]  apz Area fractions on the `x,y` face
- * \param[in]  fcx Face centroid, specifies `(y,z)` position with n=2 components
- * \param[in]  fcy Face centroid, specifies `(x,z)` position with n=2 components
- * \param[in]  fcz Face centroid, specifies `(x,y)` position with n=2 components
- * \param[in]  m2x Necessary to compute \p vcent via least squares
- * \param[in]  m2y Necessary to compute \p vcent via least squares
- * \param[in]  m2z Necessary to compute \p vcent via least squares
+ * \param[in,out] cell Indicates whether a cell is regular, covered, or cut
+ * \param[in] apx Area fraction on the `y,z` face
+ * \param[in] apy Area fraction on the `x,z` face
+ * \param[in] apz Area fraction on the `x,y` face
+ * \param[in] fcx Face centroid, specifies `(y,z)` position with n=2 components
+ * \param[in] fcy Face centroid, specifies `(x,z)` position with n=2 components
+ * \param[in] fcz Face centroid, specifies `(x,y)` position with n=2 components
+ * \param[in] m2x Used to compute \p vcent via least squares
+ * \param[in] m2y Used to compute \p vcent via least squares
+ * \param[in] m2z Used to compute \p vcent via least squares
  * \param[out] vfrac Cell volume fraction
  * \param[out] vcent Cell volume centroid
  * \param[out] barea Embedded boundary normalized area
  * \param[out] bcent Embedded boundary centroid
  * \param[out] bnorm Unit vector normal to embedded boundary surface
- * \param[in]  small_volfrac Threshold for vfrac to be considered a "small cell"
+ * \param[in] small_volfrac Threshold for \p vfrac to be considered a "small cell"
  * \param[out] is_small_cell True means at least 5 out of 6 faces are fully covered or \p vfrac < \p small_volfrac .
  * \param[out] is_multicut True means there are two cuts at the opposite corners.
  */
@@ -209,6 +206,16 @@ void set_eb_data (const int i, const int j, const int k,
 
 }
 
+/**
+ * \brief Compute area fractions, centroids, and pre-reqs for building cell volume centroids.
+ *
+ * \param[out] areafrac Area fraction.
+ * \param[out] centx x-component of face centroid.
+ * \param[out] centy y-component of frac centroid.
+ * \param[out] Sx2 Pre-req for building cell volume fractions and centroids.
+ * \param[out] Sy2 Pre-req for building cell volume fractions and centroids.
+ * \param[out] Sxy Pre-req for building cell volume fractions and centroids.
+ */
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 void cut_face_2d (Real& areafrac, Real& centx, Real& centy,
                   Real& Sx2, Real& Sy2, Real& Sxy,
@@ -328,6 +335,28 @@ void cut_face_2d (Real& areafrac, Real& centx, Real& centy,
     }
 }
 
+/**
+ * \brief Set cell volume fractions and centroids, and EB area, centroid, and normal vector.
+ *
+ * \param[in,out] cell Indicates whether a cell is regular, covered, or cut
+ * \param[in] apx Area fraction on the `y,z` face
+ * \param[in] apy Area fraction on the `x,z` face
+ * \param[in] apz Area fraction on the `x,y` face
+ * \param[in] fcx Face centroid, specifies `(y,z)` position with n=2 components
+ * \param[in] fcy Face centroid, specifies `(x,z)` position with n=2 components
+ * \param[in] fcz Face centroid, specifies `(x,y)` position with n=2 components
+ * \param[in] m2x Necessary to compute \p vcent via least squares
+ * \param[in] m2y Necessary to compute \p vcent via least squares
+ * \param[in] m2z Necessary to compute \p vcent via least squares
+ * \param[out] vfrac Cell volume fraction
+ * \param[out] vcent Cell volume centroid
+ * \param[out] barea Embedded boundary normalized area
+ * \param[out] bcent Embedded boundary centroid
+ * \param[out] bnorm Unit vector normal to embedded boundary surface
+ * \param[in] small_volfrac Threshold for \p vfrac to be considered a "small cell"
+ * \param[out] is_small_cell True means at least 5 out of 6 faces are fully covered or \p vfrac < \p small_volfrac .
+ * \param[out] is_multicut True means there are two cuts at the opposite corners.
+ */
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 void set_eb_cell (int i, int j, int k,
                   Array4<EBCellFlag> const& cell, Array4<Real> const& apx,
@@ -393,8 +422,8 @@ void set_eb_cell (int i, int j, int k,
  * \param[out] apy Area fractions of `x,z` faces
  * \param[out] apz Area fractions of `x,y` faces
  * \param[out] fcx Area centroids on `y,z` faces
- * \param[out] fcy Area fractions of `x,z` faces
- * \param[out] fcz Area fractions of `x,y` faces
+ * \param[out] fcy Area centroids of `x,z` faces
+ * \param[out] fcz Area centroids of `x,y` faces
  * \param[out] m2x Pre-req for volume centroid calculations
  * \param[out] m2y Pre-req for volume centroid calculations
  * \param[out] m2z Pre-req for volume centroid calculations
@@ -820,6 +849,65 @@ int build_faces (Box const& bx, Array4<EBCellFlag> const& cell,
     return *hp;
 }
 
+/**
+ * \brief Build cells
+ *
+ * 
+ */
+/**
+ * \brief
+ *
+ * Calls on EB2::set_eb_cell and EB2::set_connection_flags
+ *
+ * \param[in,out] cell 
+ * \param[in] apx Area fraction on the `y,z` face
+ * \param[in] apy Area fraction on the `x,z` face
+ * \param[in] apz Area fraction on the `x,y` face
+ * \param[in] fcx Face centroid, specifies `(y,z)` position with n=2 components
+ * \param[in] fcy Face centroid, specifies `(x,z)` position with n=2 components
+ * \param[in] fcz Face centroid, specifies `(x,y)` position with n=2 components
+ * \param[in] m2x Necessary to compute \p vcent via least squares
+ * \param[in] m2y Necessary to compute \p vcent via least squares
+ * \param[in] m2z Necessary to compute \p vcent via least squares
+ * \param[out] vfrac Cell volume fraction
+ * \param[out] vcent Cell volume centroid
+ * \param[out] barea Embedded boundary normalized area
+ * \param[out] bcent Embedded boundary centroid
+ * \param[out] bnorm Unit vector normal to embedded boundary surface
+ * \param[in] small_volfrac 
+ * \param[out] is_small_cell True means at least 5 out of 6 faces are fully covered or \p vfrac < \p small_volfrac .
+ * \param[out] is_multicut True means there are two cuts at the opposite corners.
+ */
+
+
+/**
+ * \brief Build cell volume fractions and centroids, EB areas, centroids, and normal vectors
+ * , and set connection flags
+ *
+ * \param cell Indicates whether a cell is regular, covered, or cut
+ * \param[in,out] fx Coverage type for `y,z` faces
+ * \param[in,out] fy Coverage type for `x,z` faces
+ * \param[in,out] fz Coverage type for `x,y` faces
+ * \param[in] apx Area fractions on the `y,z` face
+ * \param[in] apy Area fractions on the `x,z` face
+ * \param[in] apz Area fractions on the `x,y` face
+ * \param[in] fcx Face centroid, specifies `(y,z)` position with n=2 components
+ * \param[in] fcy Face centroid, specifies `(x,z)` position with n=2 components
+ * \param[in] fcz Face centroid, specifies `(x,y)` position with n=2 components
+ * \param[in] m2x Necessary to compute \p vcent via least squares
+ * \param[in] m2y Necessary to compute \p vcent via least squares
+ * \param[in] m2z Necessary to compute \p vcent via least squares
+ * \param[out] vfrac Cell volume fraction
+ * \param[out] vcent Cell volume centroid
+ * \param[out] barea Embedded boundary normalized area
+ * \param[out] bcent Embedded boundary centroid
+ * \param[out] bnorm Unit vector normal to embedded boundary surface
+ * \param ctmp 
+ * \param[in,out] levset Levelset, negative indicate covered
+ * \param[in] small_volfrac Threshold for \p vfrac to be considered a "small cell"
+ * \param[out] nsmallcells Number of small cells
+ * \param[out] nmulticuts Number of multicut cells
+ */
 void build_cells (Box const& bx, Array4<EBCellFlag> const& cell,
                   Array4<Type_t> const& fx, Array4<Type_t> const& fy,
                   Array4<Type_t> const& fz, Array4<Real> const& apx,

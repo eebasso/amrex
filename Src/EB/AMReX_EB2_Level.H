@@ -153,8 +153,11 @@ GShopLevel<G>::GShopLevel (IndexSpace const* is, G const& gshop, const Geometry&
 /**
  * \brief Build edge, face, volume, and EB centroids along with area and volume fractions
  *
- * Calls on `buildTypes` to build edge, face, and cell types
- * Calls on `getIntercept` to calculate edge intercepts
+ * Calls on `EB2::GFab::buildTypes` to build edge, face, and cell types.
+ * Calls on `gshop.getIntercept` to calculate edge intercepts, i.e., points along edges where levelset=0.
+ * Calls on `EB2::build_faces` to obtain face area fractions and face centroids.
+ * Calls on `EB2::build_cells` to build volume fractions and volume centroids for cells, and EB centroids, areas, and normals.
+ * Calls on `EB2::intercept_to_edge_centroid` to convert intercepts to edge centroids that range between -0.5 and +0.5.
  */
 template <typename G>
 void
@@ -352,8 +355,8 @@ GShopLevel<G>::define_fine (G const& gshop, const Geometry& geom,
 
                 gfab.buildTypes(cellflag);
 
-                Array4<Real const> const& clst = levelset.const_array(); // constant ref to levelset
-                Array4<Real      > const&  lst = levelset.array();
+                Array4<Real const> const& clst = levelset.const_array(); // levelset constant array
+                Array4<Real      > const&  lst = levelset.array(); // levelset array
                 Array4<EBCellFlag> const& cfg = m_cellflag.array(mfi);
                 Array4<Real> const& vfr = m_volfrac.array(mfi);
                 Array4<Real> const& ctr = m_centroid.array(mfi);
