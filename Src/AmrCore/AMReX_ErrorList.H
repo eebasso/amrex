@@ -348,7 +348,6 @@ private:
 *
 * Container class for ErrorRecs.
 */
-
 class ErrorList
 {
 public:

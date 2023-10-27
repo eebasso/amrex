@@ -159,7 +159,6 @@ public:
 *
 * Bilinear interpolation on node centered data.
 */
-
 class NodeBilinear
     :
     public Interpolater
@@ -285,7 +284,6 @@ public:
 * sum_ivar a(ic,jc,ivar)*fab(if,jf,ivar) = 0 is satisfied
 * in all fine cells if,jf covering coarse cell ic,jc.
 */
-
 class CellConservativeLinear
     :
     public Interpolater
@@ -343,7 +341,6 @@ protected:
 * Linear conservative interpolation on cell centered data
 * but with protection against undershoots or overshoots.
 */
-
 class CellConservativeProtected
     :
     public CellConservativeLinear
@@ -450,7 +447,6 @@ public:
 /**
 * \brief Piecewise Constant interpolation on cell centered data.
 */
-
 class PCInterp
     :
     public Interpolater
@@ -511,7 +507,6 @@ public:
 * in constructing the polynomial, the average of the polynomial inside that
 * cell is equal to the cell averaged value of the original data.
 */
-
 class CellConservativeQuartic
     :
     public Interpolater
@@ -573,7 +568,6 @@ public:
 * a given coarse cell will have the same divergence, even when the coarse
 * grid divergence is spatially varying.
 */
-
 class FaceDivFree
     :
     public Interpolater
@@ -666,7 +660,6 @@ public:
 *
 * Bilinear interpolation on data.
 */
-
 class FaceLinear
     :
     public Interpolater
@@ -788,7 +781,6 @@ public:
 *
 * Quartic interpolation on cell centered data.
 */
-
 class CellQuartic
     :
     public Interpolater

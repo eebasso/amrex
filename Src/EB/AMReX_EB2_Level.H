@@ -355,8 +355,10 @@ GShopLevel<G>::define_fine (G const& gshop, const Geometry& geom,
 
                 gfab.buildTypes(cellflag);
 
-                Array4<Real const> const& clst = levelset.const_array(); // levelset constant array
-                Array4<Real      > const&  lst = levelset.array(); // levelset array
+                // levelset constant array
+                Array4<Real const> const& clst = levelset.const_array();
+                // levelset array
+                Array4<Real      > const&  lst = levelset.array();
                 Array4<EBCellFlag> const& cfg = m_cellflag.array(mfi);
                 Array4<Real> const& vfr = m_volfrac.array(mfi);
                 Array4<Real> const& ctr = m_centroid.array(mfi);
@@ -380,13 +382,19 @@ GShopLevel<G>::define_fine (G const& gshop, const Geometry& geom,
 
 #if (AMREX_SPACEDIM == 3)
                 auto& edgetype = gfab.getEdgeType();
-                Array4<Type_t const> const& xdg = edgetype[0].const_array(); // x-edge type
-                Array4<Type_t const> const& ydg = edgetype[1].const_array(); // y-edge type
-                Array4<Type_t const> const& zdg = edgetype[2].const_array(); // z-edge type
+                // x-edge type
+                Array4<Type_t const> const& xdg = edgetype[0].const_array();
+                // y-edge type
+                Array4<Type_t const> const& ydg = edgetype[1].const_array();
+                // z-edge type
+                Array4<Type_t const> const& zdg = edgetype[2].const_array();
 
-                Array4<Real> const& xip = m_edgecent[0].array(mfi); // x-edge intercept
-                Array4<Real> const& yip = m_edgecent[1].array(mfi); // y-edge intercept
-                Array4<Real> const& zip = m_edgecent[2].array(mfi); // z-edge intercept
+                //x-edge intercept
+                Array4<Real> const& xip = m_edgecent[0].array(mfi);
+                // y-edge intercept
+                Array4<Real> const& yip = m_edgecent[1].array(mfi);
+                // z-edge intercept
+                Array4<Real> const& zip = m_edgecent[2].array(mfi);
 
                 if (iter == 0) {
 #ifdef AMREX_USE_GPU

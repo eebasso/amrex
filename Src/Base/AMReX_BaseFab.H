@@ -3496,16 +3496,16 @@ BaseFab<T>::protected_divide (const BaseFab<T>& src, const Box& srcbox, const Bo
 }
 
 /**
-* Linear Interpolation / Extrapolation
-* Result is (t2-t)/(t2-t1)*f1 + (t-t1)/(t2-t1)*f2
-* Data is taken from b1 region of f1, b2 region of f2
-* and stored in b region of this FAB.
-* Boxes b, b1 and b2 must be the same size.
-* Data is taken from component comp1 of f1, comp2 of f2,
-* and stored in component comp of this FAB.
-* This fab is returned as a reference for chaining.
-*/
-
+ * \brief Linear Interpolation / Extrapolation
+ *
+ * Result is (t2-t)/(t2-t1)*f1 + (t-t1)/(t2-t1)*f2
+ * Data is taken from b1 region of f1, b2 region of f2
+ * and stored in b region of this FAB.
+ * Boxes b, b1 and b2 must be the same size.
+ * Data is taken from component comp1 of f1, comp2 of f2,
+ * and stored in component comp of this FAB.
+ * This fab is returned as a reference for chaining.
+ */
 template <class T>
 template <RunOn run_on>
 BaseFab<T>&

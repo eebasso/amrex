@@ -2832,7 +2832,7 @@ template <class FAB>
 void
 FabArray<FAB>::shift (const IntVect& v)
 {
-    clearThisBD();  // The new boxarry will have a different ID.
+    clearThisBD();  // The new boxarray will have a different ID.
     boxarray.shift(v);
     addThisBD();
 #ifdef AMREX_USE_OMP

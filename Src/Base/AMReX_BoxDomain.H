@@ -62,7 +62,7 @@ std::ostream& operator<< (std::ostream& os, const BoxDomain& bd);
  * Note that a BoxDomain is NOT a BoxList due to the protected inheritance.
  *
  * This is a concrete class, not a polymorphic one.
-*/
+ */
 class BoxDomain
     :
     protected BoxList

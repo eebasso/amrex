@@ -14,19 +14,20 @@
 namespace amrex {
 
 //
-// A Descriptor of the Long Integer type
+// 
 
 /**
-* This class is meant to hold all information needed to completely
-* describe the "int" or "Long" type on a machine.  To describe an integer both
-* the number of bytes and their ordering, relative to canonical
-* ordering 1 .. sizeof(Long), needs to be specified.
-* This allows us to write out integers in the native format on a machine,
-* and then by also saving the IntDescriptor, we can read them back in on
-* another machine and have enough information to construct the exact same
-* values.
-*/
-
+ * \brief A Descriptor of the Long Integer type
+ *
+ * This class is meant to hold all information needed to completely
+ * describe the "int" or "Long" type on a machine.  To describe an integer both
+ * the number of bytes and their ordering, relative to canonical
+ * ordering 1 .. sizeof(Long), needs to be specified.
+ * This allows us to write out integers in the native format on a machine,
+ * and then by also saving the IntDescriptor, we can read them back in on
+ * another machine and have enough information to construct the exact same
+ * values.
+ */
 class IntDescriptor
 {
 

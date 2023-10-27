@@ -33,18 +33,19 @@
 #include <float.h>
 #endif
 
-/*
-  Real is a typedef specifying the precision of the floating-point
-  calculations in C++ code.  It will be either float or double
-  depending upon which of the macros BL_USE_FLOAT or
-  BL_USE_DOUBLE, respectively, is defined during compilations.  For
-  portability, you should write floating-point code in terms of this
-  typedef, instead of using float or double directly.
-
-  Note that exactly one of these macros must be defined
-  when compiling any module that uses floating-point.
-*/
-
+/**
+ * \brief Real is a typedef specifying the precision of the floating-point
+ * calculations in C++ code.
+ *
+ * It will be either float or double
+ * depending upon which of the macros BL_USE_FLOAT or
+ * BL_USE_DOUBLE, respectively, is defined during compilations.  For
+ * portability, you should write floating-point code in terms of this
+ * typedef, instead of using float or double directly.
+ *
+ * Note that exactly one of these macros must be defined
+ * when compiling any module that uses floating-point.
+ */
 #ifdef BL_USE_FLOAT
 typedef float amrex_real; // NOLINT(modernize-use-using)
 // We need to define these to get around a CUDA 9.2 bug that breaks std::numeric_limits

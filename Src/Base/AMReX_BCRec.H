@@ -8,12 +8,12 @@
 
 namespace amrex {
 /**
-* \brief Boundary Condition Records.
-* Necessary information and functions for computing boundary conditions.
-*/
-
-// This class has standard layout.  And we should keep it so!
-
+ * \brief Boundary Condition Records.
+ *
+ * Necessary information and functions for computing boundary conditions.
+ * This class has standard layout.  And we should keep it so!
+ *
+ */
 class BCRec
 {
 public:

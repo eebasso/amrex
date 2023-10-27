@@ -1,16 +1,15 @@
 
 #include <AMReX_MultiFab.H>
 
+using namespace amrex;
+
 /**
- * Initialize Data on Multifab
+ * \brief Initialize Data on Multifab
  *
  * \param S_tmp Pointer to Multifab where data is to be initialized.
  * \param geom Pointer to Multifab's geometry data.
  *
  */
-
-using namespace amrex;
-
 void initdata (MultiFab& S_tmp, const Geometry& geom){
 
     const GpuArray<Real, AMREX_SPACEDIM> dx = geom.CellSizeArray();

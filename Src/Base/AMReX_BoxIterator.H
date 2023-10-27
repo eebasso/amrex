@@ -16,7 +16,7 @@ namespace amrex
    * \brief Iterates through the IntVect's of a Box.
    *
    * BoxIterator iterates through the IntVect's of a box.  The actual
-   * sequence of IntVects is implementation-specific.
+   * sequence of IntVect's is implementation-specific.
    *
    * Typical usage:
    *
@@ -34,19 +34,19 @@ namespace amrex
   class BoxIterator
   {
   public:
-    ///
     /**
-       Default constructor.  This constructs an invalid iterator.
-       The user must call define before using.
-    */
+     * \brief Default constructor.
+     *
+     * This constructs an invalid iterator. The user must call define before using.
+     *
+     */
     BoxIterator () noexcept = default;
 
-    ///
     /**
-       Constructs a BoxIterator and associates it with a Box.
-       Arguments:
-       a_bx (not modified) the Box to iterate over.
-    */
+     * \brief Constructs a BoxIterator and associates it with a Box.
+     *
+     * \param a_bx (not modified) the Box to iterate over.
+     */
     explicit BoxIterator (const Box& a_bx) noexcept;
 
     void setBox (const Box& a_bx) noexcept;

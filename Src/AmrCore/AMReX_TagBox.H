@@ -144,7 +144,6 @@ public:
 *
 * A container class for TagBoxes.
 */
-
 class TagBoxArray
     :
     public FabArray<TagBox>

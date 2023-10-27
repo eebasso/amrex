@@ -563,7 +563,6 @@ public:
     * \param only_valid
     * \param only_local
     */
-
     Long NumberOfParticlesAtLevel (int level, bool only_valid = true, bool only_local = false) const;
 
     Vector<Long> NumberOfParticlesInGrid  (int level, bool only_valid = true, bool only_local = false) const;

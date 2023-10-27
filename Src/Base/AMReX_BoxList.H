@@ -169,14 +169,16 @@ public:
     //! Applies Box::shiftHalf(IntVect) to each Box in BoxList.
     BoxList& shiftHalf (const IntVect& iv);
     /**
-    * \brief Merge adjacent Boxes in this BoxList. Return the number
-    * of Boxes merged.  If "best" is specified we do a single
-    * bruteforce pass over the list checking each Box against
-    * all Boxes after it in the list to see if they can be
-    * merged.  If "best" is not specified we limit how fair
-    * afield we look for possible matches.  The "best" algorithm
-    * is O(N-squared) while the other algorithm is O(N).
-    */
+     * \brief Merge adjacent Boxes in this BoxList. Return the number
+     * of Boxes merged.
+     *
+     * If "best" is specified we do a single
+     * bruteforce pass over the list checking each Box against
+     * all Boxes after it in the list to see if they can be
+     * merged.  If "best" is not specified we limit how fair
+     * afield we look for possible matches.  The "best" algorithm
+     * is O(N-squared) while the other algorithm is O(N).
+     */
     int simplify (bool best = false);
     //! Assuming the boxes are nicely ordered
     int ordered_simplify ();
@@ -196,9 +198,9 @@ public:
     */
     BoxList& surroundingNodes () noexcept;
     /**
-    * \brief Applies surroundingNodes(Box,int) to each Box in
-    * BoxList.  See the documentation of Box for details.
-    */
+     * \brief Applies surroundingNodes(Box,int) to each Box in
+     * BoxList.  See the documentation of Box for details.
+     */
     BoxList& surroundingNodes (int dir) noexcept;
     //! Applies Box::enclosedCells() to each Box in the BoxList.
     BoxList& enclosedCells () noexcept;

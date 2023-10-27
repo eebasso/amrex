@@ -338,7 +338,6 @@ private:
 *
 * DeriveList manages and provides access to the list of DeriveRecs.
 */
-
 class DeriveList
 {
 public:

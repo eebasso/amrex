@@ -210,7 +210,6 @@ public:
      is possible for an RealVect to be neither greater than or equal
      to, less than or equal to, nor equal to another.
   */
-
   AMREX_GPU_HOST_DEVICE inline
   bool operator>= (const RealVect& p) const noexcept;
 

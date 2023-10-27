@@ -137,7 +137,6 @@ private:
 *
 * A container class for Cluster.
 */
-
 class ClusterList
 {
 public:

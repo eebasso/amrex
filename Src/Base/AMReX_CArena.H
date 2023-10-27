@@ -18,11 +18,12 @@ namespace amrex {
 struct MemStat;
 
 /**
-* \brief A Concrete Class for Dynamic Memory Management using first fit.
-* This is a coalescing memory manager.  It allocates (possibly) large
-* chunks of heap space and apportions it out as requested.  It merges
-* together neighboring chunks on each free().
-*/
+ * \brief A Concrete Class for Dynamic Memory Management using first fit.
+ *
+ * This is a coalescing memory manager.  It allocates (possibly) large
+ * chunks of heap space and apportions it out as requested.  It merges
+ * together neighboring chunks on each free().
+ */
 class CArena
     :
     public Arena

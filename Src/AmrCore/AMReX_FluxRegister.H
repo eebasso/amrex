@@ -10,10 +10,10 @@ namespace amrex {
 
 
 /**
-* \brief Flux Register.
-*
-* Stores and manipulates fluxes at coarse-fine interfaces.
-*/
+ * \brief Flux Register.
+ *
+ * Stores and manipulates fluxes at coarse-fine interfaces.
+ */
 class FluxRegister
     :
     public BndryRegister

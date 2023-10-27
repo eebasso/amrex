@@ -60,13 +60,13 @@ public:
 };
 
 /**
-* \class Geometry
-* \brief Rectangular problem domain geometry.
-*
-* This class describes problem domain and coordinate system for
-* RECTANGULAR problem domains.  Since the problem domain is RECTANGULAR,
-* periodicity is meaningful.
-*/
+ * \class Geometry
+ * \brief Rectangular problem domain geometry.
+ *
+ * This class describes problem domain and coordinate system for
+ * RECTANGULAR problem domains.  Since the problem domain is RECTANGULAR,
+ * periodicity is meaningful.
+ */
 class Geometry
     :
     public CoordSys

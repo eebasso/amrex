@@ -56,7 +56,9 @@ namespace amrex
                              int                num,
                              int                mindigits = 5);
     /**
-    *  \brief Creates the specified directories.  path may be either a full pathname
+    *  \brief Creates the specified directories.
+    *
+    *  path may be either a full pathname
     *  or a relative pathname.  It will create all the directories in the
     *  pathname, if they don't already exist, so that on successful return the
     *  pathname refers to an existing directory.  Returns true or false

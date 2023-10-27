@@ -429,11 +429,10 @@ private:
 };
 
 /**
-* A List of StateDescriptors.
-*
-* A container class for StateDescriptors.
-*/
-
+ * \brief A List of StateDescriptors.
+ *
+ * A container class for StateDescriptors.
+ */
 class DescriptorList
 {
 public:

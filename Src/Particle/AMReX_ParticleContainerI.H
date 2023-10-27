@@ -560,11 +560,9 @@ ParticleContainer_impl<ParticleType, NArrayReal, NArrayInt, Allocator, CellAssig
 }
 
 /**
- * Adds the number of particles in each cell to the values currently located in
+ * \brief Adds the number of particles in each cell to the values currently located in
  * the input MultiFab.
  */
-
-
 template <typename ParticleType, int NArrayReal, int NArrayInt,
           template<class> class Allocator, class CellAssignor>
 void
