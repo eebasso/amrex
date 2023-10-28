@@ -23,17 +23,17 @@ namespace amrex
 class BoxCommHelper;
 
 /**
-* \brief A Rectangular Domain on an Integer Lattice
-*
-* A Box is an abstraction for defining discrete regions of
-* SPACEDIM indexing space.  Boxes have an IndexType, which defines
-* IndexType::CELL or IndexType::NODE based points for each direction
-* and a low and high INTVECT which defines the lower and upper corners
-* of the Box.  Boxes can exist in positive and negative indexing space.
-*
-* Box is a dimension dependent class, so SPACEDIM must be
-* defined as either 1, 2, or 3 when compiling.
-*/
+ * \brief A Rectangular Domain on an Integer Lattice
+ *
+ * A Box is an abstraction for defining discrete regions of
+ * SPACEDIM indexing space.  Boxes have an IndexType, which defines
+ * IndexType::CELL or IndexType::NODE based points for each direction
+ * and a low and high INTVECT which defines the lower and upper corners
+ * of the Box.  Boxes can exist in positive and negative indexing space.
+ *
+ * Box is a dimension dependent class, so SPACEDIM must be
+ * defined as either 1, 2, or 3 when compiling.
+ */
 class Box
 {
     friend MPI_Datatype ParallelDescriptor::Mpi_typemap<Box>::type();
@@ -836,15 +836,15 @@ AMREX_FORCE_INLINE
 Box&
 Box::convert (IndexType t) noexcept
 {
-   for (int dir = 0; dir < AMREX_SPACEDIM; dir++)
-   {
-      const auto typ = t[dir];
-      const auto bitval = btype[dir];
-      const int off = typ - bitval;
-      bigend.shift(dir,off);
-      btype.setType(dir, (IndexType::CellIndex) typ);
-   }
-   return *this;
+    for (int dir = 0; dir < AMREX_SPACEDIM; dir++)
+    {
+        const auto typ = t[dir];
+        const auto bitval = btype[dir];
+        const int off = typ - bitval;
+        bigend.shift(dir,off);
+        btype.setType(dir, (IndexType::CellIndex) typ);
+    }
+    return *this;
 }
 
 AMREX_GPU_HOST_DEVICE

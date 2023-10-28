@@ -12,13 +12,13 @@
 namespace amrex {
 
 /**
-* \brief Cell-Based or Node-Based Indices
-*
-* The class IndexType defines an index as being cell based or node (edge)
-* based in each of the AMREX_SPACEDIM directions.  This class defines an
-* enumerated type CellIndex to be either CELL or NODE; i.e. each of the
-* AMREX_SPACEDIM dimensions must be either CELL or NODE.
-*/
+ * \brief Cell-Based or Node-Based Indices
+ *
+ * The class IndexType defines an index as being cell based or node (edge)
+ * based in each of the AMREX_SPACEDIM directions.  This class defines an
+ * enumerated type CellIndex to be either CELL or NODE; i.e. each of the
+ * AMREX_SPACEDIM dimensions must be either CELL or NODE.
+ */
 class IndexType
 {
     friend MPI_Datatype ParallelDescriptor::Mpi_typemap<IndexType>::type();

@@ -1575,7 +1575,7 @@ void AmrData::FillVar(Vector<FArrayBox *> &destFabs, const Vector<Box> &destBoxe
 
 // ---------------------------------------------------------------
 void AmrData::FillInterior(FArrayBox &/*dest*/, int /*level*/, const Box &/*subbox*/) {
-   amrex::Abort("Error:  should not be in AmrData::FillInterior");
+  amrex::Abort("Error:  should not be in AmrData::FillInterior");
 }
 
 

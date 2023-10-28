@@ -177,96 +177,96 @@ class IntVect;
 
 
 /**
-* \brief  Parse Parameters From Command Line and Input Files
-*
-*  The ParmParse class is used to interpret parameters passed in to a program
-*  from the command line and an arbitrary collection of input files.  The
-*  parameters are stored in static table that can be queried by any object
-*  of type ParmParse.  A parameter is a  "definition".  A definition is
-*  of the form "\<name\> = \<value\>\<value\>...\<value\>".  It is stored in the table
-*  as a name, value-list pair.
-*
-*  In the following example, niter is a definition with the single
-*  integer value 10; name is a definition with the string value "big
-*  code" and dx is a definition with the two floating point values 0.5
-*  and 0.75 and iv is an IntVect(5,4)
-*
-*  prog niter = 10 name = "big code" dx = 0.5 0.75 iv=(5,4)
-*
-*  The ParmParse class has two constructors.  The first is responsible for
-*  building the table and is usually called by the main routine of an
-*  application.  It has arguments for the command line argc and argv parameters,
-*  as well as an optional filename argument for reading definitions from an
-*  input file.  The table is built by reading the input file first (if it
-*  exists) with the command line arguments added to the end of the table.
-*  The order of a definition in the table is significant, so command line
-*  parameters can be used to override definitions in the input file.  A
-*  definition of the explicit form: FILE=\<filename\> is not added to the table
-*  but is a directive to include the named file at that point in the table.
-*
-*  The second constructor is generally used by other classes in the code.  It
-*  permits access to the table via a large collection of query functions.
-*  Both constructors have an optional prefix argument that narrows the search
-*  to entries in the table with the same prefix.  For example, let PlanR be a
-*  ParmParse object with code prefix "ope".  PlanR.get("val",v) will look for
-*  an entry in the parameter list of the form: ope.val==\<value\>, and will
-*  reject all entries not starting with the correct code prefix.
-*
-*  The query functions search the table for definition names that match a given
-*  string (and prefix) and return values from the corresponding value list.
-*  The values can be returned as ints, Vector\<int\>s, floats, Vector\<float\>s,
-*  doubles, Vector\<double\>s, std::strings, or Vector\<aSring\>s.  All values in the
-*  table are stored as std::string objects, but if an int, float, or double is
-*  requested, the translation is done automatically.  In the previous example,
-*  the value of niter could be returned as either an std::string, an int, a double,
-*  or a float.  The values of dx can be returned as std::strings, floats, or
-*  doubles, but the value of name can be returned only as an std::string.
-*
-*  Comments in an input file include all text from a # character to the
-*  end of the line.  Here is a sample input file:
-*
-*     niter = 100
-*
-*     title = "Double Wammy"
-*
-*     cell_size = 0.5 0.75
-*
-*     plot.var = Density 1 10
-*
-*     plot.var = Energy  5 12
-*
-*     bigarray = 1 2 3 4 5 6 7 8 \
-*                9 10 11 12
-*
-*     multi_line_string = "This is a
-*                          multi-line string."
-*
-*     aBox    = ((0,0) (5,5))
-*
-*     test = apple "boy blue" 10 20 30 40
-*
-*     FILE = prob_file
-*
-*  Preprocessing of AMREX_SPACEDIM is supported. It supports #if, #elif,
-*  #else, and #endif.  The condition must be `AMREX_SPACEDIM op D`, where op
-*  is >, <, >=, <=, or ==, and D is 1, 2, or 3. The parentheses around the
-*  condition are optional. Some examples are shown below.
-*
-*    #if (AMREX_SPACEDIM == 1)
-*    n_cell = 256
-*    #elif (AMREX_SPACEDIM == 2)
-*    n_cell = 128 128
-*    #else
-*    n_cell = 64 64 64
-*    #endif
-*
-*    #if AMREX_SPACEDIM >= 2
-*    t = 0.5
-*    #else
-*    t = 1.5
-*    #endif
-*
-*/
+ * \brief  Parse Parameters From Command Line and Input Files
+ *
+ * The ParmParse class is used to interpret parameters passed in to a program
+ * from the command line and an arbitrary collection of input files.  The
+ * parameters are stored in static table that can be queried by any object
+ * of type ParmParse.  A parameter is a  "definition".  A definition is
+ * of the form "\<name\> = \<value\>\<value\>...\<value\>".  It is stored in the table
+ * as a name, value-list pair.
+ *
+ * In the following example, niter is a definition with the single
+ * integer value 10; name is a definition with the string value "big
+ * code" and dx is a definition with the two floating point values 0.5
+ * and 0.75 and iv is an IntVect(5,4)
+ *
+ * prog niter = 10 name = "big code" dx = 0.5 0.75 iv=(5,4)
+ *
+ * The ParmParse class has two constructors.  The first is responsible for
+ * building the table and is usually called by the main routine of an
+ * application.  It has arguments for the command line argc and argv parameters,
+ * as well as an optional filename argument for reading definitions from an
+ * input file.  The table is built by reading the input file first (if it
+ * exists) with the command line arguments added to the end of the table.
+ * The order of a definition in the table is significant, so command line
+ * parameters can be used to override definitions in the input file.  A
+ * definition of the explicit form: FILE=\<filename\> is not added to the table
+ * but is a directive to include the named file at that point in the table.
+ *
+ * The second constructor is generally used by other classes in the code.  It
+ * permits access to the table via a large collection of query functions.
+ * Both constructors have an optional prefix argument that narrows the search
+ * to entries in the table with the same prefix.  For example, let PlanR be a
+ * ParmParse object with code prefix "ope".  PlanR.get("val",v) will look for
+ * an entry in the parameter list of the form: ope.val==\<value\>, and will
+ * reject all entries not starting with the correct code prefix.
+ *
+ * The query functions search the table for definition names that match a given
+ * string (and prefix) and return values from the corresponding value list.
+ * The values can be returned as ints, Vector\<int\>s, floats, Vector\<float\>s,
+ * doubles, Vector\<double\>s, std::strings, or Vector\<aSring\>s.  All values in the
+ * table are stored as std::string objects, but if an int, float, or double is
+ * requested, the translation is done automatically.  In the previous example,
+ * the value of niter could be returned as either an std::string, an int, a double,
+ * or a float.  The values of dx can be returned as std::strings, floats, or
+ * doubles, but the value of name can be returned only as an std::string.
+ *
+ * Comments in an input file include all text from a # character to the
+ * end of the line.  Here is a sample input file:
+ *
+ *    niter = 100
+ *
+ *    title = "Double Wammy"
+ *
+ *    cell_size = 0.5 0.75
+ *
+ *    plot.var = Density 1 10
+ *
+ *    plot.var = Energy  5 12
+ *
+ *    bigarray = 1 2 3 4 5 6 7 8 \
+ *               9 10 11 12
+ *
+ *    multi_line_string = "This is a
+ *                         multi-line string."
+ *
+ *    aBox    = ((0,0) (5,5))
+ *
+ *    test = apple "boy blue" 10 20 30 40
+ *
+ *    FILE = prob_file
+ *
+ * Preprocessing of AMREX_SPACEDIM is supported. It supports #if, #elif,
+ * #else, and #endif.  The condition must be `AMREX_SPACEDIM op D`, where op
+ * is >, <, >=, <=, or ==, and D is 1, 2, or 3. The parentheses around the
+ * condition are optional. Some examples are shown below.
+ *
+ *   #if (AMREX_SPACEDIM == 1)
+ *   n_cell = 256
+ *   #elif (AMREX_SPACEDIM == 2)
+ *   n_cell = 128 128
+ *   #else
+ *   n_cell = 64 64 64
+ *   #endif
+ *
+ *   #if AMREX_SPACEDIM >= 2
+ *   t = 0.5
+ *   #else
+ *   t = 1.5
+ *   #endif
+ *
+ */
 class ParmParse
 {
 public:

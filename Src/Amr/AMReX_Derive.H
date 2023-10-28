@@ -92,14 +92,14 @@ class DescriptorList;
 
 
 /**
-* \brief Derived Type Record
-*
-* Computes quantities derived from state data.
-*
-* DeriveRec is designed to compute quantities which can be derived
-* from the state data contained in AmrLevel and its derivatives. Some
-* examples might be kinetic energy, vorticity, concentration gradients ...
-*/
+ * \brief Derived Type Record
+ *
+ * Computes quantities derived from state data.
+ *
+ * DeriveRec is designed to compute quantities which can be derived
+ * from the state data contained in AmrLevel and its derivatives. Some
+ * examples might be kinetic energy, vorticity, concentration gradients ...
+ */
 class DeriveRec
 {
    friend class DeriveList;
@@ -334,10 +334,10 @@ private:
 
 
 /**
-* \brief A list of DeriveRecs.
-*
-* DeriveList manages and provides access to the list of DeriveRecs.
-*/
+ * \brief A list of DeriveRecs.
+ *
+ * DeriveList manages and provides access to the list of DeriveRecs.
+ */
 class DeriveList
 {
 public:

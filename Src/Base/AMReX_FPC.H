@@ -8,13 +8,13 @@
 namespace amrex {
 
 /**
-* \brief A Collection of Floating-Point Constants Supporting FAB I/O
-*
-* This class is a poor-person's namespace of floating-point constants
-* used in support of FAB I/O.  Since we can't assume the existence of
-* namespaces, and we don't like global constants, we make them static
-* constant data members of this class.
-*/
+ * \brief A Collection of Floating-Point Constants Supporting FAB I/O
+ *
+ * This class is a poor-person's namespace of floating-point constants
+ * used in support of FAB I/O.  Since we can't assume the existence of
+ * namespaces, and we don't like global constants, we make them static
+ * constant data members of this class.
+ */
 class FPC
 {
 public:

@@ -16,10 +16,10 @@ class ClusterList;
 
 
 /**
-* \brief A cluster of tagged cells.
-*
-* Utility class for tagging error cells.
-*/
+ * \brief A cluster of tagged cells.
+ *
+ * Utility class for tagging error cells.
+ */
 class Cluster
 {
 public:
@@ -133,10 +133,10 @@ private:
 
 
 /**
-* \brief A list of Cluster objects
-*
-* A container class for Cluster.
-*/
+ * \brief A list of Cluster objects
+ *
+ * A container class for Cluster.
+ */
 class ClusterList
 {
 public:

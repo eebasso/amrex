@@ -22,25 +22,25 @@ public:
 };
 
 /**
-* \brief  A Fortran Array of ints
-
-*  iFortran Array Box's (generally called iFAB's) are objects constructed
-*  to emulate the FORTRAN array.  Useful operations can be performed
-*  upon FAB's in C++, and they provide a convenient interface to
-*  FORTRAN when it is necessary to retreat into that language.
-
-*  IArrayBox is derived from BaseFab<int>.
-*  IArrayBox adds additional useful capabilities which make sense
-*  for int types, such as L**p norms.
-
-*  The C pre-processor macro AMREX_SPACEDIM must be defined to use
-*  this class.  The internal precision of FARRAYBOX objects is
-*  set by defining either BL_USE_FLOAT or BL_USE_DOUBLE
-
-*  This is NOT a polymorphic class.
-
-*  This class does NOT provide a copy constructor or assignment operator.
-*/
+ * \brief  A Fortran Array of ints
+ *
+ * iFortran Array Box's (generally called iFAB's) are objects constructed
+ * to emulate the FORTRAN array.  Useful operations can be performed
+ * upon FAB's in C++, and they provide a convenient interface to
+ * FORTRAN when it is necessary to retreat into that language.
+ *
+ * IArrayBox is derived from BaseFab<int>.
+ * IArrayBox adds additional useful capabilities which make sense
+ * for int types, such as L**p norms.
+ *
+ * The C pre-processor macro AMREX_SPACEDIM must be defined to use
+ * this class.  The internal precision of FARRAYBOX objects is
+ * set by defining either BL_USE_FLOAT or BL_USE_DOUBLE
+ *
+ * This is NOT a polymorphic class.
+ *
+ * This class does NOT provide a copy constructor or assignment operator.
+ */
 class IArrayBox
     :
     public BaseFab<int>

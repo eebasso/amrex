@@ -9,10 +9,10 @@
 namespace amrex {
 
 /**
-* \brief This provides length of period for periodic domains.  0 means it is
-* not periodic in that direction.
-* It is also assumed that the periodic domain starts with index 0.
-*/
+ * \brief This provides length of period for periodic domains.  0 means it is
+ * not periodic in that direction.
+ * It is also assumed that the periodic domain starts with index 0.
+ */
 class Periodicity
 {
 public:

@@ -26,9 +26,9 @@ namespace amrex {
 class IArrayBox;
 
 /**
-* \brief File I/O for FabArray<FArrayBox>.
-*  Wrapper class for reading/writing FabArray<FArrayBox> objects to disk in various "smart" ways.
-*/
+ * \brief File I/O for FabArray<FArrayBox>.
+ * Wrapper class for reading/writing FabArray<FArrayBox> objects to disk in various "smart" ways.
+ */
 class VisMF
     : public VisMFBuffer
 {

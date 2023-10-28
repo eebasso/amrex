@@ -27,8 +27,8 @@ namespace amrex {
                                                    int scomp)>;
 
 /**
-* \brief Attributes of StateData.
-*/
+ * \brief Attributes of StateData.
+ */
 class StateDescriptor
 {
     friend class DescriptorList;

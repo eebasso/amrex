@@ -9,20 +9,19 @@
 namespace amrex {
 
 /**
-        A Mask is a derived Fab class whose elements maintain a logical
-        "TRUE" or "FALSE" state.  A Mask can perform several elementary
-        logical operations on its data members.
-
-        Implement a logical class Mask to maintain the TRUE or FALSE state
-        of elements in a box.  A Mask can perform element-wise logical
-        operations, but is otherwise very similar to an FArrayBox object.
-        A Mask object can set its components based on comparing (a subregion
-        of a) real-valued FArrayBox element magnitudes to a scalar value, or
-        by "and", "or" operations with (the a subregion of) other Masks.
-
-        This class does NOT provide a copy constructor or assignment operator.
-*/
-
+ * \brief A Mask is a derived Fab class whose elements maintain a logical
+ * "TRUE" or "FALSE" state.  A Mask can perform several elementary
+ * logical operations on its data members.
+ *
+ * Implement a logical class Mask to maintain the TRUE or FALSE state
+ * of elements in a box.  A Mask can perform element-wise logical
+ * operations, but is otherwise very similar to an FArrayBox object.
+ * A Mask object can set its components based on comparing (a subregion
+ * of a) real-valued FArrayBox element magnitudes to a scalar value, or
+ * by "and", "or" operations with (the a subregion of) other Masks.
+ *
+ * This class does NOT provide a copy constructor or assignment operator.
+ */
 class Mask final
     :
     public BaseFab<int>

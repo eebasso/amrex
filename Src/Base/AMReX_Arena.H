@@ -78,10 +78,9 @@ struct ArenaInfo
 };
 
 /**
-* \brief
-* A virtual base class for objects that manage their own dynamic
-* memory allocation.
-*/
+ * \brief A virtual base class for objects that manage their own dynamic
+ * memory allocation.
+ */
 class Arena
 {
 public:

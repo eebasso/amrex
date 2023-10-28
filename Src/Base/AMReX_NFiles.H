@@ -14,15 +14,15 @@ namespace amrex {
 
 
 /**
-* \brief This class encapsulates writing to nfiles.
-*
-* an example:
-*
-* for(NFilesIter nfi(nOutFiles, filePrefix); nfi.ReadyToWrite(); ++nfi) {
-*   // do your writing here
-*   nfi.Stream().write((const char *) data.dataPtr(), nChars);
-* }
-*/
+ * \brief This class encapsulates writing to nfiles.
+ *
+ * an example:
+ *
+ * for(NFilesIter nfi(nOutFiles, filePrefix); nfi.ReadyToWrite(); ++nfi) {
+ *   // do your writing here
+ *   nfi.Stream().write((const char *) data.dataPtr(), nChars);
+ * }
+ */
 class NFilesIter
 {
   public:

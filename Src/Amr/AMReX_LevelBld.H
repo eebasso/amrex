@@ -13,12 +13,11 @@ namespace amrex {
 
 
 /**
-* \brief Builds problem-specific AmrLevels.
-*
-* Abstract base class specifying an interface for building problem-specific
-* AmrLevels.
-*/
-
+ * \brief Builds problem-specific AmrLevels.
+ *
+ * Abstract base class specifying an interface for building problem-specific
+ * AmrLevels.
+ */
 class LevelBld
 {
 public:

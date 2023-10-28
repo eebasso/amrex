@@ -16,16 +16,15 @@ enum class Direction : int { AMREX_D_DECL(x = 0, y = 1, z = 2) };
 class OrientationIter;
 
 /**
-* \brief Encapsulation of the Orientation of the Faces of a Box
-*
-* This class encapsulates the orientation of the faces of a Box by
-* providing an ordering of each of the faces of a Box in AMREX_SPACEDIM
-* dimensions.  This allows iterating over all the faces of a Box.  The
-* ordering first traverses the AMREX_SPACEDIM low sides from direction 0 ..
-* AMREX_SPACEDIM-1 and then the AMREX_SPACEDIM high sides from direction 0 ..
-* AMREX_SPACEDIM-1.
-*/
-
+ * \brief Encapsulation of the Orientation of the Faces of a Box
+ *
+ * This class encapsulates the orientation of the faces of a Box by
+ * providing an ordering of each of the faces of a Box in AMREX_SPACEDIM
+ * dimensions.  This allows iterating over all the faces of a Box.  The
+ * ordering first traverses the AMREX_SPACEDIM low sides from direction 0 ..
+ * AMREX_SPACEDIM-1 and then the AMREX_SPACEDIM high sides from direction 0 ..
+ * AMREX_SPACEDIM-1.
+ */
 class Orientation
 {
 public:

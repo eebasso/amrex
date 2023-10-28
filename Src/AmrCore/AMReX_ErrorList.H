@@ -94,15 +94,13 @@ extern "C"
 
 
 /**
-* \brief Error Record.
-*
-*
-* ErrorRec is designed to tag cells for regridding based on the state
-* data contained in AmrLevel and its derivatives.  It is conceivable that
-* actual error tagging will be through derivation, so provision is made
-* for this as well.
-*/
-
+ * \brief Error Record.
+ *
+ * ErrorRec is designed to tag cells for regridding based on the state
+ * data contained in AmrLevel and its derivatives.  It is conceivable that
+ * actual error tagging will be through derivation, so provision is made
+ * for this as well.
+ */
 class ErrorRec
 {
 public:
@@ -344,10 +342,10 @@ private:
 
 
 /**
-* \brief A List of ErrorRecs.
-*
-* Container class for ErrorRecs.
-*/
+ * \brief A List of ErrorRecs.
+ *
+ * Container class for ErrorRecs.
+ */
 class ErrorList
 {
 public:

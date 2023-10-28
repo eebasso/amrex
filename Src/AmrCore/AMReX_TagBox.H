@@ -16,10 +16,10 @@ namespace amrex {
 
 
 /**
-* \brief Tagged cells in a Box.
-*
-* This class is used to tag cells in a Box that need addition refinement.
-*/
+ * \brief Tagged cells in a Box.
+ *
+ * This class is used to tag cells in a Box that need addition refinement.
+ */
 class TagBox final
     :
     public BaseFab<char>
@@ -140,10 +140,10 @@ public:
 
 
 /**
-* \brief An array of TagBoxes.
-*
-* A container class for TagBoxes.
-*/
+ * \brief An array of TagBoxes.
+ *
+ * A container class for TagBoxes.
+ */
 class TagBoxArray
     :
     public FabArray<TagBox>

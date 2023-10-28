@@ -24,12 +24,12 @@ class AmrInSituBridge;
 #endif
 
 /**
-* \brief Manage hierarchy of levels for time-dependent AMR computations.
-*
-* The Amr class is designed to manage parts of the computation  which do
-* not belong on a single level, like establishing and updating the hierarchy
-* of levels, global timestepping, and managing the different AmrLevels
-*/
+ * \brief Manage hierarchy of levels for time-dependent AMR computations.
+ *
+ * The Amr class is designed to manage parts of the computation  which do
+ * not belong on a single level, like establishing and updating the hierarchy
+ * of levels, global timestepping, and managing the different AmrLevels
+ */
 class Amr
     : public AmrCore
 {
@@ -81,9 +81,9 @@ public:
     const std::string& subcyclingMode() const noexcept { return subcycling_mode; }
 
     /**
-    * \brief What is "level" in Amr::timeStep?  This is only relevant if we are still in Amr::timeStep;
-    *      it is set back to -1 on leaving Amr::timeStep.
-    */
+     * \brief What is "level" in Amr::timeStep?  This is only relevant if we are still in Amr::timeStep;
+     *      it is set back to -1 on leaving Amr::timeStep.
+     */
     int level_being_advanced () const noexcept { return which_level_being_advanced; }
     //! Physical time.
     Real cumTime () const noexcept { return cumtime; }

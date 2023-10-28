@@ -13,10 +13,10 @@ class FArrayBox;
 class IArrayBox;
 
 /**
-* \brief Virtual base class for interpolaters.
-*
-* Specifies interpolater interface for coarse-to-fine interpolation in space.
-*/
+ * \brief Virtual base class for interpolaters.
+ *
+ * Specifies interpolater interface for coarse-to-fine interpolation in space.
+ */
 class Interpolater
     : public InterpBase
 {
@@ -155,10 +155,10 @@ public:
 
 
 /**
-* \brief Bilinear interpolation on node centered data.
-*
-* Bilinear interpolation on node centered data.
-*/
+ * \brief Bilinear interpolation on node centered data.
+ *
+ * Bilinear interpolation on node centered data.
+ */
 class NodeBilinear
     :
     public Interpolater
@@ -213,11 +213,10 @@ public:
 
 
 /**
-* \brief Bilinear interpolation on cell centered data.
-*
-* Bilinear interpolation on cell centered data.
-*/
-
+ * \brief Bilinear interpolation on cell centered data.
+ *
+ * Bilinear interpolation on cell centered data.
+ */
 class CellBilinear
     :
     public Interpolater
@@ -272,18 +271,17 @@ public:
 
 
 /**
-* \brief Linear conservative interpolation on cell centered data
-*
-*
-* Linear conservative interpolation on cell centered data
-* I.e, conservative interpolation with a limiting scheme that
-* preserves the value of any linear combination  of the
-* fab components; //!< e.g.,
-*
-* if sum_ivar a(ic,jc,ivar)*fab(ic,jc,ivar) = 0, then
-* sum_ivar a(ic,jc,ivar)*fab(if,jf,ivar) = 0 is satisfied
-* in all fine cells if,jf covering coarse cell ic,jc.
-*/
+ * \brief Linear conservative interpolation on cell centered data
+ *
+ * Linear conservative interpolation on cell centered data
+ * I.e, conservative interpolation with a limiting scheme that
+ * preserves the value of any linear combination  of the
+ * fab components; //!< e.g.,
+ *
+ * if sum_ivar a(ic,jc,ivar)*fab(ic,jc,ivar) = 0, then
+ * sum_ivar a(ic,jc,ivar)*fab(if,jf,ivar) = 0 is satisfied
+ * in all fine cells if,jf covering coarse cell ic,jc.
+ */
 class CellConservativeLinear
     :
     public Interpolater
@@ -336,11 +334,11 @@ protected:
 
 
 /**
-* \brief Lin. cons. interp. on cc data with protection against under/over-shoots.
-*
-* Linear conservative interpolation on cell centered data
-* but with protection against undershoots or overshoots.
-*/
+ * \brief Lin. cons. interp. on cc data with protection against under/over-shoots.
+ *
+ * Linear conservative interpolation on cell centered data
+ * but with protection against undershoots or overshoots.
+ */
 class CellConservativeProtected
     :
     public CellConservativeLinear
@@ -385,11 +383,10 @@ public:
 
 
 /**
-* \brief Quadratic interpolation on cell centered data.
-*
-* Quadratic interpolation on cell centered data.
-*/
-
+ * \brief Quadratic interpolation on cell centered data.
+ *
+ * Quadratic interpolation on cell centered data.
+ */
 class CellQuadratic
     :
     public Interpolater
@@ -445,45 +442,26 @@ public:
 
 
 /**
-* \brief Piecewise Constant interpolation on cell centered data.
-*/
+ * \brief Piecewise Constant interpolation on cell centered data.
+ */
 class PCInterp
     :
     public Interpolater
 {
 public:
     /**
-    * \brief Returns coarsened box given fine box and refinement ratio.
-    *
-    * \param fine
-    * \param ratio
-    */
+     * \brief Returns coarsened box given fine box and refinement ratio.
+     */
     Box CoarseBox (const Box& fine, int ratio) override;
 
     /**
-    * \brief Returns coarsened box given fine box and refinement ratio.
-    *
-    * \param fine
-    * \param ratio
-    */
+     * \brief Returns coarsened box given fine box and refinement ratio.
+     */
     Box CoarseBox (const Box& fine, const IntVect& ratio) override;
 
     /**
-    * \brief Coarse to fine interpolation in space.
-    *
-    * \param crse
-    * \param crse_comp
-    * \param fine
-    * \param fine_comp
-    * \param ncomp
-    * \param fine_region
-    * \param ratio
-    * \param crse_geom
-    * \param fine_geom
-    * \param bcr
-    * \param actual_comp
-    * \param actual_state
-    */
+     * \brief Coarse to fine interpolation in space.
+     */
     void interp (const FArrayBox& crse,
                  int              crse_comp,
                  FArrayBox&       fine,
@@ -501,49 +479,30 @@ public:
 
 
 /**
-* \brief Conservative quartic interpolation on cell averaged data.
-*
-* An order 4 polynomial is used to fit the data.  For each cell involved
-* in constructing the polynomial, the average of the polynomial inside that
-* cell is equal to the cell averaged value of the original data.
-*/
+ * \brief Conservative quartic interpolation on cell averaged data.
+ *
+ * An order 4 polynomial is used to fit the data.  For each cell involved
+ * in constructing the polynomial, the average of the polynomial inside that
+ * cell is equal to the cell averaged value of the original data.
+ */
 class CellConservativeQuartic
     :
     public Interpolater
 {
 public:
     /**
-    * \brief Returns coarsened box given fine box and refinement ratio.
-    *
-    * \param fine
-    * \param ratio
-    */
+     * \brief Returns coarsened box given fine box and refinement ratio.
+     */
     Box CoarseBox (const Box& fine, int ratio) override;
 
     /**
-    * \brief Returns coarsened box given fine box and refinement ratio.
-    *
-    * \param fine
-    * \param ratio
-    */
+     * \brief Returns coarsened box given fine box and refinement ratio.
+     */
     Box CoarseBox (const Box& fine, const IntVect& ratio) override;
 
     /**
-    * \brief Coarse to fine interpolation in space.
-    *
-    * \param crse
-    * \param crse_comp
-    * \param fine
-    * \param fine_comp
-    * \param ncomp
-    * \param fine_region
-    * \param ratio
-    * \param crse_geom
-    * \param fine_geom
-    * \param bcr
-    * \param actual_comp
-    * \param actual_state
-    */
+     * \brief Coarse to fine interpolation in space.
+     */
     void interp (const FArrayBox& crse,
                  int              crse_comp,
                  FArrayBox&       fine,
@@ -560,52 +519,32 @@ public:
 };
 
 /**
-* \brief Divergence-preserving interpolation on face centered data.
-*
-* Divergence-preserving interpolation on face centered data,
-* i.e., it ensures the divergence of the fine ghost cells match the value
-* of the divergence of the underlying crse cell. All fine cells overlying
-* a given coarse cell will have the same divergence, even when the coarse
-* grid divergence is spatially varying.
-*/
+ * \brief Divergence-preserving interpolation on face centered data.
+ *
+ * Divergence-preserving interpolation on face centered data,
+ * i.e., it ensures the divergence of the fine ghost cells match the value
+ * of the divergence of the underlying crse cell. All fine cells overlying
+ * a given coarse cell will have the same divergence, even when the coarse
+ * grid divergence is spatially varying.
+ */
 class FaceDivFree
     :
     public Interpolater
 {
 public:
     /**
-    * \brief Returns coarsened box given fine box and refinement ratio.
-    *
-    * \param fine
-    * \param ratio
-    */
+     * \brief Returns coarsened box given fine box and refinement ratio.
+     */
     Box CoarseBox (const Box& fine, int ratio) override;
 
     /**
-    * \brief Returns coarsened box given fine box and refinement ratio.
-    *
-    * \param fine
-    * \param ratio
-    */
+     * \brief Returns coarsened box given fine box and refinement ratio.
+     */
     Box CoarseBox (const Box& fine, const IntVect& ratio) override;
 
     /**
-    * \brief Coarse to fine interpolation in space.
-    *
-    * \param crse
-    * \param crse_comp
-    * \param fine
-    * \param fine_comp
-    * \param ncomp
-    * \param fine_region
-    * \param ratio
-    * \param crse_geom
-    * \param fine_geom
-    * \param bcr
-    * \param actual_comp
-    * \param actual_state
-    * \param runon
-    */
+     * \brief Coarse to fine interpolation in space.
+     */
     void interp (const FArrayBox& crse,
                  int              crse_comp,
                  FArrayBox&       fine,
@@ -621,23 +560,8 @@ public:
                  RunOn            runon) override;
 
     /**
-    * \brief Coarse to fine interpolation in space.
-    *
-    * \param crse
-    * \param crse_comp
-    * \param fine
-    * \param fine_comp
-    * \param ncomp
-    * \param fine_region
-    * \param ratio
-    * \param solve_mask
-    * \param crse_geom
-    * \param fine_geom
-    * \param bcr
-    * \param actual_comp
-    * \param actual_state
-    * \param runon
-    */
+     * \brief Coarse to fine interpolation in space.
+     */
     void interp_arr (Array<FArrayBox*, AMREX_SPACEDIM> const& crse,
                      int         crse_comp,
                      Array<FArrayBox*, AMREX_SPACEDIM> const& fine,
@@ -656,29 +580,21 @@ public:
 
 
 /**
-* \brief Bilinear interpolation on face data.
-*
-* Bilinear interpolation on data.
-*/
+ * \brief Bilinear interpolation on face data.a
+ */
 class FaceLinear
     :
     public Interpolater
 {
 public:
     /**
-    * \brief Returns coarsened box given fine box and refinement ratio.
-    *
-    * \param fine
-    * \param ratio
-    */
+     * \brief Returns coarsened box given fine box and refinement ratio.
+     */
     Box CoarseBox (const Box& fine, int ratio) override;
 
     /**
-    * \brief Returns coarsened box given fine box and refinement ratio.
-    *
-    * \param fine
-    * \param ratio
-    */
+     * \brief Returns coarsened box given fine box and refinement ratio.
+     */
     Box CoarseBox (const Box& fine, const IntVect& ratio) override;
 
     /**
@@ -777,10 +693,10 @@ public:
 };
 
 /**
-* \brief Quartic interpolation on cell centered data.
-*
-* Quartic interpolation on cell centered data.
-*/
+ * \brief Quartic interpolation on cell centered data.
+ *
+ * Quartic interpolation on cell centered data.
+ */
 class CellQuartic
     :
     public Interpolater

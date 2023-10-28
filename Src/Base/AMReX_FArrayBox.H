@@ -12,20 +12,20 @@ namespace amrex {
 class FArrayBox;
 
 /**
-* \brief A Class Facilitating I/O for Fabs
-*
-* This data-less class aids I/O for FABs and encapsulates information
-* about the floating point format being used in output.
-* Note that the "new" format for writing out FABs is self-describing;
-*    i.e. we can always read in a FAB written in the "new" format.  For this
-* reason, it is usually preferable to write FABs out in the native
-*    format on the machine, unless you're doing computations in 64 bit and
-* only want to write out 32 bit FABs.
-*
-* With the exception of the enumeration constants, this class is
-* primarily for FArrayBox implementers; i.e. user's shouldn't
-* call any of the member functions in this class directly.
-*/
+ * \brief A Class Facilitating I/O for Fabs
+ *
+ * This data-less class aids I/O for FABs and encapsulates information
+ * about the floating point format being used in output.
+ * Note that the "new" format for writing out FABs is self-describing;
+ *    i.e. we can always read in a FAB written in the "new" format.  For this
+ * reason, it is usually preferable to write FABs out in the native
+ *    format on the machine, unless you're doing computations in 64 bit and
+ * only want to write out 32 bit FABs.
+ *
+ * With the exception of the enumeration constants, this class is
+ * primarily for FArrayBox implementers; i.e. user's shouldn't
+ * call any of the member functions in this class directly.
+ */
 class FABio // NOLINT(cppcoreguidelines-special-member-functions)
 {
 public:
@@ -189,40 +189,40 @@ private:
 };
 
 /**
-* \brief  A Fortran Array of REALs
-*
-*  Fortran Array Box's (generally called FAB's) are objects constructed
-*  to emulate the FORTRAN array.  Useful operations can be performed
-*  upon FAB's in C++, and they provide a convenient interface to
-*  FORTRAN when it is necessary to retreat into that language.
-*
-*  FArrayBox is derived from BaseFab<Real>.
-*  FArrayBox adds additional useful capabilities which make sense
-*  for Real types, such as I/O and L**p norms.
-*
-*  FArrayBox's may be output in various formats (see FABio above).
-*
-*  The format and precision may be set in a file read by the ParmParse
-*  class by the "fab.format" variable.  Allowed values are:
-*    ASCII
-*    8BIT
-*    NATIVE
-*    NATIVE_32
-*    IEEE32
-*
-*  FABs written using operator<< are always written in ASCII.
-*  FABS written using writOn use the FABio::Format specified with
-*  setFormat or the FABio::Format specified in the ParmParse file
-*  read by init. If the FABio::Format is not set explicitly by either
-*  of these two methods, then it defaults to NATIVE.
-*
-*  The C pre-processor macro AMREX_SPACEDIM must be defined to use
-*  this class.  The internal precision of FARRAYBOX objects is
-*  set by defining either BL_USE_FLOAT or BL_USE_DOUBLE
-*
-*  This class does NOT provide a copy constructor or assignment operator,
-*  but it has a move constructor.
-*/
+ * \brief  A Fortran Array of REALs
+ *
+ * Fortran Array Box's (generally called FAB's) are objects constructed
+ * to emulate the FORTRAN array.  Useful operations can be performed
+ * upon FAB's in C++, and they provide a convenient interface to
+ * FORTRAN when it is necessary to retreat into that language.
+ *
+ * FArrayBox is derived from BaseFab<Real>.
+ * FArrayBox adds additional useful capabilities which make sense
+ * for Real types, such as I/O and L**p norms.
+ *
+ * FArrayBox's may be output in various formats (see FABio above).
+ *
+ * The format and precision may be set in a file read by the ParmParse
+ * class by the "fab.format" variable.  Allowed values are:
+ *    ASCII
+ *    8BIT
+ *    NATIVE
+ *    NATIVE_32
+ *    IEEE32
+ *
+ * FABs written using operator<< are always written in ASCII.
+ * FABS written using writOn use the FABio::Format specified with
+ * setFormat or the FABio::Format specified in the ParmParse file
+ * read by init. If the FABio::Format is not set explicitly by either
+ * of these two methods, then it defaults to NATIVE.
+ *
+ * The C pre-processor macro AMREX_SPACEDIM must be defined to use
+ * this class.  The internal precision of FARRAYBOX objects is
+ * set by defining either BL_USE_FLOAT or BL_USE_DOUBLE
+ *
+ * This class does NOT provide a copy constructor or assignment operator,
+ * but it has a move constructor.
+ */
 class FArrayBox
     :
     public BaseFab<Real>

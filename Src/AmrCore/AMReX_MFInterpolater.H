@@ -21,8 +21,8 @@ public:
 };
 
 /**
-* \brief Piecewise constant interpolation on cell-centered data.
-*/
+ * \brief Piecewise constant interpolation on cell-centered data.
+ */
 class MFPCInterp final
     : public MFInterpolater
 {
@@ -37,15 +37,15 @@ public:
 };
 
 /**
-* \brief Linear conservative interpolation on cell centered data
-*
-* Linear conservative interpolation on cell centered data, i.e, conservative
-* interpolation with a limiting scheme that preserves the value of any
-* linear combination of the fab components. If sum_ivar
-* a(ic,jc,ivar)*fab(ic,jc,ivar) = 0, then sum_ivar
-* a(ic,jc,ivar)*fab(if,jf,ivar) = 0 is satisfied in all fine cells if,jf
-* covering coarse cell ic,jc.
-*/
+ * \brief Linear conservative interpolation on cell centered data
+ *
+ * Linear conservative interpolation on cell centered data, i.e, conservative
+ * interpolation with a limiting scheme that preserves the value of any
+ * linear combination of the fab components. If sum_ivar
+ * a(ic,jc,ivar)*fab(ic,jc,ivar) = 0, then sum_ivar
+ * a(ic,jc,ivar)*fab(if,jf,ivar) = 0 is satisfied in all fine cells if,jf
+ * covering coarse cell ic,jc.
+ */
 class MFCellConsLinInterp
     : public MFInterpolater
 {
@@ -65,16 +65,16 @@ protected:
 };
 
 /**
-* \brief Linear conservative interpolation on cell centered data
-*
-* Linear conservative interpolation on cell centered data, i.e, conservative
-* interpolation with a limiting scheme that preserves the value of any
-* linear combination of the fab components. If sum_ivar
-* a(ic,jc,ivar)*fab(ic,jc,ivar) = 0, then sum_ivar
-* a(ic,jc,ivar)*fab(if,jf,ivar) = 0 is satisfied in all fine cells if,jf
-* covering coarse cell ic,jc. This version *also* ensures no new min/max
-* are created by limiting the slope vector.
-*/
+ * \brief Linear conservative interpolation on cell centered data
+ *
+ * Linear conservative interpolation on cell centered data, i.e, conservative
+ * interpolation with a limiting scheme that preserves the value of any
+ * linear combination of the fab components. If sum_ivar
+ * a(ic,jc,ivar)*fab(ic,jc,ivar) = 0, then sum_ivar
+ * a(ic,jc,ivar)*fab(if,jf,ivar) = 0 is satisfied in all fine cells if,jf
+ * covering coarse cell ic,jc. This version *also* ensures no new min/max
+ * are created by limiting the slope vector.
+ */
 class MFCellConsLinMinmaxLimitInterp
     : public MFInterpolater
 {

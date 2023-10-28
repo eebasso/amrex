@@ -16,10 +16,10 @@ namespace amrex {
 class FArrayBox;
 
 /**
-* \brief Coordinate System
-*
-* Routines for mapping between physical coordinate system and index space.
-*/
+ * \brief Coordinate System
+ *
+ * Routines for mapping between physical coordinate system and index space.
+ */
 class CoordSys
 {
 public:

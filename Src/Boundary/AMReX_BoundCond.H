@@ -9,14 +9,13 @@
 namespace amrex {
 
 /**
-   \brief Maintain an identifier for boundary condition types.
-
-   This is a placeholder for more extensive boundary condition
-   implementations, which might include stencils, etc.  Presently,
-   boundary conditions are specified via an integer identifier.
-   This class maintains that integer.
-*/
-
+ * \brief Maintain an identifier for boundary condition types.
+ *
+ * This is a placeholder for more extensive boundary condition
+ * implementations, which might include stencils, etc.  Presently,
+ * boundary conditions are specified via an integer identifier.
+ * This class maintains that integer.
+ */
 class BoundCond
 {
 public:
