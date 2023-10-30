@@ -268,7 +268,7 @@ Add (FabArray<FAB>& dst, FabArray<FAB> const& src, int srccomp, int dstcomp, int
  * \brief A Collection (i.e., Array) of FortranArrayBox-like Objects
  *
  * The FabArray<FAB> class implements a collection (stored as an array) of
- * Fortran array-like ( \p FAB ) objects.  The parameterized type \p FAB is intended to be
+ * Fortran array box-like ( \p FAB ) objects.  The parameterized type \p FAB is intended to be
  * any class derived from BaseFab<T>.  For example, \p FAB may be a BaseFab of
  * integers, so we could write:
  *
@@ -329,10 +329,10 @@ public:
         using value_type = FAB;
     };
 
-    /*
-    * if FAB is a BaseFab or its child, value_type = FAB::value_type
-    * else                              value_type = FAB;
-    */
+    /**
+     * if FAB is a BaseFab or its child, value_type = FAB::value_type
+     * else                              value_type = FAB;
+     */
     using value_type = typename std::conditional<IsBaseFab<FAB>::value, FAB, FABType>::type::value_type;
 
     using fab_type = FAB;
@@ -351,10 +351,10 @@ public:
     explicit FabArray (Arena* a) noexcept;
 
     /**
-    * \brief Construct a FabArray<FAB> with a valid region defined by bxs
-    * and a region of definition defined by the grow factor ngrow
-    * and the number of components nvar.
-    */
+     * \brief Construct a FabArray<FAB> with a valid region defined by bxs
+     * and a region of definition defined by the grow factor ngrow
+     * and the number of components nvar.
+     */
     FabArray (const BoxArray&            bxs,
               const DistributionMapping& dm,
               int                        nvar,

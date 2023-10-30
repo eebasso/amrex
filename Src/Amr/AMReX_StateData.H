@@ -25,10 +25,10 @@ class StateDataPhysBCFunct;
 
 
 /**
-* \brief Current and previous level-time data.
-*
-* StateData holds state data on a level for the current and previous time step.
-*/
+ * \brief Current and previous level-time data.
+ *
+ * StateData holds state data on a level for the current and previous time step.
+ */
 class StateData
 {
     friend class StateDataPhysBCFunct;
