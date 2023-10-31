@@ -270,6 +270,913 @@ inline void mlndlap_bc_doit (Box const& vbx, Array4<T> const& a, Box const& doma
     const auto dhi = amrex::ubound(domain);
 
     Box const& sbox = amrex::grow(vbx,1);
+
+    if (bflo[0]) {
+        if (bfhi[0]) {
+            if (bflo[1]) {
+                if (bfhi[1]) {
+                    if (bflo[2]) {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) : (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) : (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) : (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) : (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) : (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) :                                0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) : (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) : (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + (                              (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) : (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) : (j == dhi.y+1) ? (-1-offset) : 0);
+
+                                    if ((i != ii) || (j != jj)             ) {
+                                        a(i,j,k) = a(ii,jj,k );
+                                    }
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    if (bflo[2]) {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) : (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) :                                0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) : (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) : (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) :                                0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) :                                0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) : (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) :                                0);
+                                    int kk = k + (                              (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) : (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) :                                0);
+
+                                    if ((i != ii) || (j != jj)             ) {
+                                        a(i,j,k) = a(ii,jj,k );
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            } else {
+                if (bfhi[1]) {
+                    if (bflo[2]) {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) : (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + (                              (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) : (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) : (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + (                              (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) :                                0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) : (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + (                              (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + (                              (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) : (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + (                              (j == dhi.y+1) ? (-1-offset) : 0);
+
+                                    if ((i != ii) || (j != jj)             ) {
+                                        a(i,j,k) = a(ii,jj,k );
+                                    }
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    if (bflo[2]) {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) : (i == dhi.x+1) ? (-1-offset) : 0);
+
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) : (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) ||              (k != kk)) {
+                                        a(i,j,k) = a(ii,j ,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) : (i == dhi.x+1) ? (-1-offset) : 0);
+
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) :                                0);
+                                    if ((i != ii) ||              (k != kk)) {
+                                        a(i,j,k) = a(ii,j ,kk);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) : (i == dhi.x+1) ? (-1-offset) : 0);
+
+                                    int kk = k + (                              (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) ||              (k != kk)) {
+                                        a(i,j,k) = a(ii,j ,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) : (i == dhi.x+1) ? (-1-offset) : 0);
+
+
+                                    if ((i != ii)                          ) {
+                                        a(i,j,k) = a(ii,j ,k );
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        } else {
+            if (bflo[1]) {
+                if (bfhi[1]) {
+                    if (bflo[2]) {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) :                                0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) : (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) : (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) :                                0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) : (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) :                                0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) :                                0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) : (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + (                              (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) :                                0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) : (j == dhi.y+1) ? (-1-offset) : 0);
+
+                                    if ((i != ii) || (j != jj)             ) {
+                                        a(i,j,k) = a(ii,jj,k );
+                                    }
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    if (bflo[2]) {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) :                                0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) :                                0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) : (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) :                                0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) :                                0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) :                                0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) :                                0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) :                                0);
+                                    int kk = k + (                              (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) :                                0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) :                                0);
+
+                                    if ((i != ii) || (j != jj)             ) {
+                                        a(i,j,k) = a(ii,jj,k );
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            } else {
+                if (bfhi[1]) {
+                    if (bflo[2]) {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) :                                0);
+                                    int jj = j + (                              (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) : (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) :                                0);
+                                    int jj = j + (                              (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) :                                0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) :                                0);
+                                    int jj = j + (                              (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + (                              (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) :                                0);
+                                    int jj = j + (                              (j == dhi.y+1) ? (-1-offset) : 0);
+
+                                    if ((i != ii) || (j != jj)             ) {
+                                        a(i,j,k) = a(ii,jj,k );
+                                    }
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    if (bflo[2]) {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) :                                0);
+
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) : (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) ||              (k != kk)) {
+                                        a(i,j,k) = a(ii,j ,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) :                                0);
+
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) :                                0);
+                                    if ((i != ii) ||              (k != kk)) {
+                                        a(i,j,k) = a(ii,j ,kk);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) :                                0);
+
+                                    int kk = k + (                              (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) ||              (k != kk)) {
+                                        a(i,j,k) = a(ii,j ,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + ((i == dlo.x-1) ? (1+offset) :                                0);
+
+
+                                    if ((i != ii)                          ) {
+                                        a(i,j,k) = a(ii,j ,k );
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    } else {
+        if (bfhi[0]) {
+            if (bflo[1]) {
+                if (bfhi[1]) {
+                    if (bflo[2]) {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + (                              (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) : (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) : (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + (                              (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) : (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) :                                0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + (                              (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) : (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + (                              (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + (                              (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) : (j == dhi.y+1) ? (-1-offset) : 0);
+
+                                    if ((i != ii) || (j != jj)             ) {
+                                        a(i,j,k) = a(ii,jj,k );
+                                    }
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    if (bflo[2]) {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + (                              (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) :                                0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) : (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + (                              (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) :                                0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) :                                0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + (                              (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) :                                0);
+                                    int kk = k + (                              (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + (                              (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) :                                0);
+
+                                    if ((i != ii) || (j != jj)             ) {
+                                        a(i,j,k) = a(ii,jj,k );
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            } else {
+                if (bfhi[1]) {
+                    if (bflo[2]) {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + (                              (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + (                              (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) : (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + (                              (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + (                              (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) :                                0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + (                              (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + (                              (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + (                              (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + (                              (i == dhi.x+1) ? (-1-offset) : 0);
+                                    int jj = j + (                              (j == dhi.y+1) ? (-1-offset) : 0);
+
+                                    if ((i != ii) || (j != jj)             ) {
+                                        a(i,j,k) = a(ii,jj,k );
+                                    }
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    if (bflo[2]) {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + (                              (i == dhi.x+1) ? (-1-offset) : 0);
+
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) : (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) ||              (k != kk)) {
+                                        a(i,j,k) = a(ii,j ,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + (                              (i == dhi.x+1) ? (-1-offset) : 0);
+
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) :                                0);
+                                    if ((i != ii) ||              (k != kk)) {
+                                        a(i,j,k) = a(ii,j ,kk);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + (                              (i == dhi.x+1) ? (-1-offset) : 0);
+
+                                    int kk = k + (                              (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii)              || (k != kk)) {
+                                        a(i,j,k) = a(ii,j ,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+                                    int ii = i + (                              (i == dhi.x+1) ? (-1-offset) : 0);
+
+
+                                    if ((i != ii)                          ) {
+                                        a(i,j,k) = a(ii,j ,k );
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        } else {
+            if (bflo[1]) {
+                if (bfhi[1]) {
+                    if (bflo[2]) {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) : (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) : (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if (             (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(i ,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) : (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) :                                0);
+                                    if (             (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(i ,jj,kk);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) : (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + (                              (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if (             (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(i ,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) : (j == dhi.y+1) ? (-1-offset) : 0);
+
+                                    if (             (j != jj)             ) {
+                                        a(i,j,k) = a(i ,jj,k );
+                                    }
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    if (bflo[2]) {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) :                                0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) : (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if (             (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(i ,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) :                                0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) :                                0);
+                                    if (             (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(i ,jj,kk);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) :                                0);
+                                    int kk = k + (                              (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if (             (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(i ,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+
+                                    int jj = j + ((j == dlo.y-1) ? (1+offset) :                                0);
+
+                                    if (             (j != jj)             ) {
+                                        a(i,j,k) = a(i ,jj,k );
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            } else {
+                if (bfhi[1]) {
+                    if (bflo[2]) {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+
+                                    int jj = j + (                              (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) : (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if (             (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(i ,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+
+                                    int jj = j + (                              (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) :                                0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+
+                                    int jj = j + (                              (j == dhi.y+1) ? (-1-offset) : 0);
+                                    int kk = k + (                              (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if ((i != ii) || (j != jj) || (k != kk)) {
+                                        a(i,j,k) = a(ii,jj,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+
+                                    int jj = j + (                              (j == dhi.y+1) ? (-1-offset) : 0);
+
+                                    if (             (j != jj)             ) {
+                                        a(i,j,k) = a(i ,jj,k );
+                                    }
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    if (bflo[2]) {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+
+
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) : (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if (                          (k != kk)) {
+                                        a(i,j,k) = a(i ,j ,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+
+
+                                    int kk = k + ((k == dlo.z-1) ? (1+offset) :                                0);
+                                    if (                          (k != kk)) {
+                                        a(i,j,k) = a(i ,j ,kk);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        if (bfhi[2]) {
+                            AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            {
+                                if (! gdomain.contains(IntVect(i,j,k))) {
+
+
+                                    int kk = k + (                              (k == dhi.z+1) ? (-1-offset) : 0);
+                                    if (                          (k != kk)) {
+                                        a(i,j,k) = a(i ,j ,kk);
+                                    }
+                                }
+                            });
+                        } else {
+                            // AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+                            // {
+                            //     if (! gdomain.contains(IntVect(i,j,k))) {
+                            //         int ii = i + (                                                             0);
+                            //         int jj = j + (                                                             0);
+                            //         int kk = k + (                                                             0);
+                            //         if ((i != ii) || (j != jj) || (k != kk)) {
+                            //             a(i,j,k) = a(ii,jj,kk);
+                            //         }
+                            //     }
+                            // });
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
+    {
+        if (! gdomain.contains(IntVect(i,j,k))) {
+            int di = (i == dlo.x-1 && bflo[0]) ? (1+offset) : (i == dhi.x+1 && bfhi[0]) ? (-1-offset) : 0;
+            int dj = (j == dlo.y-1 && bflo[1]) ? (1+offset) : (j == dhi.y+1 && bfhi[1]) ? (-1-offset) : 0;
+            int dk = (k == dlo.z-1 && bflo[2]) ? (1+offset) : (k == dhi.z+1 && bfhi[2]) ? (-1-offset) : 0;
+            if ((di != 0) || (dj != 0) || (dk != 0)) {
+                a(i,j,k) = a(i+di,j+dj,k+dk);
+            }
+        }
+    });
+
     AMREX_HOST_DEVICE_FOR_3D(sbox, i, j, k,
     {
         if (! gdomain.contains(IntVect(i,j,k))) {
