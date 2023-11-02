@@ -23,7 +23,7 @@
 
   -- We weren't defining cent_hat out far enough (#3548)
 
-  -- Add Fortran inteface for FillCoarsePatch for face variables (#3542)
+  -- Add Fortran interface for FillCoarsePatch for face variables (#3542)
 
   -- print_state/printCell: Make it work without managed memory (#3543)
 
@@ -65,7 +65,7 @@
 
   -- Simplify filterParticles Kernel (#3510)
 
-  -- Generatize particle-to-cell assignment function (#3499)
+  -- Generalize particle-to-cell assignment function (#3499)
      Follow-on to 3499 (#3514)
      ParticleLocator: Make Assignor optional template parameter (#3515)
 
@@ -253,7 +253,7 @@
 
 # 23.07
 
-  -- Allow users to change the default vector growth stategy (#3389)
+  -- Allow users to change the default vector growth strategy (#3389)
 
   -- Communications arena implementation (#3388)
 
@@ -1460,9 +1460,9 @@
   -- Fix Particle CI Tests (#2252)
 
   -- Github Action Concurrency (#2254)
-    
+
   -- MF ParallelFor: MultiFab (#2249)
-    
+
   -- Reimplement AddParticlesAtLevel for GPU (#2236)
 
   -- Enable mixed (face) GpuBndryFuncFab (#2238)
@@ -1489,7 +1489,7 @@
   -- Add MFNodeBilinear for nodal linear interpolation (#2202)
 
   -- Adding experimental parfor into the FSmooth method (#2230)
-    
+
   -- Parser: Exception handling (#2233)
 
   -- Parser: Noinline transcendental functions (#2229)
@@ -2688,7 +2688,7 @@
      number of error buffer cells in different directions.
 
   -- Using PETSc as bottom solver no longer requires Hypre.
- 
+
 # 19.04
 
   -- SUNDIALS 4 support.
@@ -2717,7 +2717,7 @@
 
   -- In addition to launch macros, there are now functions for
      launching, amrex::launch, amrex::For and amrex::ParallelFor.
-     These improves debuggability. 
+     These improves debuggability.
 
   -- If compiled with BASEFAB_IS_PINNED, pinned memory will be used
      for BaseFab meta-data.  On systems with nvlink, this improves the
@@ -2772,14 +2772,14 @@
   -- Option to use PETSc as bottom solver
 
   -- Multi-level linear solver with EB not crossing coarse/fine
-     boundary. 
+     boundary.
 
   -- Sundials 3 support
 
 # 18.09
 
   -- Cell-centered linear solver with homogeneous Neumann embedded
-     boundary. 
+     boundary.
 
   -- Hypre as a bottom solver has a IJ matrix interface and supports
      homogeneous Neumann boundary condition on embedded boundary.
@@ -2812,7 +2812,7 @@
      are stored in amrex_namelist character variable in
      amrex_parmparse_module, and can be read with standard Fortran
      I/O.
-     
+
   -- There is a new non-blocking parallel copy function in
      MultiFab/FabArray called ParallelCopy_nowait.  It returns a
      CopierHandle object and can later be used to finish the
@@ -2914,15 +2914,15 @@
      replacing Array with Vector.  There is a script,
      amrex/Tools/Migration/amrex_array_to_vector.sh, to help.  But use
      it with caution.   If it is completely gibberish to you, you
-     probably shouldn't use the script. 
+     probably shouldn't use the script.
 
   -- functions for printing to a file in a parallel and thread-safe manner
      have been added. For example:
 
-        amrex::AllPrintToFile("output") << "Hello from rank " << rank << 
+        amrex::AllPrintToFile("output") << "Hello from rank " << rank <<
                                            " and thread " << thread << "\n";
 
-     will print out the requested information to separate files for each 
+     will print out the requested information to separate files for each
      rank and thread.
 
 # 17.10
@@ -2938,7 +2938,7 @@
 
   -- MFIter now supports dynamic scheduling of OpenMP threads.  For
      example,
- 
+
        for (MFIter mfi(mf, MFItInfo().SetDynamic(true).EnableTiling(tile_size);
             mfi.isValid(); ++mfi)
        { ... }
@@ -2948,4 +2948,4 @@
 
   -- amrex.signal_handling = 1 is a new runtime parameter that can be
      used to control whether AMReX should handle signals like SIGSEGV
-     etc. 
+     etc.
