@@ -115,8 +115,6 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     sorig.LocalCopy(sol,0,0,ncomp,nghost);
     rh.LocalCopy   (r  ,0,0,ncomp,nghost);
 
-    sol.setVal(RT(0.0));
-
     RT rnorm = norm_inf(r);
     const RT rnorm0 = rnorm;
 
@@ -136,6 +134,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
                            << ", rnorm = " << rnorm
                            << ", eps_abs = " << eps_abs << std::endl;
         }
+        sol.setVal(RT(0.0)); // Not sure why we set to 0 in this case
         return ret;
     }
 
@@ -246,12 +245,12 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 
     if ( ( ret == 0 || ret == 8 ) && (rnorm < rnorm0) )
     {
-        sol.LocalAdd(sorig, 0, 0, ncomp, nghost);
+        // keep updated solution
     }
     else
     {
-        sol.setVal(RT(0.0));
-        sol.LocalAdd(sorig, 0, 0, ncomp, nghost);
+        // reset solution to original copy
+        sol.LocalCopy(sorig, 0, 0, ncomp, nghost);
     }
 
     return ret;
@@ -281,8 +280,6 @@ MLCGSolverT<MF>::solve_cg (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 
     Lp.correctionResidual(amrlev, mglev, r, sol, rhs, MLLinOpT<MF>::BCMode::Homogeneous);
 
-    sol.setVal(RT(0.0));
-
     RT       rnorm    = norm_inf(r);
     const RT rnorm0   = rnorm;
 
@@ -302,6 +299,7 @@ MLCGSolverT<MF>::solve_cg (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
                            << ", rnorm = " << rnorm
                            << ", eps_abs = " << eps_abs << std::endl;
         }
+        sol.setVal(RT(0.0)); // Not sure why we do this in this case
         return ret;
     }
 
@@ -379,12 +377,12 @@ MLCGSolverT<MF>::solve_cg (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 
     if ( ( ret == 0 || ret == 8 ) && (rnorm < rnorm0) )
     {
-        sol.LocalAdd(sorig, 0, 0, ncomp, nghost);
+        // keep updated solution
     }
     else
     {
-        sol.setVal(RT(0.0));
-        sol.LocalAdd(sorig, 0, 0, ncomp, nghost);
+        // reset solution to original copy
+        sol.LocalCopy(sorig, 0, 0, ncomp, nghost);
     }
 
     return ret;
