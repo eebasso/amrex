@@ -1275,7 +1275,7 @@
   -- New HDF5 schema with separate datasets for different variables (#2432)
 
   -- InterpFaceRegister (#2452)
-    
+
   -- Fix WarpX EB solver's grad phi computation (#2453)
 
 # 21.11
@@ -1425,7 +1425,7 @@
      #2268)
 
   -- Move slope routines out of amrex into AMReX-Hydro (#2294)
-    
+
   -- GNU Make: Fix GNU builds on Perlmutter, + some bug fixes. (#2286,
      #2293)
 
@@ -1435,15 +1435,15 @@
      (#2288)
 
   -- SENSEI: Remove amr adaptor/bridge when AMRLEVEL is off (#2258, #2283)
-    
+
   -- ParallelFor(Tag) (#2281)
-    
+
   -- Protect against nullptr when calling PODVector dtor. (#2272)
 
   -- Parser: Hide local symbols (#2274)
-    
+
   -- Add EditorConfig section for rst files (#2273)
-    
+
   -- Fix bug in the dual grid PC restart in the case where there are no
      particles on some levels. (#2276)
 
@@ -1452,7 +1452,7 @@
   -- Fine-tune FabArray::setBndry (#2269)
 
   -- MF ParallelFor: PETSc (#2262)
-    
+
   -- MF ParallelFor: HYPRE (#2257)
 
   -- MF ParallelFor: MultiFabUtil (#2256)

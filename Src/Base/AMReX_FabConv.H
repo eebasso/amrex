@@ -13,9 +13,6 @@
 
 namespace amrex {
 
-//
-// 
-
 /**
  * \brief A Descriptor of the Long Integer type
  *
