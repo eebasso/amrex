@@ -50,8 +50,8 @@ public:
     void setMaxIter (int _maxiter) { maxiter = _maxiter; }
     [[nodiscard]] int getMaxIter () const { return maxiter; }
 
-    void setNGhost(int _nghost) {nghost = IntVect(_nghost);}
-    [[nodiscard]] int getNGhost() {return nghost[0];}
+    void setNGhost (int _nghost) {nghost = IntVect(_nghost);}
+    [[nodiscard]] int getNGhost () {return nghost[0];}
 
     [[nodiscard]] RT dotxy (const MF& r, const MF& z, bool local = false);
     [[nodiscard]] RT norm_inf (const MF& res, bool local = false);
