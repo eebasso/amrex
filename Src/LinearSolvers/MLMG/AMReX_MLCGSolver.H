@@ -52,6 +52,8 @@ public:
 
     [[nodiscard]] int getNumIters () const noexcept { return iter; }
 
+    void PrintDots (const std::string& title, const char* names, const MF& x, const MF& y);
+
 private:
 
     MLLinOpT<MF>& Lp;
@@ -61,8 +63,11 @@ private:
     int verbose   = 0;
     int maxiter   = 100;
     IntVect nghost = IntVect(0);
+    IntVect ngrow = IntVect(0);
     int iter = -1;
 };
+
+static bool printedHeader = false;
 
 template <typename MF>
 MLCGSolverT<MF>::MLCGSolverT (MLLinOpT<MF>& _lp, Type _typ)
@@ -87,6 +92,24 @@ int
 MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 {
     BL_PROFILE("MLCGSolver::bicgstab");
+    if (!printedHeader) {
+        amrex::Print() << "MLCGSolver_BiCGStab: print-development branch" << "\n";
+        printedHeader = true;
+    }
+    std::string MLCGSolverTitle = "MLCGSolver_BiCGStab: ";
+    std::string TitleHalf_Iter = "MLCGSolver_BiCGStab: Half Iter           ";
+    std::string TitleIteration = "MLCGSolver_BiCGStab: Iteration           ";
+    std::string TitlePost_Calc = "MLCGSolver_BiCGStab: Post_Calc           ";
+
+    std::string Half_Iter = TitleHalf_Iter + std::to_string(0);
+    std::string Iteration = TitleIteration + std::to_string(0);
+    std::string Post_Calc = TitlePost_Calc + std::to_string(0);
+
+    amrex::Print() << "MLCGSolver_BiCGStab: nghost = " << nghost << "\n";
+    amrex::Print() << "MLCGSolver_BiCGStab: ngrow  = " << sol.nGrowVect() << "\n";
+
+    ngrow = sol.nGrowVect();
+    verbose = 3;
 
     const int ncomp = sol.nComp();
 
@@ -98,6 +121,8 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     MF sh(ba, dm, ncomp, sol.nGrowVect(), MFInfo(), factory);
     ph.setVal(RT(0.0));
     sh.setVal(RT(0.0));
+    // PrintDots(Iteration,"Dots(ph,ph) initialized",ph,ph);
+    // PrintDots(Iteration,"Dots(sh,sh) initialized",sh,sh);
 
     MF sorig(ba, dm, ncomp, nghost, MFInfo(), factory);
     MF p    (ba, dm, ncomp, nghost, MFInfo(), factory);
@@ -107,15 +132,23 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     MF v    (ba, dm, ncomp, nghost, MFInfo(), factory);
     MF t    (ba, dm, ncomp, nghost, MFInfo(), factory);
 
+    PrintDots(Iteration,"Dots(sol,sol) before Lp.correctionResidual",sol,sol);
     Lp.correctionResidual(amrlev, mglev, r, sol, rhs, MLLinOpT<MF>::BCMode::Homogeneous);
+    PrintDots(Iteration,"Dots(sol,sol) after  Lp.correctionResidual",sol,sol);
 
     // Then normalize
+    PrintDots(Iteration,"Dots(r,r) before Lp.normalize",r,r);
     Lp.normalize(amrlev, mglev, r);
+    PrintDots(Iteration,"Dots(r,r) after  Lp.normalize",r,r);
 
     sorig.LocalCopy(sol,0,0,ncomp,nghost);
+    PrintDots(Iteration,"Dots(sorig,sorig)",sorig,sorig);
+
     rh.LocalCopy   (r  ,0,0,ncomp,nghost);
+    PrintDots(Iteration,"Dots(rh,rh)",rh,rh);
 
     sol.setVal(RT(0.0));
+    PrintDots(Iteration,"Dots(sol,sol) after sol.setVal(0)",sol,sol);
 
     RT rnorm = norm_inf(r);
     const RT rnorm0 = rnorm;
@@ -141,7 +174,13 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 
     for (; iter <= maxiter; ++iter)
     {
+        Half_Iter = TitleHalf_Iter + std::to_string(iter);
+        Iteration = TitleIteration + std::to_string(iter);
+        Post_Calc = TitlePost_Calc + std::to_string(iter-1);
+
         const RT rho = dotxy(rh,r);
+        PrintDots(Post_Calc,"Dots(rh,r)",rh,r);
+
         if ( rho == 0 )
         {
             ret = 1; break;
@@ -149,18 +188,30 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         if ( iter == 1 )
         {
             p.LocalCopy(r,0,0,ncomp,nghost);
+            PrintDots(Post_Calc, "Dots(p,p)",p,p);
         }
         else
         {
             const RT beta = (rho/rho_1)*(alpha/omega);
+            // amrex::Print() << Iteration << " beta: " << beta << '\n';
+            PrintDots(Post_Calc, "Dots(p,p) before     ",p,p);
             MF::Saxpy(p, -omega, v, 0, 0, ncomp, nghost); // p += -omega*v
+            PrintDots(Post_Calc, "Dots(p,p) after Saxpy",p,p);
             MF::Xpay(p, beta, r, 0, 0, ncomp, nghost); // p = r + beta*p
+            PrintDots(Post_Calc, "Dots(p,p) after  Xpay",p,p);
         }
         ph.LocalCopy(p,0,0,ncomp,nghost);
+        PrintDots(Half_Iter,"Dots(ph,ph) before Lp.apply",ph,ph);
         Lp.apply(amrlev, mglev, v, ph, MLLinOpT<MF>::BCMode::Homogeneous, MLLinOpT<MF>::StateMode::Correction);
+        PrintDots(Half_Iter,"Dots(ph,ph) after  Lp.apply",ph,ph);
+
+        PrintDots(Half_Iter,"Dots(v,v) before Lp.normalize",v,v);
         Lp.normalize(amrlev, mglev, v);
+        PrintDots(Half_Iter,"Dots(v,v) after  Lp.normalize",v,v);
 
         RT rhTv = dotxy(rh,v);
+        PrintDots(Half_Iter,"Dots(rh,v)",rh,v);
+
         if ( rhTv != RT(0.0) )
         {
             alpha = rho/rhTv;
@@ -169,8 +220,11 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         {
             ret = 2; break;
         }
+        // amrex::Print() << Half_Iter << " alpha: " << alpha << "\n";
         MF::Saxpy(sol, alpha, ph, 0, 0, ncomp, nghost); // sol += alpha * ph
         MF::LinComb(s, RT(1.0), r, 0, -alpha, v, 0, 0, ncomp, nghost); // s = r - alpha * v
+        PrintDots(Half_Iter,"Dots(sol,sol)",sol,sol);
+        PrintDots(Half_Iter,"Dots(s  ,s  )",s,s);
 
         rnorm = norm_inf(s);
 
@@ -185,8 +239,13 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         if ( rnorm < eps_rel*rnorm0 || rnorm < eps_abs ) { break; }
 
         sh.LocalCopy(s,0,0,ncomp,nghost);
+        PrintDots(Iteration,"Dots(sh,sh) before Lp.apply",sh,sh);
         Lp.apply(amrlev, mglev, t, sh, MLLinOpT<MF>::BCMode::Homogeneous, MLLinOpT<MF>::StateMode::Correction);
+        PrintDots(Iteration,"Dots(sh,sh) after  Lp.apply",sh,sh);
+
+        PrintDots(Iteration,"Dots(t,t) before Lp.normalize",t,t);
         Lp.normalize(amrlev, mglev, t);
+        PrintDots(Iteration,"Dots(t,t) after  Lp.normalize",t,t);
         //
         // This is a little funky.  I want to elide one of the reductions
         // in the following two dotxy()s.  We do that by calculating the "local"
@@ -206,8 +265,12 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         {
             ret = 3; break;
         }
+        PrintDots(Iteration,"Dots(s,t)",t,s);
+
         MF::Saxpy(sol, omega, sh, 0, 0, ncomp, nghost); // sol += omega * sh
         MF::LinComb(r, RT(1.0), s, 0, -omega, t, 0, 0, ncomp, nghost); // r = s - omega * t
+        PrintDots(Iteration,"Dots(sol,sol)",sol,sol);
+        PrintDots(Iteration,"Dots(r  ,r  )",r,r);
 
         rnorm = norm_inf(r);
 
@@ -244,14 +307,22 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         ret = 8;
     }
 
+    std::string IterationFinal = "MLCGSolver_BiCGStab: Final: Iteration    " + std::to_string(iter);
+
     if ( ( ret == 0 || ret == 8 ) && (rnorm < rnorm0) )
     {
+        // keep updated solution
+        amrex::Print() << "MLCGSolver_BiCGstab: Keep new solution.\n";
         sol.LocalAdd(sorig, 0, 0, ncomp, nghost);
+        PrintDots(IterationFinal,"Dots(sol,sol)",sol,sol);
     }
     else
     {
+        // reset solution to original copy
+        amrex::Print() << "MLCGSolver_BiCGstab: Reset solution.\n";
         sol.setVal(RT(0.0));
         sol.LocalAdd(sorig, 0, 0, ncomp, nghost);
+        PrintDots(IterationFinal,"Dots(sol,sol)",sol,sol);
     }
 
     return ret;
@@ -413,6 +484,25 @@ MLCGSolverT<MF>::norm_inf (const MF& res, bool local) -> RT
     }
     return result;
 }
+
+template <typename MF>
+void
+MLCGSolverT<MF>::PrintDots (const std::string& title, const char* name, const MF& x, const MF& y)
+{
+    amrex::Print() << title << " " << name << " -> ";
+    amrex::Print() << "dotxy: " ;
+    amrex::Print() << dotxy(x,y);
+    amrex::Print() << ", Dot(...,nghost): ";
+    amrex::Print() << Dot(x,0,y,0,x.nComp(),nghost);
+    amrex::Print() << ", Dot(...,ngrow): ";
+    if (x.nGrowVect().allGE(ngrow) && y.nGrowVect().allGE(ngrow)) {
+        amrex::Print() << Dot(x,0,y,0,x.nComp(),ngrow) << "\n";
+    }
+    else {
+        amrex::Print() << "N/A" << "\n";
+    }
+}
+
 
 using MLCGSolver = MLCGSolverT<MultiFab>;
 
