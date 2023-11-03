@@ -14,14 +14,24 @@
 
 namespace amrex
 {
+    template <typename DMF, typename SMF,
+              std::enable_if_t<IsFabArray_v<SMF> && IsFabArray_v<DMF>, int> = 0>
+    void average_to_different_ixtype (DMF& destMF, int dcomp,
+                                      const SMF& sourceMF, int scomp,
+                                      int ncomp = 1, IntVect ngrow = IntVect{0},
+                                      Geometry* geom = nullptr);
+
     //! Average nodal-based MultiFab onto cell-centered MultiFab.
     void average_node_to_cellcenter (MultiFab& cc, int dcomp,
                                      const MultiFab& nd, int scomp,
                                      int ncomp, int ngrow = 0);
 
-    //! Average edge-based MultiFab onto cell-centered MultiFab. This fills in
-    //! ngrow ghost cells in the cell-centered MultiFab. Both cell centered and
-    //! edge centered MultiFabs need to have ngrow ghost values
+    /**
+     * \brief Average edge-based MultiFab onto cell-centered MultiFab.
+     *
+     * This fills in \p ngrow ghost cells in the cell-centered MultiFab. Both cell centered and
+     * edge centered MultiFabs need to have \p ngrow ghost values.
+     */
     void average_edge_to_cellcenter (MultiFab& cc, int dcomp,
                                      const Vector<const MultiFab*>& edge,
                                      int ngrow = 0);
@@ -30,21 +40,21 @@ namespace amrex
     void average_face_to_cellcenter (MultiFab& cc, int dcomp,
                                      const Vector<const MultiFab*>& fc,
                                      int ngrow = 0);
-
+    //! Average face-based FabArray onto cell-centered FabArray.
     template <typename CMF, typename FMF,
               std::enable_if_t<IsFabArray_v<CMF> && IsFabArray_v<FMF>, int> = 0>
     void average_face_to_cellcenter (CMF& cc, int dcomp,
                                      const Array<const FMF*,AMREX_SPACEDIM>& fc,
                                      int ngrow = 0);
-
+    //! Average face-based MultiFab onto cell-centered MultiFab with geometric weighting.
     void average_face_to_cellcenter (MultiFab& cc,
                                      const Vector<const MultiFab*>& fc,
                                      const Geometry& geom);
+    //! Average face-based MultiFab onto cell-centered MultiFab with geometric weighting.
     void average_face_to_cellcenter (MultiFab& cc,
                                      const Array<const MultiFab*,AMREX_SPACEDIM>& fc,
                                      const Geometry& geom);
-
-    //! Average cell-centered MultiFab onto face-based MultiFab.
+    //! Average cell-centered MultiFab onto face-based MultiFab with geometric weighting.
     void average_cellcenter_to_face (const Vector<MultiFab*>& fc,
                                      const MultiFab& cc,
                                      const Geometry& geom,
@@ -55,31 +65,62 @@ namespace amrex
                                      const Geometry& geom,
                                      int ncomp = 1,
                                      bool use_harmonic_averaging = false);
+    // *******************************************************************************************************
+    /**
+     * \brief Geometric weighed average of fine MultiFab onto coarse MultiFab.
+     *
+     * Both MultiFabs are assumed to have the same IndexType. This routine DOES NOT assume that
+     * the crse BoxArray is a coarsened version of the fine BoxArray.
+     */
+    void average_down (const MultiFab& S_fine, MultiFab& S_crse,
+                       const Geometry& fgeom, const Geometry& cgeom,
+                       int scomp, int ncomp, const IntVect& ratio);
+    void average_down (const MultiFab& S_fine, MultiFab& S_crse,
+                       const Geometry& fgeom, const Geometry& cgeom,
+                       int scomp, int ncomp, int rr);
+    /**
+     * \brief Average fine FabArray onto coarse FabArray of same IndexType without geometric weighting.
+     *
+     * Works for any IndexType shared by both \p crse and \p fine. This routine DOES NOT assume that
+     * the \p crse BoxArray is a coarsened version of the \p fine BoxArray.
+     */
+    template<typename FAB>
+    void average_down (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
+                       int scomp, int ncomp, const IntVect& ratio, const IntVect& ngcrse = IntVect(0));
+    template<typename FAB>
+    void average_down (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
+                       int scomp, int ncomp, int rr);
 
     //! Average fine face-based MultiFab onto crse face-based MultiFab.
-    template <typename MF, std::enable_if_t<IsFabArray<MF>::value,int> = 0>
+    template <typename MF, std::enable_if_t<IsFabArray_v<MF>,int> = 0>
     void average_down_faces (const Vector<const MF*>& fine,
                              const Vector<MF*>& crse,
                              const IntVect& ratio,
                              int ngcrse = 0);
+    //! Average fine face-based FabArray onto crse face-based FabArray.
     template <typename MF, std::enable_if_t<IsFabArray<MF>::value,int> = 0>
     void average_down_faces (const Vector<const MF*>& fine,
                              const Vector<MF*>& crse,
                              int ratio,
                              int ngcrse = 0);
+    //! Average fine face-based FabArray onto crse face-based FabArray.
     template <typename MF, std::enable_if_t<IsFabArray<MF>::value,int> = 0>
     void average_down_faces (const Array<const MF*,AMREX_SPACEDIM>& fine,
                              const Array<MF*,AMREX_SPACEDIM>& crse,
                              const IntVect& ratio,
                              int ngcrse = 0);
+    //! Average fine face-based FabArray onto crse face-based FabArray.
     template <typename MF, std::enable_if_t<IsFabArray<MF>::value,int> = 0>
     void average_down_faces (const Array<const MF*,AMREX_SPACEDIM>& fine,
                              const Array<MF*,AMREX_SPACEDIM>& crse,
                              int ratio,
                              int ngcrse = 0);
-    //! This version does average down for one direction.
-    //! It uses the IndexType of MultiFabs to determine the direction.
-    //! It is expected that one direction is nodal and the rest are cell-centered.
+    /**
+     * \brief This version does average down for one face direction.
+     *
+     * It uses the IndexType of MultiFabs to determine the direction.
+     * It is expected that one direction is nodal and the rest are cell-centered.
+     */
     template <typename FAB>
     void average_down_faces (const FabArray<FAB>& fine, FabArray<FAB>& crse,
                              const IntVect& ratio, int ngcrse=0);
@@ -117,25 +158,32 @@ namespace amrex
                              int ngcrse = 0,
                              bool mfiter_is_definitely_safe=false);
 
-    //! Average fine cell-based MultiFab onto crse cell-centered MultiFab using
-    //! volume-weighting. This routine DOES NOT assume that the crse BoxArray is
-    //! a coarsened version of the fine BoxArray.
-    void average_down (const MultiFab& S_fine, MultiFab& S_crse,
+    /**
+     * \brief Volume weighed average of cell-centered fine MultiFab onto coarse MultiFab.
+     *
+     * Both MultiFabs are assumed to be cell-centered. This routine DOES NOT assume that
+     * the \p crse BoxArray is a coarsened version of the \p fine BoxArray.
+     */
+    void average_down_cells (const MultiFab& S_fine, MultiFab& S_crse,
                        const Geometry& fgeom, const Geometry& cgeom,
                        int scomp, int ncomp, const IntVect& ratio);
-    void average_down (const MultiFab& S_fine, MultiFab& S_crse,
+    void average_down_cells (const MultiFab& S_fine, MultiFab& S_crse,
                        const Geometry& fgeom, const Geometry& cgeom,
                        int scomp, int ncomp, int rr);
 
-    //! Average MultiFab onto crse MultiFab without volume weighting. This
-    //! routine DOES NOT assume that the crse BoxArray is a coarsened version of
-    //! the fine BoxArray. Work for both cell-centered and nodal MultiFabs.
+    /**
+     * \brief Average cell-centered fine FabArray onto coarse FabArray without volume weighting.
+     *
+     * Work for both cell-centered and nodal MultiFabs. This routine DOES NOT assume that
+     * the \p crse BoxArray is a coarsened version of the \p fine BoxArray.
+     */
     template<typename FAB>
-    void average_down (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
+    void average_down_cells (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
                        int scomp, int ncomp, const IntVect& ratio);
     template<typename FAB>
-    void average_down (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
+    void average_down_cells (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
                        int scomp, int ncomp, int rr);
+    // *******************************************************************************************************
 
     //! Add a coarsened version of the data contained in the S_fine MultiFab to
     //! S_crse, including ghost cells.
@@ -490,13 +538,13 @@ void average_down_nodal (const FabArray<FAB>& fine, FabArray<FAB>& crse,
 // We do NOT assume that the coarse layout is a coarsened version of the fine layout.
 // This version does NOT use volume-weighting
 template<typename FAB>
-void average_down (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse, int scomp, int ncomp, int rr)
+void average_down_cells (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse, int scomp, int ncomp, int rr)
 {
     average_down(S_fine,S_crse,scomp,ncomp,rr*IntVect::TheUnitVector());
 }
 
 template<typename FAB>
-void average_down (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
+void average_down_cells (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
                    int scomp, int ncomp, const IntVect& ratio)
 {
     BL_PROFILE("amrex::average_down");
@@ -625,13 +673,108 @@ void average_down (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
 
 
 
-   /**
-    * \brief Returns part of a norm based on two MultiFabs
-    * The MultiFabs MUST have the same underlying BoxArray.
-    * The function f is applied elementwise as f(x(i,j,k,n),y(i,j,k,n))
-    * inside the summation (subject to a valid mask entry pf(mask(i,j,k,n)
-    */
+template<typename FAB>
+void average_down (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
+                   int scomp, int ncomp, const IntVect& ratio, const IntVect& ngcrse)
+{
+    BL_PROFILE("amrex::average_down");
+    AMREX_ASSERT(S_crse.nComp() == S_fine.nComp());
+    AMREX_ASSERT(S_crse.ixType() == S_fine.ixType());
 
+    // Coarsen() the fine stuff on processors owning the fine data.
+    BoxArray crse_S_fine_BA = S_fine.boxArray();
+    if (ngcrse != IntVect{0}) {
+        crse_S_fine_BA.grow(ngcrse);
+    }
+    crse_S_fine_BA.coarsen(ratio);
+
+    if (crse_S_fine_BA == S_crse.boxArray() && S_fine.DistributionMap() == S_crse.DistributionMap())
+    {
+        average_down_matching(S_crse, S_fine, scomp, scomp, ncomp, ratio, ngcrse);
+    }
+    else
+    {
+        FabArray<FAB> crse_S_fine(crse_S_fine_BA, S_fine.DistributionMap(),
+                                  ncomp, ngcrse, MFInfo(), DefaultFabFactory<FAB>());
+        average_down_matching(S_fine, crse_S_fine, 0, scomp, ncomp, ratio, ngcrse);
+        S_crse.ParallelCopy(crse_S_fine,0,scomp,ncomp);
+    }
+}
+
+template<typename FAB>
+void average_down_matching (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
+                            int ccomp, int fcomp, int ncomp, const IntVect& ratio, const IntVect& ngcrse)
+{
+    using value_type = typename FAB::value_type;
+    IndexType ixType = S_fine.ixType();
+
+    Dim3 ratio3{0,0,0};
+    Dim3 range3{1,1,1};
+    int denomInt = 1;
+
+    for (int dir = 0; dir < AMREX_SPACEDIM; dir++) {
+        ratio3[dir] = ratio[dir];
+        if (ixType.cellCentered(dir)) {
+            range3[dir] = ratio[dir];
+            denomInt *= ratio[dir];
+        }
+    }
+    value_type denom = value_type(denomInt);
+
+#ifdef AMREX_USE_GPU
+    if (Gpu::inLaunchRegion() && S_crse.isFusingCandidate()) {
+        auto const& crsema = S_crse.arrays();
+        auto const& finema = S_fine.const_arrays();
+        ParallelFor(S_crse, ngcrse, ncomp,
+        [=] AMREX_GPU_DEVICE (int box_no, int i, int j, int k, int n) noexcept
+        {
+            amrex_avgdown(i,j,k,n,crsema[box_no],finema[box_no],ccomp,fcomp,ratio3,range3,denom);
+        });
+        if (!Gpu::inNoSyncRegion()) {
+            Gpu::streamSynchronize();
+        }
+    } else
+#endif
+    {
+#ifdef AMREX_USE_OMP
+#pragma omp parallel if (Gpu::notInLaunchRegion())
+#endif
+        for (MFIter mfi(S_crse,TilingIfNotGPU()); mfi.isValid(); ++mfi)
+        {
+            //  NOTE: The tilebox is defined at the coarse level.
+            const Box& bx = mfi.growntilebox(ngcrse);
+            Array4<value_type> const& crsearr = S_crse.array(mfi);
+            Array4<value_type const> const& finearr = S_fine.const_array(mfi);
+            AMREX_HOST_DEVICE_PARALLEL_FOR_4D(bx, ncomp, i, j, k, n,
+            {
+                amrex_avgdown(i,j,k,n,crsearr,finearr,ccomp,fcomp,ratio3,range3,denom);
+            });
+        }
+    }
+}
+
+template <typename T>
+AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
+void amrex_avgdown (int i, int j, int k, int n, const Array4<T> &crse, const Array4<const T> &fine,
+                    int ccomp, int fcomp, const Dim3 &ratio3,
+                    const Dim3 &range3, const T &denom) noexcept
+{
+    T c = T(0.0);
+    for (int kk = k * ratio[2]; kk < k * ratio[2] + range3[2]; ++kk) {
+    for (int jj = j * ratio[1]; jj < j * ratio[1] + range3[1]; ++jj) {
+    for (int ii = i * ratio[0]; ii < i * ratio[0] + range3[0]; ++ii) {
+        c += fine(ii,jj,kk,n+fcomp);
+    }}}
+    crse(i,j,k,n+ccomp) = c / denom;
+}
+
+/**
+ * \brief Returns part of a norm based on two MultiFabs.
+ *
+ * The MultiFabs MUST have the same underlying BoxArray.
+ * The function f is applied elementwise as f(x(i,j,k,n),y(i,j,k,n))
+ * inside the summation (subject to a valid mask entry pf(mask(i,j,k,n).
+ */
 template <typename F>
 Real
 NormHelper (const MultiFab& x, int xcomp,
@@ -684,14 +827,14 @@ NormHelper (const MultiFab& x, int xcomp,
     return sm;
 }
 
-   /**
-    * \brief Returns part of a norm based on three MultiFabs
-    * The MultiFabs MUST have the same underlying BoxArray.
-    * The Predicate pf is used to test the mask
-    * The function f is applied elementwise as f(x(i,j,k,n),y(i,j,k,n))
-    * inside the summation (subject to a valid mask entry pf(mask(i,j,k,n)
-    */
-
+/**
+ * \brief Returns part of a norm based on three MultiFabs.
+ *
+ * The MultiFabs MUST have the same underlying BoxArray.
+ * The Predicate pf is used to test the mask
+ * The function f is applied elementwise as f(x(i,j,k,n),y(i,j,k,n))
+ * inside the summation (subject to a valid mask entry pf(mask(i,j,k,n)
+ */
 template <typename MMF, typename Pred, typename F>
 Real
 NormHelper (const MMF& mask,

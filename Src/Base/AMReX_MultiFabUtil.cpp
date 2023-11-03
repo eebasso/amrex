@@ -308,17 +308,14 @@ namespace amrex
 
 // *************************************************************************************************************
 
-    // Average fine cell-based MultiFab onto crse cell-centered MultiFab.
-    // We do NOT assume that the coarse layout is a coarsened version of the fine layout.
-    // This version DOES use volume-weighting.
-    void average_down (const MultiFab& S_fine, MultiFab& S_crse,
+    void average_down_cells (const MultiFab& S_fine, MultiFab& S_crse,
                        const Geometry& fgeom, const Geometry& cgeom,
                        int scomp, int ncomp, int rr)
     {
          average_down(S_fine,S_crse,fgeom,cgeom,scomp,ncomp,rr*IntVect::TheUnitVector());
     }
 
-    void average_down (const MultiFab& S_fine, MultiFab& S_crse,
+    void average_down_cells (const MultiFab& S_fine, MultiFab& S_crse,
                        const Geometry& fgeom, const Geometry& cgeom,
                        int scomp, int ncomp, const IntVect& ratio)
     {
@@ -332,7 +329,7 @@ namespace amrex
         }
 
 #if (AMREX_SPACEDIM == 3)
-        amrex::average_down(S_fine, S_crse, scomp, ncomp, ratio);
+        amrex::average_down_cells(S_fine, S_crse, scomp, ncomp, ratio);
 #else
 
         AMREX_ASSERT(S_crse.nComp() == S_fine.nComp() &&
@@ -467,59 +464,60 @@ namespace amrex
     void average_down_edges (const MultiFab& fine, MultiFab& crse,
                              const IntVect& ratio, int ngcrse)
     {
-        AMREX_ASSERT(crse.nComp() == fine.nComp());
-        AMREX_ASSERT(fine.ixType() == crse.ixType());
-        const auto type = fine.ixType();
-        int dir;
-        for (dir = 0; dir < AMREX_SPACEDIM; ++dir) {
-            if (type.cellCentered(dir)) { break; }
-        }
-        auto tmptype = type;
-        tmptype.set(dir);
-        if (dir >= AMREX_SPACEDIM || !tmptype.nodeCentered()) {
-            amrex::Abort("average_down_edges: not face index type");
-        }
-        const int ncomp = crse.nComp();
-        if (isMFIterSafe(fine, crse))
-        {
-#ifdef AMREX_USE_GPU
-            if (Gpu::inLaunchRegion() && crse.isFusingCandidate()) {
-                auto const& crsema = crse.arrays();
-                auto const& finema = fine.const_arrays();
-                ParallelFor(crse, IntVect(ngcrse), ncomp,
-                [=] AMREX_GPU_DEVICE (int box_no, int i, int j, int k, int n) noexcept
-                {
-                    amrex_avgdown_edges(i,j,k,n, crsema[box_no], finema[box_no], 0, 0, ratio, dir);
-                });
-                if (!Gpu::inNoSyncRegion()) {
-                    Gpu::streamSynchronize();
-                }
-            } else
-#endif
-            {
-#ifdef AMREX_USE_OMP
-#pragma omp parallel if(Gpu::notInLaunchRegion())
-#endif
-                for (MFIter mfi(crse,TilingIfNotGPU()); mfi.isValid(); ++mfi)
-                {
-                    const Box& bx = mfi.growntilebox(ngcrse);
-                    Array4<Real> const& crsearr = crse.array(mfi);
-                    Array4<Real const> const& finearr = fine.const_array(mfi);
+        average_down(fine, crse, 0, crse.nComp(), ratio, IntVect(ngcrse));
+//         AMREX_ASSERT(crse.nComp() == fine.nComp());
+//         AMREX_ASSERT(fine.ixType() == crse.ixType());
+//         const auto type = fine.ixType();
+//         int dir;
+//         for (dir = 0; dir < AMREX_SPACEDIM; ++dir) {
+//             if (type.cellCentered(dir)) { break; }
+//         }
+//         auto tmptype = type;
+//         tmptype.set(dir);
+//         if (dir >= AMREX_SPACEDIM || !tmptype.nodeCentered()) {
+//             amrex::Abort("average_down_edges: not face index type");
+//         }
+//         const int ncomp = crse.nComp();
+//         if (isMFIterSafe(fine, crse))
+//         {
+// #ifdef AMREX_USE_GPU
+//             if (Gpu::inLaunchRegion() && crse.isFusingCandidate()) {
+//                 auto const& crsema = crse.arrays();
+//                 auto const& finema = fine.const_arrays();
+//                 ParallelFor(crse, IntVect(ngcrse), ncomp,
+//                 [=] AMREX_GPU_DEVICE (int box_no, int i, int j, int k, int n) noexcept
+//                 {
+//                     amrex_avgdown_edges(i,j,k,n, crsema[box_no], finema[box_no], 0, 0, ratio, dir);
+//                 });
+//                 if (!Gpu::inNoSyncRegion()) {
+//                     Gpu::streamSynchronize();
+//                 }
+//             } else
+// #endif
+//             {
+// #ifdef AMREX_USE_OMP
+// #pragma omp parallel if(Gpu::notInLaunchRegion())
+// #endif
+//                 for (MFIter mfi(crse,TilingIfNotGPU()); mfi.isValid(); ++mfi)
+//                 {
+//                     const Box& bx = mfi.growntilebox(ngcrse);
+//                     Array4<Real> const& crsearr = crse.array(mfi);
+//                     Array4<Real const> const& finearr = fine.const_array(mfi);
 
-                    AMREX_HOST_DEVICE_PARALLEL_FOR_4D(bx, ncomp, i, j, k, n,
-                    {
-                        amrex_avgdown_edges(i,j,k,n, crsearr, finearr, 0, 0, ratio, dir);
-                    });
-                }
-            }
-        }
-        else
-        {
-            MultiFab ctmp(amrex::coarsen(fine.boxArray(),ratio), fine.DistributionMap(),
-                          ncomp, ngcrse, MFInfo(), FArrayBoxFactory());
-            average_down_edges(fine, ctmp, ratio, ngcrse);
-            crse.ParallelCopy(ctmp,0,0,ncomp,ngcrse,ngcrse);
-        }
+//                     AMREX_HOST_DEVICE_PARALLEL_FOR_4D(bx, ncomp, i, j, k, n,
+//                     {
+//                         amrex_avgdown_edges(i,j,k,n, crsearr, finearr, 0, 0, ratio, dir);
+//                     });
+//                 }
+//             }
+//         }
+//         else
+//         {
+//             MultiFab ctmp(amrex::coarsen(fine.boxArray(),ratio), fine.DistributionMap(),
+//                           ncomp, ngcrse, MFInfo(), FArrayBoxFactory());
+//             average_down_edges(fine, ctmp, ratio, ngcrse);
+//             crse.ParallelCopy(ctmp,0,0,ncomp,ngcrse,ngcrse);
+//         }
     }
 
     void print_state(const MultiFab& mf, const IntVect& cell, const int n, const IntVect& ng)

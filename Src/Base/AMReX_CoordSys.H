@@ -248,6 +248,8 @@ protected:
     bool ok = false;
 };
 
+using CoordType = CoordSys::CoordType;
+
 }
 
 #endif /*_COORDSYS_H_*/

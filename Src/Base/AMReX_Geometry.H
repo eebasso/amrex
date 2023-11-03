@@ -16,14 +16,7 @@
 #include <map>
 
 namespace amrex {
-/**
-* \class Geometry
-* \brief Rectangular problem domain geometry.
-*
-* This class describes problem domain and coordinate system for
-* RECTANGULAR problem domains.  Since the problem domain is RECTANGULAR,
-* periodicity is meaningful.
-*/
+
 
 class MultiFab;
 class DistributionMapping;
@@ -67,6 +60,14 @@ public:
     int coord;
 };
 
+/**
+* \class Geometry
+* \brief Rectangular problem domain geometry.
+*
+* This class describes problem domain and coordinate system for
+* RECTANGULAR problem domains.  Since the problem domain is RECTANGULAR,
+* periodicity is meaningful.
+*/
 class Geometry
     :
     public CoordSys
@@ -122,8 +123,8 @@ public:
     //! Returns non-static copy of geometry's stored data.
     [[nodiscard]] GeometryData data() const noexcept {
         return { prob_domain, domain, {AMREX_D_DECL(dx[0],dx[1],dx[2])},
-            {AMREX_D_DECL(is_periodic[0], is_periodic[1], is_periodic[2])},
-                static_cast<int>(c_sys) };
+                 {AMREX_D_DECL(is_periodic[0], is_periodic[1], is_periodic[2])},
+                 c_sys };
     }
 
     //! Read static values from ParmParse database.
