@@ -1,0 +1,924 @@
+Initializing AMReX (23.11-4-ga7afcba3cffd)...
+MPI initialized with 4 MPI processes
+MPI initialized with thread support level 0
+AMReX (23.11-4-ga7afcba3cffd) initialized
+MLMG: # of AMR levels: 1
+      # of MG levels on the coarsest AMR level: 6
+MLMG: Initial rhs               = 15.20237123
+MLMG: Initial residual (resid0) = 15.20237123
+MLCGSolver_BiCGStab: nghost = (0,0)
+MLCGSolver_BiCGStab: ngrow  = (1,1)
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 0.001891652539, Dot(...,nghost): 0.002574898213, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) after  Lp.normalize -> dotxy: 2.168484812e-06, Dot(...,nghost): 2.812096246e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(sorig,sorig) -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(rh,rh) -> dotxy: 2.168484812e-06, Dot(...,nghost): 2.812096246e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after sol.setVal(0) -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Initial error (error0) =        0.0006901201077
+MLCGSolver_BiCGStab: Post_Calc           0 Dots(rh,r) -> dotxy: 2.168484812e-06, Dot(...,nghost): 2.812096246e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           0 Dots(p,p) -> dotxy: 2.168484812e-06, Dot(...,nghost): 2.812096246e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(ph,ph) before Lp.apply -> dotxy: 2.168484812e-06, Dot(...,nghost): 2.812096246e-06, Dot(...,ngrow): 2.812096246e-06
+MLCGSolver_BiCGStab: Half Iter           1 Dots(ph,ph) after  Lp.apply -> dotxy: 2.168484812e-06, Dot(...,nghost): 2.812096246e-06, Dot(...,ngrow): 3.721022258e-06
+MLCGSolver_BiCGStab: Half Iter           1 Dots(v,v) before Lp.normalize -> dotxy: 0.0002870351167, Dot(...,nghost): 0.0003768134128, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(v,v) after  Lp.normalize -> dotxy: 3.529131174e-07, Dot(...,nghost): 4.38471779e-07, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(rh,v) -> dotxy: 6.438281759e-07, Dot(...,nghost): 8.724248624e-07, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(sol,sol) -> dotxy: 2.45996652e-05, Dot(...,nghost): 3.190090416e-05, Dot(...,ngrow): 3.190090416e-05
+MLCGSolver_BiCGStab: Half Iter           1 Dots(s  ,s  ) -> dotxy: 1.835022377e-06, Dot(...,nghost): 1.909347939e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 rel. err. 1.056714224
+MLCGSolver_BiCGStab: Iteration           1 Dots(sh,sh) before Lp.apply -> dotxy: 1.835022377e-06, Dot(...,nghost): 1.909347939e-06, Dot(...,ngrow): 1.909347939e-06
+MLCGSolver_BiCGStab: Iteration           1 Dots(sh,sh) after  Lp.apply -> dotxy: 1.835022377e-06, Dot(...,nghost): 1.909347939e-06, Dot(...,ngrow): 3.263108108e-06
+MLCGSolver_BiCGStab: Iteration           1 Dots(t,t) before Lp.normalize -> dotxy: 0.001410041368, Dot(...,nghost): 0.001787806681, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(t,t) after  Lp.normalize -> dotxy: 1.625314441e-06, Dot(...,nghost): 1.938167177e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(s,t) -> dotxy: 1.36642706e-06, Dot(...,nghost): 1.43568819e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(sol,sol) -> dotxy: 2.589666373e-05, Dot(...,nghost): 3.253501187e-05, Dot(...,ngrow): 3.253501187e-05
+MLCGSolver_BiCGStab: Iteration           1 Dots(r  ,r  ) -> dotxy: 6.862459531e-07, Dot(...,nghost): 8.652388209e-07, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 rel. err. 0.4714143472
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(rh,r) -> dotxy: 5.916552047e-07, Dot(...,nghost): 8.370966411e-07, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) before      -> dotxy: 2.168484812e-06, Dot(...,nghost): 2.812096246e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) after Saxpy -> dotxy: 1.335372043e-06, Dot(...,nghost): 1.655086999e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) after  Xpay -> dotxy: 3.626826371e-06, Dot(...,nghost): 4.599239586e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(ph,ph) before Lp.apply -> dotxy: 3.626826371e-06, Dot(...,nghost): 4.599239586e-06, Dot(...,ngrow): 5.508165598e-06
+MLCGSolver_BiCGStab: Half Iter           2 Dots(ph,ph) after  Lp.apply -> dotxy: 3.626826371e-06, Dot(...,nghost): 4.599239586e-06, Dot(...,ngrow): 6.229716719e-06
+MLCGSolver_BiCGStab: Half Iter           2 Dots(v,v) before Lp.normalize -> dotxy: 6.971937368e-05, Dot(...,nghost): 9.622781777e-05, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(v,v) after  Lp.normalize -> dotxy: 5.796365656e-08, Dot(...,nghost): 8.171663491e-08, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(rh,v) -> dotxy: 2.418391063e-07, Dot(...,nghost): 3.650538118e-07, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(sol,sol) -> dotxy: 9.154963572e-05, Dot(...,nghost): 0.0001159083917, Dot(...,ngrow): 0.0001159083917
+MLCGSolver_BiCGStab: Half Iter           2 Dots(s  ,s  ) -> dotxy: 6.505820637e-07, Dot(...,nghost): 7.555329795e-07, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 rel. err. 0.4972088652
+MLCGSolver_BiCGStab: Iteration           2 Dots(sh,sh) before Lp.apply -> dotxy: 6.505820637e-07, Dot(...,nghost): 7.555329795e-07, Dot(...,ngrow): 2.109293148e-06
+MLCGSolver_BiCGStab: Iteration           2 Dots(sh,sh) after  Lp.apply -> dotxy: 6.505820637e-07, Dot(...,nghost): 7.555329795e-07, Dot(...,ngrow): 1.163049923e-06
+MLCGSolver_BiCGStab: Iteration           2 Dots(t,t) before Lp.normalize -> dotxy: 0.0002928145797, Dot(...,nghost): 0.0003710352886, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(t,t) after  Lp.normalize -> dotxy: 2.460819442e-07, Dot(...,nghost): 3.221592021e-07, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(s,t) -> dotxy: 2.777183163e-07, Dot(...,nghost): 3.120840101e-07, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(sol,sol) -> dotxy: 9.814506139e-05, Dot(...,nghost): 0.0001226234182, Dot(...,ngrow): 0.0001226234182
+MLCGSolver_BiCGStab: Iteration           2 Dots(r  ,r  ) -> dotxy: 3.371601934e-07, Dot(...,nghost): 4.614392693e-07, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 rel. err. 0.3101341326
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(rh,r) -> dotxy: 3.488560171e-07, Dot(...,nghost): 5.384829744e-07, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) before      -> dotxy: 3.626826371e-06, Dot(...,nghost): 4.599239586e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) after Saxpy -> dotxy: 3.128010751e-06, Dot(...,nghost): 3.819023592e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) after  Xpay -> dotxy: 7.485765552e-06, Dot(...,nghost): 9.433638303e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(ph,ph) before Lp.apply -> dotxy: 7.485765552e-06, Dot(...,nghost): 9.433638303e-06, Dot(...,ngrow): 1.106411544e-05
+MLCGSolver_BiCGStab: Half Iter           3 Dots(ph,ph) after  Lp.apply -> dotxy: 7.485765552e-06, Dot(...,nghost): 9.433638303e-06, Dot(...,ngrow): 1.297529296e-05
+MLCGSolver_BiCGStab: Half Iter           3 Dots(v,v) before Lp.normalize -> dotxy: 4.950311107e-05, Dot(...,nghost): 7.166738626e-05, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(v,v) after  Lp.normalize -> dotxy: 3.511945598e-08, Dot(...,nghost): 4.99284622e-08, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(rh,v) -> dotxy: 1.237816264e-07, Dot(...,nghost): 2.037690913e-07, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(sol,sol) -> dotxy: 0.0003041214238, Dot(...,nghost): 0.000381691996, Dot(...,ngrow): 0.000381691996
+MLCGSolver_BiCGStab: Half Iter           3 Dots(s  ,s  ) -> dotxy: 5.754232791e-08, Dot(...,nghost): 6.394420758e-08, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 rel. err. 0.1654000182
+MLCGSolver_BiCGStab: Iteration           3 Dots(sh,sh) before Lp.apply -> dotxy: 5.754232791e-08, Dot(...,nghost): 6.394420758e-08, Dot(...,ngrow): 4.714611506e-07
+MLCGSolver_BiCGStab: Iteration           3 Dots(sh,sh) after  Lp.apply -> dotxy: 5.754232791e-08, Dot(...,nghost): 6.394420758e-08, Dot(...,ngrow): 1.081495701e-07
+MLCGSolver_BiCGStab: Iteration           3 Dots(t,t) before Lp.normalize -> dotxy: 6.985150769e-05, Dot(...,nghost): 8.683511114e-05, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(t,t) after  Lp.normalize -> dotxy: 6.559255543e-08, Dot(...,nghost): 7.940320373e-08, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(s,t) -> dotxy: 5.128048324e-08, Dot(...,nghost): 5.645613265e-08, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(sol,sol) -> dotxy: 0.0003069375319, Dot(...,nghost): 0.0003842978381, Dot(...,ngrow): 0.0003842978381
+MLCGSolver_BiCGStab: Iteration           3 Dots(r  ,r  ) -> dotxy: 1.745107145e-08, Dot(...,nghost): 2.420156748e-08, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 rel. err. 0.0714879709
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(rh,r) -> dotxy: 6.255212833e-08, Dot(...,nghost): 9.940597976e-08, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) before      -> dotxy: 7.485765552e-06, Dot(...,nghost): 9.433638303e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) after Saxpy -> dotxy: 6.935374079e-06, Dot(...,nghost): 8.627403785e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) after  Xpay -> dotxy: 3.282410182e-06, Dot(...,nghost): 4.121334956e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(ph,ph) before Lp.apply -> dotxy: 3.282410182e-06, Dot(...,nghost): 4.121334956e-06, Dot(...,ngrow): 7.662989615e-06
+MLCGSolver_BiCGStab: Half Iter           4 Dots(ph,ph) after  Lp.apply -> dotxy: 3.282410182e-06, Dot(...,nghost): 4.121334956e-06, Dot(...,ngrow): 5.737984671e-06
+MLCGSolver_BiCGStab: Half Iter           4 Dots(v,v) before Lp.normalize -> dotxy: 1.773512627e-05, Dot(...,nghost): 2.523717711e-05, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(v,v) after  Lp.normalize -> dotxy: 1.108759278e-08, Dot(...,nghost): 1.52867048e-08, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(rh,v) -> dotxy: 5.111429268e-08, Dot(...,nghost): 8.146432868e-08, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(sol,sol) -> dotxy: 0.0003882915116, Dot(...,nghost): 0.0004863386886, Dot(...,ngrow): 0.0004863386886
+MLCGSolver_BiCGStab: Half Iter           4 Dots(s  ,s  ) -> dotxy: 1.181340426e-10, Dot(...,nghost): 1.3408151e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 rel. err. 0.009601266455
+MLCGSolver_BiCGStab: Iteration           4 Dots(sh,sh) before Lp.apply -> dotxy: 1.181340426e-10, Dot(...,nghost): 1.3408151e-10, Dot(...,ngrow): 4.433944406e-08
+MLCGSolver_BiCGStab: Iteration           4 Dots(sh,sh) after  Lp.apply -> dotxy: 1.181340426e-10, Dot(...,nghost): 1.3408151e-10, Dot(...,ngrow): 2.102332383e-10
+MLCGSolver_BiCGStab: Iteration           4 Dots(t,t) before Lp.normalize -> dotxy: 1.362789001e-07, Dot(...,nghost): 1.570905328e-07, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(t,t) after  Lp.normalize -> dotxy: 1.408297409e-10, Dot(...,nghost): 1.539652105e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(s,t) -> dotxy: 1.190488498e-10, Dot(...,nghost): 1.262536492e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(sol,sol) -> dotxy: 0.0003883911742, Dot(...,nghost): 0.0004864592843, Dot(...,ngrow): 0.0004864592843
+MLCGSolver_BiCGStab: Iteration           4 Dots(r  ,r  ) -> dotxy: 1.749742592e-11, Dot(...,nghost): 3.065047703e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 rel. err. 0.003066407844
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(rh,r) -> dotxy: 1.027082237e-09, Dot(...,nghost): 2.69096516e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) before      -> dotxy: 3.282410182e-06, Dot(...,nghost): 4.121334956e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) after Saxpy -> dotxy: 3.021290303e-06, Dot(...,nghost): 3.76963715e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) after  Xpay -> dotxy: 1.904693635e-09, Dot(...,nghost): 2.476834811e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(ph,ph) before Lp.apply -> dotxy: 1.904693635e-09, Dot(...,nghost): 2.476834811e-09, Dot(...,ngrow): 1.61912655e-06
+MLCGSolver_BiCGStab: Half Iter           5 Dots(ph,ph) after  Lp.apply -> dotxy: 1.904693635e-09, Dot(...,nghost): 2.476834811e-09, Dot(...,ngrow): 3.371091723e-09
+MLCGSolver_BiCGStab: Half Iter           5 Dots(v,v) before Lp.normalize -> dotxy: 2.565258527e-08, Dot(...,nghost): 4.58789007e-08, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(v,v) after  Lp.normalize -> dotxy: 1.50589336e-11, Dot(...,nghost): 2.588982537e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(rh,v) -> dotxy: 9.198501943e-10, Dot(...,nghost): 2.54810766e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(sol,sol) -> dotxy: 0.0003902797489, Dot(...,nghost): 0.000488868258, Dot(...,ngrow): 0.000488868258
+MLCGSolver_BiCGStab: Half Iter           5 Dots(s  ,s  ) -> dotxy: 1.614594203e-12, Dot(...,nghost): 1.725300144e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 rel. err. 0.001013743475
+MLCGSolver_BiCGStab: Iteration           5 Dots(sh,sh) before Lp.apply -> dotxy: 1.614594203e-12, Dot(...,nghost): 1.725300144e-12, Dot(...,ngrow): 7.787702844e-11
+MLCGSolver_BiCGStab: Iteration           5 Dots(sh,sh) after  Lp.apply -> dotxy: 1.614594203e-12, Dot(...,nghost): 1.725300144e-12, Dot(...,ngrow): 2.682695632e-12
+MLCGSolver_BiCGStab: Iteration           5 Dots(t,t) before Lp.normalize -> dotxy: 3.041217477e-09, Dot(...,nghost): 3.6696438e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(t,t) after  Lp.normalize -> dotxy: 2.935442759e-12, Dot(...,nghost): 3.271664677e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(s,t) -> dotxy: 2.122236921e-12, Dot(...,nghost): 2.287708861e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(sol,sol) -> dotxy: 0.000390284746, Dot(...,nghost): 0.0004888715428, Dot(...,ngrow): 0.0004888715428
+MLCGSolver_BiCGStab: Iteration           5 Dots(r  ,r  ) -> dotxy: 8.028066998e-14, Dot(...,nghost): 1.274624694e-13, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 rel. err. 0.0001892998666
+MLCGSolver_BiCGStab: Post_Calc           5 Dots(rh,r) -> dotxy: -4.606309541e-12, Dot(...,nghost): 9.866528476e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           5 Dots(p,p) before      -> dotxy: 1.904693635e-09, Dot(...,nghost): 2.476834811e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           5 Dots(p,p) after Saxpy -> dotxy: 1.783920143e-09, Dot(...,nghost): 2.253934154e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           5 Dots(p,p) after  Xpay -> dotxy: 1.525315426e-13, Dot(...,nghost): 1.614763437e-13, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           6 Dots(ph,ph) before Lp.apply -> dotxy: 1.525315426e-13, Dot(...,nghost): 1.614763437e-13, Dot(...,ngrow): 8.944183884e-10
+MLCGSolver_BiCGStab: Half Iter           6 Dots(ph,ph) after  Lp.apply -> dotxy: 1.525315426e-13, Dot(...,nghost): 1.614763437e-13, Dot(...,ngrow): 2.342150934e-13
+MLCGSolver_BiCGStab: Half Iter           6 Dots(v,v) before Lp.normalize -> dotxy: 7.103887188e-11, Dot(...,nghost): 1.180014382e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           6 Dots(v,v) after  Lp.normalize -> dotxy: 4.885660008e-14, Dot(...,nghost): 7.39748748e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           6 Dots(rh,v) -> dotxy: -1.977700773e-11, Dot(...,nghost): 6.51919783e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           6 Dots(sol,sol) -> dotxy: 0.0003902821605, Dot(...,nghost): 0.0004888691441, Dot(...,ngrow): 0.0004888691441
+MLCGSolver_BiCGStab: Half Iter           6 Dots(s  ,s  ) -> dotxy: 5.649034586e-14, Dot(...,nghost): 8.921800708e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           6 rel. err. 0.0001520473281
+MLCGSolver_BiCGStab: Iteration           6 Dots(sh,sh) before Lp.apply -> dotxy: 5.649034586e-14, Dot(...,nghost): 8.921800708e-14, Dot(...,ngrow): 1.046613495e-12
+MLCGSolver_BiCGStab: Iteration           6 Dots(sh,sh) after  Lp.apply -> dotxy: 5.649034586e-14, Dot(...,nghost): 8.921800708e-14, Dot(...,ngrow): 1.002806332e-13
+MLCGSolver_BiCGStab: Iteration           6 Dots(t,t) before Lp.normalize -> dotxy: 4.551736979e-11, Dot(...,nghost): 7.810996249e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           6 Dots(t,t) after  Lp.normalize -> dotxy: 3.072123306e-14, Dot(...,nghost): 4.819889046e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           6 Dots(s,t) -> dotxy: 3.93306352e-14, Dot(...,nghost): 6.306604128e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           6 Dots(sol,sol) -> dotxy: 0.0003902829696, Dot(...,nghost): 0.0004888739072, Dot(...,ngrow): 0.0004888739072
+MLCGSolver_BiCGStab: Iteration           6 Dots(r  ,r  ) -> dotxy: 6.137586178e-15, Dot(...,nghost): 6.737340581e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           6 rel. err. 6.674135872e-05
+MLCGSolver_BiCGStab: Final: Iteration    6 rel. err. 6.674135872e-05
+MLCGSolver_BiCGstab: Keep new solution.
+MLCGSolver_BiCGStab: Final: Iteration    6 Dots(sol,sol) -> dotxy: 0.0003902829696, Dot(...,nghost): 0.0004888739072, Dot(...,ngrow): 0.0004888739072
+MLMG: Iteration   1 Fine resid/bnorm = 0.02796299314
+MLCGSolver_BiCGStab: nghost = (0,0)
+MLCGSolver_BiCGStab: ngrow  = (1,1)
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 3.078110882e-06, Dot(...,nghost): 4.223229191e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) after  Lp.normalize -> dotxy: 3.469121951e-09, Dot(...,nghost): 4.577237459e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(sorig,sorig) -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(rh,rh) -> dotxy: 3.469121951e-09, Dot(...,nghost): 4.577237459e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after sol.setVal(0) -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Initial error (error0) =        2.770774469e-05
+MLCGSolver_BiCGStab: Post_Calc           0 Dots(rh,r) -> dotxy: 3.469121951e-09, Dot(...,nghost): 4.577237459e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           0 Dots(p,p) -> dotxy: 3.469121951e-09, Dot(...,nghost): 4.577237459e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(ph,ph) before Lp.apply -> dotxy: 3.469121951e-09, Dot(...,nghost): 4.577237459e-09, Dot(...,ngrow): 4.577237459e-09
+MLCGSolver_BiCGStab: Half Iter           1 Dots(ph,ph) after  Lp.apply -> dotxy: 3.469121951e-09, Dot(...,nghost): 4.577237459e-09, Dot(...,ngrow): 6.00591938e-09
+MLCGSolver_BiCGStab: Half Iter           1 Dots(v,v) before Lp.normalize -> dotxy: 3.217709964e-07, Dot(...,nghost): 4.41756432e-07, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(v,v) after  Lp.normalize -> dotxy: 4.806313447e-10, Dot(...,nghost): 6.205014508e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(rh,v) -> dotxy: 8.29280909e-10, Dot(...,nghost): 1.205058044e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(sol,sol) -> dotxy: 6.070931967e-08, Dot(...,nghost): 8.010124059e-08, Dot(...,ngrow): 8.010124059e-08
+MLCGSolver_BiCGStab: Half Iter           1 Dots(s  ,s  ) -> dotxy: 4.941883011e-09, Dot(...,nghost): 5.353743758e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 rel. err. 1.498292068
+MLCGSolver_BiCGStab: Iteration           1 Dots(sh,sh) before Lp.apply -> dotxy: 4.941883011e-09, Dot(...,nghost): 5.353743758e-09, Dot(...,ngrow): 5.353743758e-09
+MLCGSolver_BiCGStab: Iteration           1 Dots(sh,sh) after  Lp.apply -> dotxy: 4.941883011e-09, Dot(...,nghost): 5.353743758e-09, Dot(...,ngrow): 9.186052854e-09
+MLCGSolver_BiCGStab: Iteration           1 Dots(t,t) before Lp.normalize -> dotxy: 4.06947842e-06, Dot(...,nghost): 5.121665314e-06, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(t,t) after  Lp.normalize -> dotxy: 5.103154812e-09, Dot(...,nghost): 6.272125212e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(s,t) -> dotxy: 4.241190075e-09, Dot(...,nghost): 4.738591699e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(sol,sol) -> dotxy: 6.41227453e-08, Dot(...,nghost): 8.057368001e-08, Dot(...,ngrow): 8.057368001e-08
+MLCGSolver_BiCGStab: Iteration           1 Dots(r  ,r  ) -> dotxy: 1.417064754e-09, Dot(...,nghost): 1.809576401e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 rel. err. 0.5145325137
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(rh,r) -> dotxy: 1.24998111e-09, Dot(...,nghost): 1.727589834e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) before      -> dotxy: 3.469121951e-09, Dot(...,nghost): 4.577237459e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) after Saxpy -> dotxy: 2.422683429e-09, Dot(...,nghost): 3.00279853e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) after  Xpay -> dotxy: 1.404049095e-08, Dot(...,nghost): 1.772833194e-08, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(ph,ph) before Lp.apply -> dotxy: 1.404049095e-08, Dot(...,nghost): 1.772833194e-08, Dot(...,ngrow): 1.915701386e-08
+MLCGSolver_BiCGStab: Half Iter           2 Dots(ph,ph) after  Lp.apply -> dotxy: 1.404049095e-08, Dot(...,nghost): 1.772833194e-08, Dot(...,ngrow): 2.425026279e-08
+MLCGSolver_BiCGStab: Half Iter           2 Dots(v,v) before Lp.normalize -> dotxy: 1.71833362e-07, Dot(...,nghost): 2.402189555e-07, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(v,v) after  Lp.normalize -> dotxy: 1.541139731e-10, Dot(...,nghost): 2.166787176e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(rh,v) -> dotxy: 5.455438244e-10, Dot(...,nghost): 8.074305139e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(sol,sol) -> dotxy: 2.706247504e-07, Dot(...,nghost): 3.412523339e-07, Dot(...,ngrow): 3.412523339e-07
+MLCGSolver_BiCGStab: Half Iter           2 Dots(s  ,s  ) -> dotxy: 1.23263795e-09, Dot(...,nghost): 1.475386554e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 rel. err. 0.536472889
+MLCGSolver_BiCGStab: Iteration           2 Dots(sh,sh) before Lp.apply -> dotxy: 1.23263795e-09, Dot(...,nghost): 1.475386554e-09, Dot(...,ngrow): 5.307695651e-09
+MLCGSolver_BiCGStab: Iteration           2 Dots(sh,sh) after  Lp.apply -> dotxy: 1.23263795e-09, Dot(...,nghost): 1.475386554e-09, Dot(...,ngrow): 2.184284174e-09
+MLCGSolver_BiCGStab: Iteration           2 Dots(t,t) before Lp.normalize -> dotxy: 5.060223713e-07, Dot(...,nghost): 6.457746384e-07, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(t,t) after  Lp.normalize -> dotxy: 4.508524475e-10, Dot(...,nghost): 5.982788287e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(s,t) -> dotxy: 5.626354021e-10, Dot(...,nghost): 6.685442971e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(sol,sol) -> dotxy: 2.856979122e-07, Dot(...,nghost): 3.563924076e-07, Dot(...,ngrow): 3.563924076e-07
+MLCGSolver_BiCGStab: Iteration           2 Dots(r  ,r  ) -> dotxy: 5.305044744e-10, Dot(...,nghost): 7.385118011e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 rel. err. 0.3154761604
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(rh,r) -> dotxy: 6.758657071e-10, Dot(...,nghost): 1.026112985e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) before      -> dotxy: 1.404049095e-08, Dot(...,nghost): 1.772833194e-08, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) after Saxpy -> dotxy: 1.195332801e-08, Dot(...,nghost): 1.463393128e-08, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) after  Xpay -> dotxy: 1.596166595e-08, Dot(...,nghost): 2.019491153e-08, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(ph,ph) before Lp.apply -> dotxy: 1.596166595e-08, Dot(...,nghost): 2.019491153e-08, Dot(...,ngrow): 2.671684238e-08
+MLCGSolver_BiCGStab: Half Iter           3 Dots(ph,ph) after  Lp.apply -> dotxy: 1.596166595e-08, Dot(...,nghost): 2.019491153e-08, Dot(...,ngrow): 2.768080954e-08
+MLCGSolver_BiCGStab: Half Iter           3 Dots(v,v) before Lp.normalize -> dotxy: 1.180115495e-07, Dot(...,nghost): 1.749117555e-07, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(v,v) after  Lp.normalize -> dotxy: 8.615157836e-11, Dot(...,nghost): 1.253981601e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(rh,v) -> dotxy: 2.883626506e-10, Dot(...,nghost): 4.683299798e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(sol,sol) -> dotxy: 6.835427478e-07, Dot(...,nghost): 8.571810511e-07, Dot(...,ngrow): 8.571810511e-07
+MLCGSolver_BiCGStab: Half Iter           3 Dots(s  ,s  ) -> dotxy: 8.222568919e-11, Dot(...,nghost): 9.288962831e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 rel. err. 0.1646429676
+MLCGSolver_BiCGStab: Iteration           3 Dots(sh,sh) before Lp.apply -> dotxy: 8.222568919e-11, Dot(...,nghost): 9.288962831e-11, Dot(...,ngrow): 8.017872479e-10
+MLCGSolver_BiCGStab: Iteration           3 Dots(sh,sh) after  Lp.apply -> dotxy: 8.222568919e-11, Dot(...,nghost): 9.288962831e-11, Dot(...,ngrow): 1.53066324e-10
+MLCGSolver_BiCGStab: Iteration           3 Dots(t,t) before Lp.normalize -> dotxy: 9.526960283e-08, Dot(...,nghost): 1.204094869e-07, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(t,t) after  Lp.normalize -> dotxy: 9.474940966e-11, Dot(...,nghost): 1.173853114e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(s,t) -> dotxy: 7.52018214e-11, Dot(...,nghost): 8.59631505e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(sol,sol) -> dotxy: 6.881250831e-07, Dot(...,nghost): 8.609847606e-07, Dot(...,ngrow): 8.609847606e-07
+MLCGSolver_BiCGStab: Iteration           3 Dots(r  ,r  ) -> dotxy: 2.253862662e-11, Dot(...,nghost): 3.03796182e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 rel. err. 0.06220982065
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(rh,r) -> dotxy: 1.062418754e-10, Dot(...,nghost): 1.595449865e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) before      -> dotxy: 1.596166595e-08, Dot(...,nghost): 2.019491153e-08, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) after Saxpy -> dotxy: 1.475961828e-08, Dot(...,nghost): 1.837210741e-08, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) after  Xpay -> dotxy: 3.613139669e-09, Dot(...,nghost): 4.536577379e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(ph,ph) before Lp.apply -> dotxy: 3.613139669e-09, Dot(...,nghost): 4.536577379e-09, Dot(...,ngrow): 1.202247538e-08
+MLCGSolver_BiCGStab: Half Iter           4 Dots(ph,ph) after  Lp.apply -> dotxy: 3.613139669e-09, Dot(...,nghost): 4.536577379e-09, Dot(...,ngrow): 6.30684105e-09
+MLCGSolver_BiCGStab: Half Iter           4 Dots(v,v) before Lp.normalize -> dotxy: 2.23044646e-08, Dot(...,nghost): 3.147136172e-08, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(v,v) after  Lp.normalize -> dotxy: 1.381224275e-11, Dot(...,nghost): 1.881060256e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(rh,v) -> dotxy: 8.410629835e-11, Dot(...,nghost): 1.289651463e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(sol,sol) -> dotxy: 8.1835989e-07, Dot(...,nghost): 1.024246508e-06, Dot(...,ngrow): 1.024246508e-06
+MLCGSolver_BiCGStab: Half Iter           4 Dots(s  ,s  ) -> dotxy: 1.4860977e-13, Dot(...,nghost): 1.648463432e-13, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 rel. err. 0.007989408797
+MLCGSolver_BiCGStab: Iteration           4 Dots(sh,sh) before Lp.apply -> dotxy: 1.4860977e-13, Dot(...,nghost): 1.648463432e-13, Dot(...,ngrow): 6.034154202e-11
+MLCGSolver_BiCGStab: Iteration           4 Dots(sh,sh) after  Lp.apply -> dotxy: 1.4860977e-13, Dot(...,nghost): 1.648463432e-13, Dot(...,ngrow): 2.73002437e-13
+MLCGSolver_BiCGStab: Iteration           4 Dots(t,t) before Lp.normalize -> dotxy: 2.751657984e-10, Dot(...,nghost): 3.486972509e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(t,t) after  Lp.normalize -> dotxy: 2.736390191e-13, Dot(...,nghost): 3.193259561e-13, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(s,t) -> dotxy: 1.95554883e-13, Dot(...,nghost): 2.198227104e-13, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(sol,sol) -> dotxy: 8.184871823e-07, Dot(...,nghost): 1.024323315e-06, Dot(...,ngrow): 1.024323315e-06
+MLCGSolver_BiCGStab: Iteration           4 Dots(r  ,r  ) -> dotxy: 8.857360474e-15, Dot(...,nghost): 1.374129553e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 rel. err. 0.001513576994
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(rh,r) -> dotxy: 1.245845747e-12, Dot(...,nghost): 2.376358905e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) before      -> dotxy: 3.613139669e-09, Dot(...,nghost): 4.536577379e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) after Saxpy -> dotxy: 3.370141017e-09, Dot(...,nghost): 4.207388701e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) after  Xpay -> dotxy: 1.601291838e-12, Dot(...,nghost): 2.035783236e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(ph,ph) before Lp.apply -> dotxy: 1.601291838e-12, Dot(...,nghost): 2.035783236e-12, Dot(...,ngrow): 1.772299454e-09
+MLCGSolver_BiCGStab: Half Iter           5 Dots(ph,ph) after  Lp.apply -> dotxy: 1.601291838e-12, Dot(...,nghost): 2.035783236e-12, Dot(...,ngrow): 2.817851948e-12
+MLCGSolver_BiCGStab: Half Iter           5 Dots(v,v) before Lp.normalize -> dotxy: 1.403675022e-11, Dot(...,nghost): 2.265302979e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(v,v) after  Lp.normalize -> dotxy: 8.288585981e-15, Dot(...,nghost): 1.269129895e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(rh,v) -> dotxy: 1.221743404e-12, Dot(...,nghost): 2.335536191e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(sol,sol) -> dotxy: 8.207914143e-07, Dot(...,nghost): 1.027228749e-06, Dot(...,ngrow): 1.027228749e-06
+MLCGSolver_BiCGStab: Half Iter           5 Dots(s  ,s  ) -> dotxy: 2.600747994e-16, Dot(...,nghost): 2.783297761e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 rel. err. 0.0003091392416
+MLCGSolver_BiCGStab: Iteration           5 Dots(sh,sh) before Lp.apply -> dotxy: 2.600747994e-16, Dot(...,nghost): 2.783297761e-16, Dot(...,ngrow): 1.084344236e-13
+MLCGSolver_BiCGStab: Iteration           5 Dots(sh,sh) after  Lp.apply -> dotxy: 2.600747994e-16, Dot(...,nghost): 2.783297761e-16, Dot(...,ngrow): 4.06498725e-16
+MLCGSolver_BiCGStab: Iteration           5 Dots(t,t) before Lp.normalize -> dotxy: 3.99100785e-13, Dot(...,nghost): 4.612658824e-13, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(t,t) after  Lp.normalize -> dotxy: 3.840000953e-16, Dot(...,nghost): 4.159834561e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(s,t) -> dotxy: 3.013997021e-16, Dot(...,nghost): 3.175613887e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(sol,sol) -> dotxy: 8.207938238e-07, Dot(...,nghost): 1.027231848e-06, Dot(...,ngrow): 1.027231848e-06
+MLCGSolver_BiCGStab: Iteration           5 Dots(r  ,r  ) -> dotxy: 2.350772164e-17, Dot(...,nghost): 3.609591633e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 rel. err. 8.216479025e-05
+MLCGSolver_BiCGStab: Final: Iteration    5 rel. err. 8.216479025e-05
+MLCGSolver_BiCGstab: Keep new solution.
+MLCGSolver_BiCGStab: Final: Iteration    5 Dots(sol,sol) -> dotxy: 8.207938238e-07, Dot(...,nghost): 1.027231848e-06, Dot(...,ngrow): 1.027231848e-06
+MLMG: Iteration   2 Fine resid/bnorm = 0.0004065141951
+MLCGSolver_BiCGStab: nghost = (0,0)
+MLCGSolver_BiCGStab: ngrow  = (1,1)
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 5.090247679e-09, Dot(...,nghost): 6.809220862e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) after  Lp.normalize -> dotxy: 5.399441005e-12, Dot(...,nghost): 6.967908514e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(sorig,sorig) -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(rh,rh) -> dotxy: 5.399441005e-12, Dot(...,nghost): 6.967908514e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after sol.setVal(0) -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Initial error (error0) =        1.048400478e-06
+MLCGSolver_BiCGStab: Post_Calc           0 Dots(rh,r) -> dotxy: 5.399441005e-12, Dot(...,nghost): 6.967908514e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           0 Dots(p,p) -> dotxy: 5.399441005e-12, Dot(...,nghost): 6.967908514e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(ph,ph) before Lp.apply -> dotxy: 5.399441005e-12, Dot(...,nghost): 6.967908514e-12, Dot(...,ngrow): 6.967908514e-12
+MLCGSolver_BiCGStab: Half Iter           1 Dots(ph,ph) after  Lp.apply -> dotxy: 5.399441005e-12, Dot(...,nghost): 6.967908514e-12, Dot(...,ngrow): 9.238146453e-12
+MLCGSolver_BiCGStab: Half Iter           1 Dots(v,v) before Lp.normalize -> dotxy: 4.479276205e-10, Dot(...,nghost): 6.273208384e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(v,v) after  Lp.normalize -> dotxy: 6.171356135e-13, Dot(...,nghost): 7.75953618e-13, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(rh,v) -> dotxy: 1.124419936e-12, Dot(...,nghost): 1.584621444e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(sol,sol) -> dotxy: 1.245057265e-10, Dot(...,nghost): 1.606730235e-10, Dot(...,ngrow): 1.606730235e-10
+MLCGSolver_BiCGStab: Half Iter           1 Dots(s  ,s  ) -> dotxy: 8.831090978e-12, Dot(...,nghost): 9.641987316e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 rel. err. 1.808187536
+MLCGSolver_BiCGStab: Iteration           1 Dots(sh,sh) before Lp.apply -> dotxy: 8.831090978e-12, Dot(...,nghost): 9.641987316e-12, Dot(...,ngrow): 9.641987316e-12
+MLCGSolver_BiCGStab: Iteration           1 Dots(sh,sh) after  Lp.apply -> dotxy: 8.831090978e-12, Dot(...,nghost): 9.641987316e-12, Dot(...,ngrow): 1.631726222e-11
+MLCGSolver_BiCGStab: Iteration           1 Dots(t,t) before Lp.normalize -> dotxy: 6.732495732e-09, Dot(...,nghost): 8.752920576e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(t,t) after  Lp.normalize -> dotxy: 8.581305556e-12, Dot(...,nghost): 1.020247373e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(s,t) -> dotxy: 7.479694734e-12, Dot(...,nghost): 8.211093872e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(sol,sol) -> dotxy: 1.312149981e-10, Dot(...,nghost): 1.626290703e-10, Dot(...,ngrow): 1.626290703e-10
+MLCGSolver_BiCGStab: Iteration           1 Dots(r  ,r  ) -> dotxy: 2.31158961e-12, Dot(...,nghost): 3.079126994e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 rel. err. 0.5279906057
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(rh,r) -> dotxy: 1.762905023e-12, Dot(...,nghost): 2.498935256e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) before      -> dotxy: 5.399441005e-12, Dot(...,nghost): 6.967908514e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) after Saxpy -> dotxy: 3.908150526e-12, Dot(...,nghost): 4.795029511e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) after  Xpay -> dotxy: 2.165668787e-11, Dot(...,nghost): 2.757417237e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(ph,ph) before Lp.apply -> dotxy: 2.165668787e-11, Dot(...,nghost): 2.757417237e-11, Dot(...,ngrow): 2.984441031e-11
+MLCGSolver_BiCGStab: Half Iter           2 Dots(ph,ph) after  Lp.apply -> dotxy: 2.165668787e-11, Dot(...,nghost): 2.757417237e-11, Dot(...,ngrow): 3.718197929e-11
+MLCGSolver_BiCGStab: Half Iter           2 Dots(v,v) before Lp.normalize -> dotxy: 3.698706611e-10, Dot(...,nghost): 5.285113698e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(v,v) after  Lp.normalize -> dotxy: 3.033444363e-13, Dot(...,nghost): 4.302732242e-13, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(rh,v) -> dotxy: 7.589181386e-13, Dot(...,nghost): 1.201376841e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(sol,sol) -> dotxy: 4.857819709e-10, Dot(...,nghost): 6.10340923e-10, Dot(...,ngrow): 6.10340923e-10
+MLCGSolver_BiCGStab: Half Iter           2 Dots(s  ,s  ) -> dotxy: 2.082040855e-12, Dot(...,nghost): 2.481893167e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 rel. err. 0.5684055781
+MLCGSolver_BiCGStab: Iteration           2 Dots(sh,sh) before Lp.apply -> dotxy: 2.082040855e-12, Dot(...,nghost): 2.481893167e-12, Dot(...,ngrow): 9.157168073e-12
+MLCGSolver_BiCGStab: Iteration           2 Dots(sh,sh) after  Lp.apply -> dotxy: 2.082040855e-12, Dot(...,nghost): 2.481893167e-12, Dot(...,ngrow): 3.746987596e-12
+MLCGSolver_BiCGStab: Iteration           2 Dots(t,t) before Lp.normalize -> dotxy: 1.411515944e-09, Dot(...,nghost): 1.797702248e-09, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(t,t) after  Lp.normalize -> dotxy: 1.243458524e-12, Dot(...,nghost): 1.596629763e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(s,t) -> dotxy: 1.23546756e-12, Dot(...,nghost): 1.453765905e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(sol,sol) -> dotxy: 5.058467733e-10, Dot(...,nghost): 6.28926543e-10, Dot(...,ngrow): 6.28926543e-10
+MLCGSolver_BiCGStab: Iteration           2 Dots(r  ,r  ) -> dotxy: 8.545129067e-13, Dot(...,nghost): 1.169220857e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 rel. err. 0.3303722694
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(rh,r) -> dotxy: 8.110281306e-13, Dot(...,nghost): 1.235075379e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) before      -> dotxy: 2.165668787e-11, Dot(...,nghost): 2.757417237e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) after Saxpy -> dotxy: 1.929620756e-11, Dot(...,nghost): 2.369933448e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) after  Xpay -> dotxy: 2.903405382e-11, Dot(...,nghost): 3.666513797e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(ph,ph) before Lp.apply -> dotxy: 2.903405382e-11, Dot(...,nghost): 3.666513797e-11, Dot(...,ngrow): 4.627294488e-11
+MLCGSolver_BiCGStab: Half Iter           3 Dots(ph,ph) after  Lp.apply -> dotxy: 2.903405382e-11, Dot(...,nghost): 3.666513797e-11, Dot(...,ngrow): 5.045829209e-11
+MLCGSolver_BiCGStab: Half Iter           3 Dots(v,v) before Lp.normalize -> dotxy: 2.190601503e-10, Dot(...,nghost): 3.213785013e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(v,v) after  Lp.normalize -> dotxy: 1.419724305e-13, Dot(...,nghost): 2.02670499e-13, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(rh,v) -> dotxy: 3.624176812e-13, Dot(...,nghost): 5.898801797e-13, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(sol,sol) -> dotxy: 1.179739267e-09, Dot(...,nghost): 1.474897858e-09, Dot(...,ngrow): 1.474897858e-09
+MLCGSolver_BiCGStab: Half Iter           3 Dots(s  ,s  ) -> dotxy: 7.811627428e-14, Dot(...,nghost): 8.914519191e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 rel. err. 0.1042151113
+MLCGSolver_BiCGStab: Iteration           3 Dots(sh,sh) before Lp.apply -> dotxy: 7.811627428e-14, Dot(...,nghost): 8.914519191e-14, Dot(...,ngrow): 1.354239621e-12
+MLCGSolver_BiCGStab: Iteration           3 Dots(sh,sh) after  Lp.apply -> dotxy: 7.811627428e-14, Dot(...,nghost): 8.914519191e-14, Dot(...,ngrow): 1.423603037e-13
+MLCGSolver_BiCGStab: Iteration           3 Dots(t,t) before Lp.normalize -> dotxy: 1.051074497e-10, Dot(...,nghost): 1.330672467e-10, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(t,t) after  Lp.normalize -> dotxy: 9.005475916e-14, Dot(...,nghost): 1.108418142e-13, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(s,t) -> dotxy: 7.110739161e-14, Dot(...,nghost): 8.15286704e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(sol,sol) -> dotxy: 1.185192436e-09, Dot(...,nghost): 1.479408821e-09, Dot(...,ngrow): 1.479408821e-09
+MLCGSolver_BiCGStab: Iteration           3 Dots(r  ,r  ) -> dotxy: 2.196975645e-14, Dot(...,nghost): 2.950147802e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 rel. err. 0.05218124579
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(rh,r) -> dotxy: 1.013524159e-13, Dot(...,nghost): 1.547130539e-13, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) before      -> dotxy: 2.903405382e-11, Dot(...,nghost): 3.666513797e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) after Saxpy -> dotxy: 2.691244277e-11, Dot(...,nghost): 3.35338626e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) after  Xpay -> dotxy: 3.777773549e-12, Dot(...,nghost): 4.750431512e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(ph,ph) before Lp.apply -> dotxy: 3.777773549e-12, Dot(...,nghost): 4.750431512e-12, Dot(...,ngrow): 1.854358564e-11
+MLCGSolver_BiCGStab: Half Iter           4 Dots(ph,ph) after  Lp.apply -> dotxy: 3.777773549e-12, Dot(...,nghost): 4.750431512e-12, Dot(...,ngrow): 6.593766224e-12
+MLCGSolver_BiCGStab: Half Iter           4 Dots(v,v) before Lp.normalize -> dotxy: 2.784337534e-11, Dot(...,nghost): 3.898605271e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(v,v) after  Lp.normalize -> dotxy: 1.678757338e-14, Dot(...,nghost): 2.278299822e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(rh,v) -> dotxy: 8.885544882e-14, Dot(...,nghost): 1.389207093e-13, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(sol,sol) -> dotxy: 1.340575164e-09, Dot(...,nghost): 1.674113773e-09, Dot(...,ngrow): 1.674113773e-09
+MLCGSolver_BiCGStab: Half Iter           4 Dots(s  ,s  ) -> dotxy: 8.865678777e-17, Dot(...,nghost): 1.016654806e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 rel. err. 0.004108916787
+MLCGSolver_BiCGStab: Iteration           4 Dots(sh,sh) before Lp.apply -> dotxy: 8.865678777e-17, Dot(...,nghost): 1.016654806e-16, Dot(...,ngrow): 5.331677728e-14
+MLCGSolver_BiCGStab: Iteration           4 Dots(sh,sh) after  Lp.apply -> dotxy: 8.865678777e-17, Dot(...,nghost): 1.016654806e-16, Dot(...,ngrow): 1.604971561e-16
+MLCGSolver_BiCGStab: Iteration           4 Dots(t,t) before Lp.normalize -> dotxy: 2.085403675e-13, Dot(...,nghost): 2.724590455e-13, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(t,t) after  Lp.normalize -> dotxy: 1.836402023e-16, Dot(...,nghost): 2.190898535e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(s,t) -> dotxy: 1.253655233e-16, Dot(...,nghost): 1.46217703e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(sol,sol) -> dotxy: 1.340677675e-09, Dot(...,nghost): 1.674147777e-09, Dot(...,ngrow): 1.674147777e-09
+MLCGSolver_BiCGStab: Iteration           4 Dots(r  ,r  ) -> dotxy: 3.073597251e-18, Dot(...,nghost): 4.132866381e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 rel. err. 0.0006331053053
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(rh,r) -> dotxy: 6.749658194e-16, Dot(...,nghost): 1.175134325e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) before      -> dotxy: 3.777773549e-12, Dot(...,nghost): 4.750431512e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) after Saxpy -> dotxy: 3.537242611e-12, Dot(...,nghost): 4.420175771e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) after  Xpay -> dotxy: 4.861907465e-16, Dot(...,nghost): 6.137237719e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(ph,ph) before Lp.apply -> dotxy: 4.861907465e-16, Dot(...,nghost): 6.137237719e-16, Dot(...,ngrow): 1.843948436e-12
+MLCGSolver_BiCGStab: Half Iter           5 Dots(ph,ph) after  Lp.apply -> dotxy: 4.861907465e-16, Dot(...,nghost): 6.137237719e-16, Dot(...,ngrow): 8.518184594e-16
+MLCGSolver_BiCGStab: Half Iter           5 Dots(v,v) before Lp.normalize -> dotxy: 4.655276314e-15, Dot(...,nghost): 6.53154427e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(v,v) after  Lp.normalize -> dotxy: 2.823963402e-18, Dot(...,nghost): 3.805441649e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(rh,v) -> dotxy: 6.025175355e-16, Dot(...,nghost): 1.10687908e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(sol,sol) -> dotxy: 1.342454968e-09, Dot(...,nghost): 1.67637934e-09, Dot(...,ngrow): 1.67637934e-09
+MLCGSolver_BiCGStab: Half Iter           5 Dots(s  ,s  ) -> dotxy: 4.673127887e-20, Dot(...,nghost): 5.454662503e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 rel. err. 8.232337312e-05
+MLCGSolver_BiCGStab: Final: Iteration    5 rel. err. 8.232337312e-05
+MLCGSolver_BiCGstab: Keep new solution.
+MLCGSolver_BiCGStab: Final: Iteration    5 Dots(sol,sol) -> dotxy: 1.342454968e-09, Dot(...,nghost): 1.67637934e-09, Dot(...,ngrow): 1.67637934e-09
+MLMG: Iteration   3 Fine resid/bnorm = 1.905332658e-05
+MLCGSolver_BiCGStab: nghost = (0,0)
+MLCGSolver_BiCGStab: ngrow  = (1,1)
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 8.643545508e-12, Dot(...,nghost): 1.157131053e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) after  Lp.normalize -> dotxy: 9.242499873e-15, Dot(...,nghost): 1.199617896e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(sorig,sorig) -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(rh,rh) -> dotxy: 9.242499873e-15, Dot(...,nghost): 1.199617896e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after sol.setVal(0) -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Initial error (error0) =        4.329755294e-08
+MLCGSolver_BiCGStab: Post_Calc           0 Dots(rh,r) -> dotxy: 9.242499873e-15, Dot(...,nghost): 1.199617896e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           0 Dots(p,p) -> dotxy: 9.242499873e-15, Dot(...,nghost): 1.199617896e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(ph,ph) before Lp.apply -> dotxy: 9.242499873e-15, Dot(...,nghost): 1.199617896e-14, Dot(...,ngrow): 1.199617896e-14
+MLCGSolver_BiCGStab: Half Iter           1 Dots(ph,ph) after  Lp.apply -> dotxy: 9.242499873e-15, Dot(...,nghost): 1.199617896e-14, Dot(...,ngrow): 1.585453792e-14
+MLCGSolver_BiCGStab: Half Iter           1 Dots(v,v) before Lp.normalize -> dotxy: 7.293660052e-13, Dot(...,nghost): 1.029770384e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(v,v) after  Lp.normalize -> dotxy: 1.06543101e-15, Dot(...,nghost): 1.364251932e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(rh,v) -> dotxy: 1.910652078e-15, Dot(...,nghost): 2.74558465e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(sol,sol) -> dotxy: 2.162744108e-13, Dot(...,nghost): 2.807104757e-13, Dot(...,ngrow): 2.807104757e-13
+MLCGSolver_BiCGStab: Half Iter           1 Dots(s  ,s  ) -> dotxy: 1.568857582e-14, Dot(...,nghost): 1.735693339e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 rel. err. 1.833102977
+MLCGSolver_BiCGStab: Iteration           1 Dots(sh,sh) before Lp.apply -> dotxy: 1.568857582e-14, Dot(...,nghost): 1.735693339e-14, Dot(...,ngrow): 1.735693339e-14
+MLCGSolver_BiCGStab: Iteration           1 Dots(sh,sh) after  Lp.apply -> dotxy: 1.568857582e-14, Dot(...,nghost): 1.735693339e-14, Dot(...,ngrow): 2.928146021e-14
+MLCGSolver_BiCGStab: Iteration           1 Dots(t,t) before Lp.normalize -> dotxy: 1.221608873e-11, Dot(...,nghost): 1.564740353e-11, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(t,t) after  Lp.normalize -> dotxy: 1.575871998e-14, Dot(...,nghost): 1.904223855e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(s,t) -> dotxy: 1.356320716e-14, Dot(...,nghost): 1.517177649e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(sol,sol) -> dotxy: 2.278960245e-13, Dot(...,nghost): 2.828664497e-13, Dot(...,ngrow): 2.828664497e-13
+MLCGSolver_BiCGStab: Iteration           1 Dots(r  ,r  ) -> dotxy: 4.015001526e-15, Dot(...,nghost): 5.346763227e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 rel. err. 0.51955141
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(rh,r) -> dotxy: 3.21906048e-15, Dot(...,nghost): 4.504368559e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) before      -> dotxy: 9.242499873e-15, Dot(...,nghost): 1.199617896e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) after Saxpy -> dotxy: 6.742820209e-15, Dot(...,nghost): 8.280637938e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) after  Xpay -> dotxy: 4.300987493e-14, Dot(...,nghost): 5.456884153e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(ph,ph) before Lp.apply -> dotxy: 4.300987493e-14, Dot(...,nghost): 5.456884153e-14, Dot(...,ngrow): 5.842720049e-14
+MLCGSolver_BiCGStab: Half Iter           2 Dots(ph,ph) after  Lp.apply -> dotxy: 4.300987493e-14, Dot(...,nghost): 5.456884153e-14, Dot(...,ngrow): 7.402331488e-14
+MLCGSolver_BiCGStab: Half Iter           2 Dots(v,v) before Lp.normalize -> dotxy: 6.075214609e-13, Dot(...,nghost): 8.660157009e-13, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(v,v) after  Lp.normalize -> dotxy: 5.205184334e-16, Dot(...,nghost): 7.380347583e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(rh,v) -> dotxy: 1.433987573e-15, Dot(...,nghost): 2.204993161e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(sol,sol) -> dotxy: 8.741950639e-13, Dot(...,nghost): 1.097197421e-12, Dot(...,ngrow): 1.097197421e-12
+MLCGSolver_BiCGStab: Half Iter           2 Dots(s  ,s  ) -> dotxy: 3.461524715e-15, Dot(...,nghost): 4.18571915e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 rel. err. 0.5567949436
+MLCGSolver_BiCGStab: Iteration           2 Dots(sh,sh) before Lp.apply -> dotxy: 3.461524715e-15, Dot(...,nghost): 4.18571915e-15, Dot(...,ngrow): 1.611024597e-14
+MLCGSolver_BiCGStab: Iteration           2 Dots(sh,sh) after  Lp.apply -> dotxy: 3.461524715e-15, Dot(...,nghost): 4.18571915e-15, Dot(...,ngrow): 6.211583841e-15
+MLCGSolver_BiCGStab: Iteration           2 Dots(t,t) before Lp.normalize -> dotxy: 1.942088218e-12, Dot(...,nghost): 2.475022192e-12, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(t,t) after  Lp.normalize -> dotxy: 1.744268346e-15, Dot(...,nghost): 2.263407713e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(s,t) -> dotxy: 1.88419787e-15, Dot(...,nghost): 2.247921049e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(sol,sol) -> dotxy: 9.113057307e-13, Dot(...,nghost): 1.133038753e-12, Dot(...,ngrow): 1.133038753e-12
+MLCGSolver_BiCGStab: Iteration           2 Dots(r  ,r  ) -> dotxy: 1.426171829e-15, Dot(...,nghost): 1.97033601e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 rel. err. 0.3293387568
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(rh,r) -> dotxy: 1.518933714e-15, Dot(...,nghost): 2.301381406e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) before      -> dotxy: 4.300987493e-14, Dot(...,nghost): 5.456884153e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) after Saxpy -> dotxy: 3.776959434e-14, Dot(...,nghost): 4.633545484e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) after  Xpay -> dotxy: 4.743335333e-14, Dot(...,nghost): 6.001060625e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(ph,ph) before Lp.apply -> dotxy: 4.743335333e-14, Dot(...,nghost): 6.001060625e-14, Dot(...,ngrow): 7.946507961e-14
+MLCGSolver_BiCGStab: Half Iter           3 Dots(ph,ph) after  Lp.apply -> dotxy: 4.743335333e-14, Dot(...,nghost): 6.001060625e-14, Dot(...,ngrow): 8.239166826e-14
+MLCGSolver_BiCGStab: Half Iter           3 Dots(v,v) before Lp.normalize -> dotxy: 3.709512808e-13, Dot(...,nghost): 5.503774156e-13, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(v,v) after  Lp.normalize -> dotxy: 2.482951557e-16, Dot(...,nghost): 3.592145617e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(rh,v) -> dotxy: 6.815747549e-16, Dot(...,nghost): 1.110322931e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(sol,sol) -> dotxy: 2.052924595e-12, Dot(...,nghost): 2.56755456e-12, Dot(...,ngrow): 2.56755456e-12
+MLCGSolver_BiCGStab: Half Iter           3 Dots(s  ,s  ) -> dotxy: 1.546946115e-16, Dot(...,nghost): 1.76199361e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 rel. err. 0.118441168
+MLCGSolver_BiCGStab: Iteration           3 Dots(sh,sh) before Lp.apply -> dotxy: 1.546946115e-16, Dot(...,nghost): 1.76199361e-16, Dot(...,ngrow): 2.202064052e-15
+MLCGSolver_BiCGStab: Iteration           3 Dots(sh,sh) after  Lp.apply -> dotxy: 1.546946115e-16, Dot(...,nghost): 1.76199361e-16, Dot(...,ngrow): 2.82820437e-16
+MLCGSolver_BiCGStab: Iteration           3 Dots(t,t) before Lp.normalize -> dotxy: 2.06954202e-13, Dot(...,nghost): 2.622890717e-13, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(t,t) after  Lp.normalize -> dotxy: 1.853985453e-16, Dot(...,nghost): 2.29471168e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(s,t) -> dotxy: 1.451313691e-16, Dot(...,nghost): 1.674493316e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(sol,sol) -> dotxy: 2.062761079e-12, Dot(...,nghost): 2.575255246e-12, Dot(...,ngrow): 2.575255246e-12
+MLCGSolver_BiCGStab: Iteration           3 Dots(r  ,r  ) -> dotxy: 4.108468933e-17, Dot(...,nghost): 5.465525748e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 rel. err. 0.0552607695
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(rh,r) -> dotxy: 1.97308732e-16, Dot(...,nghost): 2.923930579e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) before      -> dotxy: 4.743335333e-14, Dot(...,nghost): 6.001060625e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) after Saxpy -> dotxy: 4.397164339e-14, Dot(...,nghost): 5.479533539e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) after  Xpay -> dotxy: 6.75531497e-15, Dot(...,nghost): 8.489427395e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(ph,ph) before Lp.apply -> dotxy: 6.75531497e-15, Dot(...,nghost): 8.489427395e-15, Dot(...,ngrow): 3.08704894e-14
+MLCGSolver_BiCGStab: Half Iter           4 Dots(ph,ph) after  Lp.apply -> dotxy: 6.75531497e-15, Dot(...,nghost): 8.489427395e-15, Dot(...,ngrow): 1.178873141e-14
+MLCGSolver_BiCGStab: Half Iter           4 Dots(v,v) before Lp.normalize -> dotxy: 4.879169298e-14, Dot(...,nghost): 6.811847072e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(v,v) after  Lp.normalize -> dotxy: 2.960763014e-17, Dot(...,nghost): 3.999221898e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(rh,v) -> dotxy: 1.684860222e-16, Dot(...,nghost): 2.566681856e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(sol,sol) -> dotxy: 2.344785718e-12, Dot(...,nghost): 2.928553872e-12, Dot(...,ngrow): 2.928553872e-12
+MLCGSolver_BiCGStab: Half Iter           4 Dots(s  ,s  ) -> dotxy: 1.803712498e-19, Dot(...,nghost): 2.123793647e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 rel. err. 0.004399263401
+MLCGSolver_BiCGStab: Iteration           4 Dots(sh,sh) before Lp.apply -> dotxy: 1.803712498e-19, Dot(...,nghost): 2.123793647e-19, Dot(...,ngrow): 1.068334555e-16
+MLCGSolver_BiCGStab: Iteration           4 Dots(sh,sh) after  Lp.apply -> dotxy: 1.803712498e-19, Dot(...,nghost): 2.123793647e-19, Dot(...,ngrow): 3.321837028e-19
+MLCGSolver_BiCGStab: Iteration           4 Dots(t,t) before Lp.normalize -> dotxy: 4.150523738e-16, Dot(...,nghost): 5.546546205e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(t,t) after  Lp.normalize -> dotxy: 3.68325641e-19, Dot(...,nghost): 4.48016613e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(s,t) -> dotxy: 2.520129246e-19, Dot(...,nghost): 3.015550576e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(sol,sol) -> dotxy: 2.344990302e-12, Dot(...,nghost): 2.92860366e-12, Dot(...,ngrow): 2.92860366e-12
+MLCGSolver_BiCGStab: Iteration           4 Dots(r  ,r  ) -> dotxy: 7.940913453e-21, Dot(...,nghost): 9.461401957e-21, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 rel. err. 0.000893283051
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(rh,r) -> dotxy: 1.586558928e-18, Dot(...,nghost): 2.038044733e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) before      -> dotxy: 6.75531497e-15, Dot(...,nghost): 8.489427395e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) after Saxpy -> dotxy: 6.322365675e-15, Dot(...,nghost): 7.898345572e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) after  Xpay -> dotxy: 1.327020733e-18, Dot(...,nghost): 1.65579519e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(ph,ph) before Lp.apply -> dotxy: 1.327020733e-18, Dot(...,nghost): 1.65579519e-18, Dot(...,ngrow): 3.300959813e-15
+MLCGSolver_BiCGStab: Half Iter           5 Dots(ph,ph) after  Lp.apply -> dotxy: 1.327020733e-18, Dot(...,nghost): 1.65579519e-18, Dot(...,ngrow): 2.306366951e-18
+MLCGSolver_BiCGStab: Half Iter           5 Dots(v,v) before Lp.normalize -> dotxy: 1.214718468e-17, Dot(...,nghost): 1.542992426e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(v,v) after  Lp.normalize -> dotxy: 7.38513337e-21, Dot(...,nghost): 9.076206227e-21, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(rh,v) -> dotxy: 1.46919233e-18, Dot(...,nghost): 2.095268149e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(sol,sol) -> dotxy: 2.348738271e-12, Dot(...,nghost): 2.933283248e-12, Dot(...,ngrow): 2.933283248e-12
+MLCGSolver_BiCGStab: Half Iter           5 Dots(s  ,s  ) -> dotxy: 6.66995031e-23, Dot(...,nghost): 1.073894726e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 rel. err. 0.0001039860595
+MLCGSolver_BiCGStab: Iteration           5 Dots(sh,sh) before Lp.apply -> dotxy: 6.66995031e-23, Dot(...,nghost): 1.073894726e-22, Dot(...,ngrow): 1.199117276e-19
+MLCGSolver_BiCGStab: Iteration           5 Dots(sh,sh) after  Lp.apply -> dotxy: 6.66995031e-23, Dot(...,nghost): 1.073894726e-22, Dot(...,ngrow): 1.284576868e-22
+MLCGSolver_BiCGStab: Iteration           5 Dots(t,t) before Lp.normalize -> dotxy: 1.39943323e-19, Dot(...,nghost): 2.122355219e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(t,t) after  Lp.normalize -> dotxy: 1.134056477e-22, Dot(...,nghost): 1.503491184e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(s,t) -> dotxy: 7.819210279e-23, Dot(...,nghost): 1.157740964e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(sol,sol) -> dotxy: 2.348736783e-12, Dot(...,nghost): 2.933275835e-12, Dot(...,ngrow): 2.933275835e-12
+MLCGSolver_BiCGStab: Iteration           5 Dots(r  ,r  ) -> dotxy: 1.278680068e-23, Dot(...,nghost): 1.921473871e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 rel. err. 3.920515152e-05
+MLCGSolver_BiCGStab: Final: Iteration    5 rel. err. 3.920515152e-05
+MLCGSolver_BiCGstab: Keep new solution.
+MLCGSolver_BiCGStab: Final: Iteration    5 Dots(sol,sol) -> dotxy: 2.348736783e-12, Dot(...,nghost): 2.933275835e-12, Dot(...,ngrow): 2.933275835e-12
+MLMG: Iteration   4 Fine resid/bnorm = 4.31035225e-07
+MLCGSolver_BiCGStab: nghost = (0,0)
+MLCGSolver_BiCGStab: ngrow  = (1,1)
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 1.524702456e-14, Dot(...,nghost): 2.019391635e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) after  Lp.normalize -> dotxy: 1.578949579e-17, Dot(...,nghost): 2.027513846e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(sorig,sorig) -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(rh,rh) -> dotxy: 1.578949579e-17, Dot(...,nghost): 2.027513846e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after sol.setVal(0) -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Initial error (error0) =        1.771812948e-09
+MLCGSolver_BiCGStab: Post_Calc           0 Dots(rh,r) -> dotxy: 1.578949579e-17, Dot(...,nghost): 2.027513846e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           0 Dots(p,p) -> dotxy: 1.578949579e-17, Dot(...,nghost): 2.027513846e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(ph,ph) before Lp.apply -> dotxy: 1.578949579e-17, Dot(...,nghost): 2.027513846e-17, Dot(...,ngrow): 2.027513846e-17
+MLCGSolver_BiCGStab: Half Iter           1 Dots(ph,ph) after  Lp.apply -> dotxy: 1.578949579e-17, Dot(...,nghost): 2.027513846e-17, Dot(...,ngrow): 2.692838219e-17
+MLCGSolver_BiCGStab: Half Iter           1 Dots(v,v) before Lp.normalize -> dotxy: 1.187186829e-15, Dot(...,nghost): 1.671511047e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(v,v) after  Lp.normalize -> dotxy: 1.668237128e-18, Dot(...,nghost): 2.089161205e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(rh,v) -> dotxy: 3.016737832e-18, Dot(...,nghost): 4.256230096e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(sol,sol) -> dotxy: 4.325433564e-16, Dot(...,nghost): 5.554247302e-16, Dot(...,ngrow): 5.554247302e-16
+MLCGSolver_BiCGStab: Half Iter           1 Dots(s  ,s  ) -> dotxy: 2.991081638e-17, Dot(...,nghost): 3.295249613e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 rel. err. 2.036072989
+MLCGSolver_BiCGStab: Iteration           1 Dots(sh,sh) before Lp.apply -> dotxy: 2.991081638e-17, Dot(...,nghost): 3.295249613e-17, Dot(...,ngrow): 3.295249613e-17
+MLCGSolver_BiCGStab: Iteration           1 Dots(sh,sh) after  Lp.apply -> dotxy: 2.991081638e-17, Dot(...,nghost): 3.295249613e-17, Dot(...,ngrow): 5.563877062e-17
+MLCGSolver_BiCGStab: Iteration           1 Dots(t,t) before Lp.normalize -> dotxy: 2.280127516e-14, Dot(...,nghost): 2.956609365e-14, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(t,t) after  Lp.normalize -> dotxy: 2.95945062e-17, Dot(...,nghost): 3.498703744e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(s,t) -> dotxy: 2.598773238e-17, Dot(...,nghost): 2.864982668e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(sol,sol) -> dotxy: 4.556077926e-16, Dot(...,nghost): 5.624336091e-16, Dot(...,ngrow): 5.624336091e-16
+MLCGSolver_BiCGStab: Iteration           1 Dots(r  ,r  ) -> dotxy: 7.090289169e-18, Dot(...,nghost): 9.614873528e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 rel. err. 0.5223798925
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(rh,r) -> dotxy: 5.267321277e-18, Dot(...,nghost): 7.514639791e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) before      -> dotxy: 1.578949579e-17, Dot(...,nghost): 2.027513846e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) after Saxpy -> dotxy: 1.177772755e-17, Dot(...,nghost): 1.441108463e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) after  Xpay -> dotxy: 7.581734008e-17, Dot(...,nghost): 9.666037633e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(ph,ph) before Lp.apply -> dotxy: 7.581734008e-17, Dot(...,nghost): 9.666037633e-17, Dot(...,ngrow): 1.033136201e-16
+MLCGSolver_BiCGStab: Half Iter           2 Dots(ph,ph) after  Lp.apply -> dotxy: 7.581734008e-17, Dot(...,nghost): 9.666037633e-17, Dot(...,ngrow): 1.302284368e-16
+MLCGSolver_BiCGStab: Half Iter           2 Dots(v,v) before Lp.normalize -> dotxy: 1.292307237e-15, Dot(...,nghost): 1.862560881e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(v,v) after  Lp.normalize -> dotxy: 1.051643716e-18, Dot(...,nghost): 1.496674392e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(rh,v) -> dotxy: 2.327342408e-18, Dot(...,nghost): 3.72355116e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(sol,sol) -> dotxy: 1.65560077e-15, Dot(...,nghost): 2.07612868e-15, Dot(...,ngrow): 2.07612868e-15
+MLCGSolver_BiCGStab: Half Iter           2 Dots(s  ,s  ) -> dotxy: 6.20311243e-18, Dot(...,nghost): 7.453021742e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 rel. err. 0.5694430692
+MLCGSolver_BiCGStab: Iteration           2 Dots(sh,sh) before Lp.apply -> dotxy: 6.20311243e-18, Dot(...,nghost): 7.453021742e-18, Dot(...,ngrow): 3.013929623e-17
+MLCGSolver_BiCGStab: Iteration           2 Dots(sh,sh) after  Lp.apply -> dotxy: 6.20311243e-18, Dot(...,nghost): 7.453021742e-18, Dot(...,ngrow): 1.116008e-17
+MLCGSolver_BiCGStab: Iteration           2 Dots(t,t) before Lp.normalize -> dotxy: 4.525456801e-15, Dot(...,nghost): 5.761934009e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(t,t) after  Lp.normalize -> dotxy: 4.032729542e-18, Dot(...,nghost): 5.151880809e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(s,t) -> dotxy: 3.915068475e-18, Dot(...,nghost): 4.641841029e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(sol,sol) -> dotxy: 1.714930997e-15, Dot(...,nghost): 2.130034866e-15, Dot(...,ngrow): 2.130034866e-15
+MLCGSolver_BiCGStab: Iteration           2 Dots(r  ,r  ) -> dotxy: 2.402272082e-18, Dot(...,nghost): 3.295843749e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 rel. err. 0.3308075157
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(rh,r) -> dotxy: 2.269039282e-18, Dot(...,nghost): 3.447960009e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) before      -> dotxy: 7.581734008e-17, Dot(...,nghost): 9.666037633e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) after Saxpy -> dotxy: 6.786962325e-17, Dot(...,nghost): 8.346375417e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) after  Xpay -> dotxy: 8.73771336e-17, Dot(...,nghost): 1.104883014e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(ph,ph) before Lp.apply -> dotxy: 8.73771336e-17, Dot(...,nghost): 1.104883014e-16, Dot(...,ngrow): 1.440563619e-16
+MLCGSolver_BiCGStab: Half Iter           3 Dots(ph,ph) after  Lp.apply -> dotxy: 8.73771336e-17, Dot(...,nghost): 1.104883014e-16, Dot(...,ngrow): 1.520098111e-16
+MLCGSolver_BiCGStab: Half Iter           3 Dots(v,v) before Lp.normalize -> dotxy: 6.914959995e-16, Dot(...,nghost): 1.025295867e-15, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(v,v) after  Lp.normalize -> dotxy: 4.42194854e-19, Dot(...,nghost): 6.362657002e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(rh,v) -> dotxy: 1.068294791e-18, Dot(...,nghost): 1.738909777e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(sol,sol) -> dotxy: 3.714493009e-15, Dot(...,nghost): 4.640397574e-15, Dot(...,ngrow): 4.640397574e-15
+MLCGSolver_BiCGStab: Half Iter           3 Dots(s  ,s  ) -> dotxy: 1.947918915e-19, Dot(...,nghost): 2.236279782e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 rel. err. 0.1013159843
+MLCGSolver_BiCGStab: Iteration           3 Dots(sh,sh) before Lp.apply -> dotxy: 1.947918915e-19, Dot(...,nghost): 2.236279782e-19, Dot(...,ngrow): 3.930686241e-18
+MLCGSolver_BiCGStab: Iteration           3 Dots(sh,sh) after  Lp.apply -> dotxy: 1.947918915e-19, Dot(...,nghost): 2.236279782e-19, Dot(...,ngrow): 3.512355181e-19
+MLCGSolver_BiCGStab: Iteration           3 Dots(t,t) before Lp.normalize -> dotxy: 2.655243617e-16, Dot(...,nghost): 3.387375521e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(t,t) after  Lp.normalize -> dotxy: 2.21286085e-19, Dot(...,nghost): 2.747610479e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(s,t) -> dotxy: 1.759184272e-19, Dot(...,nghost): 2.044086754e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(sol,sol) -> dotxy: 3.728977835e-15, Dot(...,nghost): 4.651707394e-15, Dot(...,ngrow): 4.651707394e-15
+MLCGSolver_BiCGStab: Iteration           3 Dots(r  ,r  ) -> dotxy: 5.493993001e-20, Dot(...,nghost): 7.227352736e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 rel. err. 0.05104647908
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(rh,r) -> dotxy: 2.641139441e-19, Dot(...,nghost): 3.949438051e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) before      -> dotxy: 8.73771336e-17, Dot(...,nghost): 1.104883014e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) after Saxpy -> dotxy: 8.095217804e-17, Dot(...,nghost): 1.009295984e-16, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) after  Xpay -> dotxy: 8.750535065e-18, Dot(...,nghost): 1.100479035e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(ph,ph) before Lp.apply -> dotxy: 8.750535065e-18, Dot(...,nghost): 1.100479035e-17, Dot(...,ngrow): 5.252630006e-17
+MLCGSolver_BiCGStab: Half Iter           4 Dots(ph,ph) after  Lp.apply -> dotxy: 8.750535065e-18, Dot(...,nghost): 1.100479035e-17, Dot(...,ngrow): 1.525931665e-17
+MLCGSolver_BiCGStab: Half Iter           4 Dots(v,v) before Lp.normalize -> dotxy: 7.050099664e-17, Dot(...,nghost): 9.778951241e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(v,v) after  Lp.normalize -> dotxy: 4.242463998e-20, Dot(...,nghost): 5.70126317e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(rh,v) -> dotxy: 2.328886117e-19, Dot(...,nghost): 3.615060747e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(sol,sol) -> dotxy: 4.143986211e-15, Dot(...,nghost): 5.171601706e-15, Dot(...,ngrow): 5.171601706e-15
+MLCGSolver_BiCGStab: Half Iter           4 Dots(s  ,s  ) -> dotxy: 2.539481088e-22, Dot(...,nghost): 3.219331515e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 rel. err. 0.003869489944
+MLCGSolver_BiCGStab: Iteration           4 Dots(sh,sh) before Lp.apply -> dotxy: 2.539481088e-22, Dot(...,nghost): 3.219331515e-22, Dot(...,ngrow): 1.27929473e-19
+MLCGSolver_BiCGStab: Iteration           4 Dots(sh,sh) after  Lp.apply -> dotxy: 2.539481088e-22, Dot(...,nghost): 3.219331515e-22, Dot(...,ngrow): 4.663456057e-22
+MLCGSolver_BiCGStab: Iteration           4 Dots(t,t) before Lp.normalize -> dotxy: 6.319423888e-19, Dot(...,nghost): 8.790053122e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(t,t) after  Lp.normalize -> dotxy: 5.145510706e-22, Dot(...,nghost): 6.511731922e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(s,t) -> dotxy: 3.503194311e-22, Dot(...,nghost): 4.464186108e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(sol,sol) -> dotxy: 4.144262909e-15, Dot(...,nghost): 5.171558036e-15, Dot(...,ngrow): 5.171558036e-15
+MLCGSolver_BiCGStab: Iteration           4 Dots(r  ,r  ) -> dotxy: 1.544174702e-23, Dot(...,nghost): 1.590079137e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 rel. err. 0.001273560547
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(rh,r) -> dotxy: 1.768711599e-21, Dot(...,nghost): 8.080947654e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) before      -> dotxy: 8.750535065e-18, Dot(...,nghost): 1.100479035e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) after Saxpy -> dotxy: 8.196880647e-18, Dot(...,nghost): 1.024125823e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) after  Xpay -> dotxy: 1.141057509e-21, Dot(...,nghost): 1.391089128e-21, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(ph,ph) before Lp.apply -> dotxy: 1.141057509e-21, Dot(...,nghost): 1.391089128e-21, Dot(...,ngrow): 4.255917385e-18
+MLCGSolver_BiCGStab: Half Iter           5 Dots(ph,ph) after  Lp.apply -> dotxy: 1.141057509e-21, Dot(...,nghost): 1.391089128e-21, Dot(...,ngrow): 1.939661128e-21
+MLCGSolver_BiCGStab: Half Iter           5 Dots(v,v) before Lp.normalize -> dotxy: 1.634949726e-20, Dot(...,nghost): 1.719344112e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(v,v) after  Lp.normalize -> dotxy: 1.078327787e-23, Dot(...,nghost): 1.125298118e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(rh,v) -> dotxy: 1.468428593e-21, Dot(...,nghost): 1.198796096e-21, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(sol,sol) -> dotxy: 4.149382155e-15, Dot(...,nghost): 5.177880278e-15, Dot(...,ngrow): 5.177880278e-15
+MLCGSolver_BiCGStab: Half Iter           5 Dots(s  ,s  ) -> dotxy: 2.703415298e-25, Dot(...,nghost): 4.671199796e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 rel. err. 0.0001557270865
+MLCGSolver_BiCGStab: Iteration           5 Dots(sh,sh) before Lp.apply -> dotxy: 2.703415298e-25, Dot(...,nghost): 4.671199796e-25, Dot(...,ngrow): 1.448795741e-22
+MLCGSolver_BiCGStab: Iteration           5 Dots(sh,sh) after  Lp.apply -> dotxy: 2.703415298e-25, Dot(...,nghost): 4.671199796e-25, Dot(...,ngrow): 5.235187551e-25
+MLCGSolver_BiCGStab: Iteration           5 Dots(t,t) before Lp.normalize -> dotxy: 3.436861055e-22, Dot(...,nghost): 5.77070649e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(t,t) after  Lp.normalize -> dotxy: 2.6932223e-25, Dot(...,nghost): 3.942326666e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(s,t) -> dotxy: 2.322107228e-25, Dot(...,nghost): 3.853596374e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(sol,sol) -> dotxy: 4.149375318e-15, Dot(...,nghost): 5.17785144e-15, Dot(...,ngrow): 5.17785144e-15
+MLCGSolver_BiCGStab: Iteration           5 Dots(r  ,r  ) -> dotxy: 7.012849949e-26, Dot(...,nghost): 9.567361555e-26, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 rel. err. 7.807422882e-05
+MLCGSolver_BiCGStab: Final: Iteration    5 rel. err. 7.807422882e-05
+MLCGSolver_BiCGstab: Keep new solution.
+MLCGSolver_BiCGStab: Final: Iteration    5 Dots(sol,sol) -> dotxy: 4.149375318e-15, Dot(...,nghost): 5.17785144e-15, Dot(...,ngrow): 5.17785144e-15
+MLMG: Iteration   5 Fine resid/bnorm = 2.086508025e-08
+MLCGSolver_BiCGStab: nghost = (0,0)
+MLCGSolver_BiCGStab: ngrow  = (1,1)
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 2.660771724e-17, Dot(...,nghost): 3.527575763e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) after  Lp.normalize -> dotxy: 2.769837234e-20, Dot(...,nghost): 3.56646268e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(sorig,sorig) -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(rh,rh) -> dotxy: 2.769837234e-20, Dot(...,nghost): 3.56646268e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after sol.setVal(0) -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Initial error (error0) =        7.386666575e-11
+MLCGSolver_BiCGStab: Post_Calc           0 Dots(rh,r) -> dotxy: 2.769837234e-20, Dot(...,nghost): 3.56646268e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           0 Dots(p,p) -> dotxy: 2.769837234e-20, Dot(...,nghost): 3.56646268e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(ph,ph) before Lp.apply -> dotxy: 2.769837234e-20, Dot(...,nghost): 3.56646268e-20, Dot(...,ngrow): 3.56646268e-20
+MLCGSolver_BiCGStab: Half Iter           1 Dots(ph,ph) after  Lp.apply -> dotxy: 2.769837234e-20, Dot(...,nghost): 3.56646268e-20, Dot(...,ngrow): 4.730251831e-20
+MLCGSolver_BiCGStab: Half Iter           1 Dots(v,v) before Lp.normalize -> dotxy: 2.056764409e-18, Dot(...,nghost): 2.902870847e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(v,v) after  Lp.normalize -> dotxy: 2.950711287e-21, Dot(...,nghost): 3.725387798e-21, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(rh,v) -> dotxy: 5.31847985e-21, Dot(...,nghost): 7.564161644e-21, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(sol,sol) -> dotxy: 7.5125558e-19, Dot(...,nghost): 9.673221792e-19, Dot(...,ngrow): 9.673221792e-19
+MLCGSolver_BiCGStab: Half Iter           1 Dots(s  ,s  ) -> dotxy: 5.233298445e-20, Dot(...,nghost): 5.791979076e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 rel. err. 2.032511442
+MLCGSolver_BiCGStab: Iteration           1 Dots(sh,sh) before Lp.apply -> dotxy: 5.233298445e-20, Dot(...,nghost): 5.791979076e-20, Dot(...,ngrow): 5.791979076e-20
+MLCGSolver_BiCGStab: Iteration           1 Dots(sh,sh) after  Lp.apply -> dotxy: 5.233298445e-20, Dot(...,nghost): 5.791979076e-20, Dot(...,ngrow): 9.76273437e-20
+MLCGSolver_BiCGStab: Iteration           1 Dots(t,t) before Lp.normalize -> dotxy: 4.020716383e-17, Dot(...,nghost): 5.180255427e-17, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(t,t) after  Lp.normalize -> dotxy: 5.228649631e-20, Dot(...,nghost): 6.226916218e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(s,t) -> dotxy: 4.567261338e-20, Dot(...,nghost): 5.071284296e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(sol,sol) -> dotxy: 7.911863924e-19, Dot(...,nghost): 9.775867331e-19, Dot(...,ngrow): 9.775867331e-19
+MLCGSolver_BiCGStab: Iteration           1 Dots(r  ,r  ) -> dotxy: 1.24376432e-20, Dot(...,nghost): 1.683601545e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 rel. err. 0.5219228034
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(rh,r) -> dotxy: 9.47105458e-21, Dot(...,nghost): 1.342790924e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) before      -> dotxy: 2.769837234e-20, Dot(...,nghost): 3.56646268e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) after Saxpy -> dotxy: 2.065834977e-20, Dot(...,nghost): 2.529245652e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) after  Xpay -> dotxy: 1.389416627e-19, Dot(...,nghost): 1.768371462e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(ph,ph) before Lp.apply -> dotxy: 1.389416627e-19, Dot(...,nghost): 1.768371462e-19, Dot(...,ngrow): 1.884750377e-19
+MLCGSolver_BiCGStab: Half Iter           2 Dots(ph,ph) after  Lp.apply -> dotxy: 1.389416627e-19, Dot(...,nghost): 1.768371462e-19, Dot(...,ngrow): 2.388681065e-19
+MLCGSolver_BiCGStab: Half Iter           2 Dots(v,v) before Lp.normalize -> dotxy: 2.178775443e-18, Dot(...,nghost): 3.134841256e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(v,v) after  Lp.normalize -> dotxy: 1.808454108e-21, Dot(...,nghost): 2.574315763e-21, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(rh,v) -> dotxy: 4.243187307e-21, Dot(...,nghost): 6.691987568e-21, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(sol,sol) -> dotxy: 2.914495015e-18, Dot(...,nghost): 3.653680067e-18, Dot(...,ngrow): 3.653680067e-18
+MLCGSolver_BiCGStab: Half Iter           2 Dots(s  ,s  ) -> dotxy: 1.067240515e-20, Dot(...,nghost): 1.289478886e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 rel. err. 0.5652014349
+MLCGSolver_BiCGStab: Iteration           2 Dots(sh,sh) before Lp.apply -> dotxy: 1.067240515e-20, Dot(...,nghost): 1.289478886e-20, Dot(...,ngrow): 5.26023418e-20
+MLCGSolver_BiCGStab: Iteration           2 Dots(sh,sh) after  Lp.apply -> dotxy: 1.067240515e-20, Dot(...,nghost): 1.289478886e-20, Dot(...,ngrow): 1.918350993e-20
+MLCGSolver_BiCGStab: Iteration           2 Dots(t,t) before Lp.normalize -> dotxy: 7.123129689e-18, Dot(...,nghost): 9.066706613e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(t,t) after  Lp.normalize -> dotxy: 6.39803539e-21, Dot(...,nghost): 8.21312054e-21, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(s,t) -> dotxy: 6.43892976e-21, Dot(...,nghost): 7.671210513e-21, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(sol,sol) -> dotxy: 3.021427724e-18, Dot(...,nghost): 3.753098569e-18, Dot(...,ngrow): 3.753098569e-18
+MLCGSolver_BiCGStab: Iteration           2 Dots(r  ,r  ) -> dotxy: 4.192319635e-21, Dot(...,nghost): 5.772751373e-21, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 rel. err. 0.3330393755
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(rh,r) -> dotxy: 4.148220789e-21, Dot(...,nghost): 6.295709875e-21, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) before      -> dotxy: 1.389416627e-19, Dot(...,nghost): 1.768371462e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) after Saxpy -> dotxy: 1.236211949e-19, Dot(...,nghost): 1.51916182e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) after  Xpay -> dotxy: 1.494864442e-19, Dot(...,nghost): 1.891380564e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(ph,ph) before Lp.apply -> dotxy: 1.494864442e-19, Dot(...,nghost): 1.891380564e-19, Dot(...,ngrow): 2.511690167e-19
+MLCGSolver_BiCGStab: Half Iter           3 Dots(ph,ph) after  Lp.apply -> dotxy: 1.494864442e-19, Dot(...,nghost): 1.891380564e-19, Dot(...,ngrow): 2.599645741e-19
+MLCGSolver_BiCGStab: Half Iter           3 Dots(v,v) before Lp.normalize -> dotxy: 1.194948279e-18, Dot(...,nghost): 1.777571039e-18, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(v,v) after  Lp.normalize -> dotxy: 7.74298682e-22, Dot(...,nghost): 1.118892269e-21, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(rh,v) -> dotxy: 1.941280985e-21, Dot(...,nghost): 3.162662662e-21, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(sol,sol) -> dotxy: 6.51103143e-18, Dot(...,nghost): 8.135753138e-18, Dot(...,ngrow): 8.135753138e-18
+MLCGSolver_BiCGStab: Half Iter           3 Dots(s  ,s  ) -> dotxy: 3.703992446e-22, Dot(...,nghost): 4.244241388e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 rel. err. 0.1038127568
+MLCGSolver_BiCGStab: Iteration           3 Dots(sh,sh) before Lp.apply -> dotxy: 3.703992446e-22, Dot(...,nghost): 4.244241388e-22, Dot(...,ngrow): 6.713145206e-21
+MLCGSolver_BiCGStab: Iteration           3 Dots(sh,sh) after  Lp.apply -> dotxy: 3.703992446e-22, Dot(...,nghost): 4.244241388e-22, Dot(...,ngrow): 6.694221775e-22
+MLCGSolver_BiCGStab: Iteration           3 Dots(t,t) before Lp.normalize -> dotxy: 5.05760262e-19, Dot(...,nghost): 6.440798424e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(t,t) after  Lp.normalize -> dotxy: 4.308962296e-22, Dot(...,nghost): 5.35011468e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(s,t) -> dotxy: 3.403531642e-22, Dot(...,nghost): 3.954386887e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(sol,sol) -> dotxy: 6.537214228e-18, Dot(...,nghost): 8.155833082e-18, Dot(...,ngrow): 8.155833082e-18
+MLCGSolver_BiCGStab: Iteration           3 Dots(r  ,r  ) -> dotxy: 1.01563575e-22, Dot(...,nghost): 1.335247457e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 rel. err. 0.05264729286
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(rh,r) -> dotxy: 4.928756314e-22, Dot(...,nghost): 7.306049431e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) before      -> dotxy: 1.494864442e-19, Dot(...,nghost): 1.891380564e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) after Saxpy -> dotxy: 1.385336783e-19, Dot(...,nghost): 1.727175925e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) after  Xpay -> dotxy: 1.602327829e-20, Dot(...,nghost): 2.014707971e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(ph,ph) before Lp.apply -> dotxy: 1.602327829e-20, Dot(...,nghost): 2.014707971e-20, Dot(...,ngrow): 9.097359743e-20
+MLCGSolver_BiCGStab: Half Iter           4 Dots(ph,ph) after  Lp.apply -> dotxy: 1.602327829e-20, Dot(...,nghost): 2.014707971e-20, Dot(...,ngrow): 2.794486802e-20
+MLCGSolver_BiCGStab: Half Iter           4 Dots(v,v) before Lp.normalize -> dotxy: 1.270541695e-19, Dot(...,nghost): 1.762581805e-19, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(v,v) after  Lp.normalize -> dotxy: 7.660604539e-23, Dot(...,nghost): 1.029146569e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(rh,v) -> dotxy: 4.301688601e-22, Dot(...,nghost): 6.614236634e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(sol,sol) -> dotxy: 7.28934585e-18, Dot(...,nghost): 9.0979972e-18, Dot(...,ngrow): 9.0979972e-18
+MLCGSolver_BiCGStab: Half Iter           4 Dots(s  ,s  ) -> dotxy: 4.757349392e-25, Dot(...,nghost): 5.996032079e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 rel. err. 0.003944475396
+MLCGSolver_BiCGStab: Iteration           4 Dots(sh,sh) before Lp.apply -> dotxy: 4.757349392e-25, Dot(...,nghost): 5.996032079e-25, Dot(...,ngrow): 2.455976419e-22
+MLCGSolver_BiCGStab: Iteration           4 Dots(sh,sh) after  Lp.apply -> dotxy: 4.757349392e-25, Dot(...,nghost): 5.996032079e-25, Dot(...,ngrow): 8.742024361e-25
+MLCGSolver_BiCGStab: Iteration           4 Dots(t,t) before Lp.normalize -> dotxy: 1.161038465e-21, Dot(...,nghost): 1.613387013e-21, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(t,t) after  Lp.normalize -> dotxy: 9.540718511e-25, Dot(...,nghost): 1.206122093e-24, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(s,t) -> dotxy: 6.517860633e-25, Dot(...,nghost): 8.278064342e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(sol,sol) -> dotxy: 7.289865869e-18, Dot(...,nghost): 9.09794135e-18, Dot(...,ngrow): 9.09794135e-18
+MLCGSolver_BiCGStab: Iteration           4 Dots(r  ,r  ) -> dotxy: 3.045917529e-26, Dot(...,nghost): 3.14610318e-26, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 rel. err. 0.001340789081
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(rh,r) -> dotxy: 3.588443422e-24, Dot(...,nghost): 2.04019316e-24, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) before      -> dotxy: 1.602327829e-20, Dot(...,nghost): 2.014707971e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) after Saxpy -> dotxy: 1.500332787e-20, Dot(...,nghost): 1.874422977e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) after  Xpay -> dotxy: 2.497744498e-24, Dot(...,nghost): 3.053289712e-24, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(ph,ph) before Lp.apply -> dotxy: 2.497744498e-24, Dot(...,nghost): 3.053289712e-24, Dot(...,ngrow): 7.800841597e-21
+MLCGSolver_BiCGStab: Half Iter           5 Dots(ph,ph) after  Lp.apply -> dotxy: 2.497744498e-24, Dot(...,nghost): 3.053289712e-24, Dot(...,ngrow): 4.256716745e-24
+MLCGSolver_BiCGStab: Half Iter           5 Dots(v,v) before Lp.normalize -> dotxy: 3.364961079e-23, Dot(...,nghost): 3.58024811e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(v,v) after  Lp.normalize -> dotxy: 2.188652806e-26, Dot(...,nghost): 2.306059001e-26, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(rh,v) -> dotxy: 3.060925155e-24, Dot(...,nghost): 2.783577633e-24, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(sol,sol) -> dotxy: 7.299655648e-18, Dot(...,nghost): 9.110046859e-18, Dot(...,ngrow): 9.110046859e-18
+MLCGSolver_BiCGStab: Half Iter           5 Dots(s  ,s  ) -> dotxy: 5.412149965e-28, Dot(...,nghost): 9.318419492e-28, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 rel. err. 0.0001728553753
+MLCGSolver_BiCGStab: Iteration           5 Dots(sh,sh) before Lp.apply -> dotxy: 5.412149965e-28, Dot(...,nghost): 9.318419492e-28, Dot(...,ngrow): 2.755310702e-25
+MLCGSolver_BiCGStab: Iteration           5 Dots(sh,sh) after  Lp.apply -> dotxy: 5.412149965e-28, Dot(...,nghost): 9.318419492e-28, Dot(...,ngrow): 1.03314175e-27
+MLCGSolver_BiCGStab: Iteration           5 Dots(t,t) before Lp.normalize -> dotxy: 7.349681337e-25, Dot(...,nghost): 1.233788817e-24, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(t,t) after  Lp.normalize -> dotxy: 5.4614446e-28, Dot(...,nghost): 8.119344583e-28, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(s,t) -> dotxy: 4.755838305e-28, Dot(...,nghost): 7.915479841e-28, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(sol,sol) -> dotxy: 7.299645726e-18, Dot(...,nghost): 9.109995046e-18, Dot(...,ngrow): 9.109995046e-18
+MLCGSolver_BiCGStab: Iteration           5 Dots(r  ,r  ) -> dotxy: 1.270755217e-28, Dot(...,nghost): 1.689655219e-28, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 rel. err. 8.520307557e-05
+MLCGSolver_BiCGStab: Final: Iteration    5 rel. err. 8.520307557e-05
+MLCGSolver_BiCGstab: Keep new solution.
+MLCGSolver_BiCGStab: Final: Iteration    5 Dots(sol,sol) -> dotxy: 7.299645726e-18, Dot(...,nghost): 9.109995046e-18, Dot(...,ngrow): 9.109995046e-18
+MLMG: Iteration   6 Fine resid/bnorm = 8.698688351e-10
+MLCGSolver_BiCGStab: nghost = (0,0)
+MLCGSolver_BiCGStab: ngrow  = (1,1)
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 4.703163614e-20, Dot(...,nghost): 6.211121327e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) after  Lp.normalize -> dotxy: 4.836850515e-23, Dot(...,nghost): 6.202765757e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(sorig,sorig) -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(rh,rh) -> dotxy: 4.836850515e-23, Dot(...,nghost): 6.202765757e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after sol.setVal(0) -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Initial error (error0) =        3.088475054e-12
+MLCGSolver_BiCGStab: Post_Calc           0 Dots(rh,r) -> dotxy: 4.836850515e-23, Dot(...,nghost): 6.202765757e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           0 Dots(p,p) -> dotxy: 4.836850515e-23, Dot(...,nghost): 6.202765757e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(ph,ph) before Lp.apply -> dotxy: 4.836850515e-23, Dot(...,nghost): 6.202765757e-23, Dot(...,ngrow): 6.202765757e-23
+MLCGSolver_BiCGStab: Half Iter           1 Dots(ph,ph) after  Lp.apply -> dotxy: 4.836850515e-23, Dot(...,nghost): 6.202765757e-23, Dot(...,ngrow): 8.242075559e-23
+MLCGSolver_BiCGStab: Half Iter           1 Dots(v,v) before Lp.normalize -> dotxy: 3.536028515e-21, Dot(...,nghost): 4.9786585e-21, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(v,v) after  Lp.normalize -> dotxy: 4.997684561e-24, Dot(...,nghost): 6.250641379e-24, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(rh,v) -> dotxy: 9.012075945e-24, Dot(...,nghost): 1.271981347e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(sol,sol) -> dotxy: 1.393279704e-21, Dot(...,nghost): 1.786738625e-21, Dot(...,ngrow): 1.786738625e-21
+MLCGSolver_BiCGStab: Half Iter           1 Dots(s  ,s  ) -> dotxy: 9.559237281e-23, Dot(...,nghost): 1.055441665e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 rel. err. 2.107645904
+MLCGSolver_BiCGStab: Iteration           1 Dots(sh,sh) before Lp.apply -> dotxy: 9.559237281e-23, Dot(...,nghost): 1.055441665e-22, Dot(...,ngrow): 1.055441665e-22
+MLCGSolver_BiCGStab: Iteration           1 Dots(sh,sh) after  Lp.apply -> dotxy: 9.559237281e-23, Dot(...,nghost): 1.055441665e-22, Dot(...,ngrow): 1.780985098e-22
+MLCGSolver_BiCGStab: Iteration           1 Dots(t,t) before Lp.normalize -> dotxy: 7.29674757e-20, Dot(...,nghost): 9.440342937e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(t,t) after  Lp.normalize -> dotxy: 9.510059758e-23, Dot(...,nghost): 1.12265485e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(s,t) -> dotxy: 8.366006219e-23, Dot(...,nghost): 9.233206176e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(sol,sol) -> dotxy: 1.467256091e-21, Dot(...,nghost): 1.809487811e-21, Dot(...,ngrow): 1.809487811e-21
+MLCGSolver_BiCGStab: Iteration           1 Dots(r  ,r  ) -> dotxy: 2.19965576e-23, Dot(...,nghost): 2.997427148e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 rel. err. 0.5258598034
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(rh,r) -> dotxy: 1.625211989e-23, Dot(...,nghost): 2.323379909e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) before      -> dotxy: 4.836850515e-23, Dot(...,nghost): 6.202765757e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) after Saxpy -> dotxy: 3.638022087e-23, Dot(...,nghost): 4.448560456e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) after  Xpay -> dotxy: 2.45375354e-22, Dot(...,nghost): 3.129093496e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(ph,ph) before Lp.apply -> dotxy: 2.45375354e-22, Dot(...,nghost): 3.129093496e-22, Dot(...,ngrow): 3.333024476e-22
+MLCGSolver_BiCGStab: Half Iter           2 Dots(ph,ph) after  Lp.apply -> dotxy: 2.45375354e-22, Dot(...,nghost): 3.129093496e-22, Dot(...,ngrow): 4.21567589e-22
+MLCGSolver_BiCGStab: Half Iter           2 Dots(v,v) before Lp.normalize -> dotxy: 4.155906231e-21, Dot(...,nghost): 6.002668023e-21, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(v,v) after  Lp.normalize -> dotxy: 3.379929979e-24, Dot(...,nghost): 4.815634502e-24, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(rh,v) -> dotxy: 7.252328395e-24, Dot(...,nghost): 1.162593862e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(sol,sol) -> dotxy: 5.298000687e-21, Dot(...,nghost): 6.640209169e-21, Dot(...,ngrow): 6.640209169e-21
+MLCGSolver_BiCGStab: Half Iter           2 Dots(s  ,s  ) -> dotxy: 1.900979874e-23, Dot(...,nghost): 2.29025417e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 rel. err. 0.5679565698
+MLCGSolver_BiCGStab: Iteration           2 Dots(sh,sh) before Lp.apply -> dotxy: 1.900979874e-23, Dot(...,nghost): 2.29025417e-23, Dot(...,ngrow): 9.5456885e-23
+MLCGSolver_BiCGStab: Iteration           2 Dots(sh,sh) after  Lp.apply -> dotxy: 1.900979874e-23, Dot(...,nghost): 2.29025417e-23, Dot(...,ngrow): 3.418819831e-23
+MLCGSolver_BiCGStab: Iteration           2 Dots(t,t) before Lp.normalize -> dotxy: 1.404613478e-20, Dot(...,nghost): 1.787897074e-20, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(t,t) after  Lp.normalize -> dotxy: 1.256839768e-23, Dot(...,nghost): 1.604114319e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(s,t) -> dotxy: 1.215859542e-23, Dot(...,nghost): 1.445087902e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(sol,sol) -> dotxy: 5.480220076e-21, Dot(...,nghost): 6.805135004e-21, Dot(...,ngrow): 6.805135004e-21
+MLCGSolver_BiCGStab: Iteration           2 Dots(r  ,r  ) -> dotxy: 7.247643663e-24, Dot(...,nghost): 9.955277194e-24, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 rel. err. 0.3313176066
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(rh,r) -> dotxy: 6.872583025e-24, Dot(...,nghost): 1.0442123e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) before      -> dotxy: 2.45375354e-22, Dot(...,nghost): 3.129093496e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) after Saxpy -> dotxy: 2.198064397e-22, Dot(...,nghost): 2.703927762e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) after  Xpay -> dotxy: 2.679843734e-22, Dot(...,nghost): 3.390209956e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(ph,ph) before Lp.apply -> dotxy: 2.679843734e-22, Dot(...,nghost): 3.390209956e-22, Dot(...,ngrow): 4.476792351e-22
+MLCGSolver_BiCGStab: Half Iter           3 Dots(ph,ph) after  Lp.apply -> dotxy: 2.679843734e-22, Dot(...,nghost): 3.390209956e-22, Dot(...,ngrow): 4.663441918e-22
+MLCGSolver_BiCGStab: Half Iter           3 Dots(v,v) before Lp.normalize -> dotxy: 2.153434493e-21, Dot(...,nghost): 3.203948643e-21, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(v,v) after  Lp.normalize -> dotxy: 1.374075142e-24, Dot(...,nghost): 1.982514155e-24, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(rh,v) -> dotxy: 3.283575553e-24, Dot(...,nghost): 5.347745511e-24, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(sol,sol) -> dotxy: 1.160969356e-20, Dot(...,nghost): 1.450111546e-20, Dot(...,ngrow): 1.450111546e-20
+MLCGSolver_BiCGStab: Half Iter           3 Dots(s  ,s  ) -> dotxy: 5.729471214e-25, Dot(...,nghost): 6.589745034e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 rel. err. 0.1007594806
+MLCGSolver_BiCGStab: Iteration           3 Dots(sh,sh) before Lp.apply -> dotxy: 5.729471214e-25, Dot(...,nghost): 6.589745034e-25, Dot(...,ngrow): 1.194463111e-23
+MLCGSolver_BiCGStab: Iteration           3 Dots(sh,sh) after  Lp.apply -> dotxy: 5.729471214e-25, Dot(...,nghost): 6.589745034e-25, Dot(...,ngrow): 1.029874759e-24
+MLCGSolver_BiCGStab: Iteration           3 Dots(t,t) before Lp.normalize -> dotxy: 7.817146776e-22, Dot(...,nghost): 9.991949966e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(t,t) after  Lp.normalize -> dotxy: 6.471178791e-25, Dot(...,nghost): 8.056833384e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(s,t) -> dotxy: 5.15846989e-25, Dot(...,nghost): 6.018125446e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(sol,sol) -> dotxy: 1.165283537e-20, Dot(...,nghost): 1.453412064e-20, Dot(...,ngrow): 1.453412064e-20
+MLCGSolver_BiCGStab: Iteration           3 Dots(r  ,r  ) -> dotxy: 1.617421082e-25, Dot(...,nghost): 2.114743498e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 rel. err. 0.0509583031
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(rh,r) -> dotxy: 7.857718552e-25, Dot(...,nghost): 1.168114632e-24, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) before      -> dotxy: 2.679843734e-22, Dot(...,nghost): 3.390209956e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) after Saxpy -> dotxy: 2.482169541e-22, Dot(...,nghost): 3.095214686e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) after  Xpay -> dotxy: 2.500020922e-23, Dot(...,nghost): 3.144232281e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(ph,ph) before Lp.apply -> dotxy: 2.500020922e-23, Dot(...,nghost): 3.144232281e-23, Dot(...,ngrow): 1.58765519e-22
+MLCGSolver_BiCGStab: Half Iter           4 Dots(ph,ph) after  Lp.apply -> dotxy: 2.500020922e-23, Dot(...,nghost): 3.144232281e-23, Dot(...,ngrow): 4.358237032e-23
+MLCGSolver_BiCGStab: Half Iter           4 Dots(v,v) before Lp.normalize -> dotxy: 2.069992095e-22, Dot(...,nghost): 2.863809923e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(v,v) after  Lp.normalize -> dotxy: 1.245879783e-25, Dot(...,nghost): 1.669563781e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(rh,v) -> dotxy: 6.926221517e-25, Dot(...,nghost): 1.073634635e-24, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(sol,sol) -> dotxy: 1.28917301e-20, Dot(...,nghost): 1.608605268e-20, Dot(...,ngrow): 1.608605268e-20
+MLCGSolver_BiCGStab: Half Iter           4 Dots(s  ,s  ) -> dotxy: 8.248374729e-28, Dot(...,nghost): 1.069915632e-27, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 rel. err. 0.004172167133
+MLCGSolver_BiCGStab: Iteration           4 Dots(sh,sh) before Lp.apply -> dotxy: 8.248374729e-28, Dot(...,nghost): 1.069915632e-27, Dot(...,ngrow): 3.719701716e-25
+MLCGSolver_BiCGStab: Iteration           4 Dots(sh,sh) after  Lp.apply -> dotxy: 8.248374729e-28, Dot(...,nghost): 1.069915632e-27, Dot(...,ngrow): 1.512669838e-27
+MLCGSolver_BiCGStab: Iteration           4 Dots(t,t) before Lp.normalize -> dotxy: 2.014923476e-24, Dot(...,nghost): 2.842363635e-24, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(t,t) after  Lp.normalize -> dotxy: 1.609219613e-27, Dot(...,nghost): 2.067428437e-27, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(s,t) -> dotxy: 1.106830422e-27, Dot(...,nghost): 1.441302839e-27, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(sol,sol) -> dotxy: 1.289258127e-20, Dot(...,nghost): 1.608580251e-20, Dot(...,ngrow): 1.608580251e-20
+MLCGSolver_BiCGStab: Iteration           4 Dots(r  ,r  ) -> dotxy: 6.355319957e-29, Dot(...,nghost): 6.529519963e-29, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 rel. err. 0.00149325724
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(rh,r) -> dotxy: 5.453539921e-27, Dot(...,nghost): 1.028249011e-27, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) before      -> dotxy: 2.500020922e-23, Dot(...,nghost): 3.144232281e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) after Saxpy -> dotxy: 2.340434315e-23, Dot(...,nghost): 2.923770173e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) after  Xpay -> dotxy: 3.447094417e-27, Dot(...,nghost): 4.169518875e-27, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(ph,ph) before Lp.apply -> dotxy: 3.447094417e-27, Dot(...,nghost): 4.169518875e-27, Dot(...,ngrow): 1.214421703e-23
+MLCGSolver_BiCGStab: Half Iter           5 Dots(ph,ph) after  Lp.apply -> dotxy: 3.447094417e-27, Dot(...,nghost): 4.169518875e-27, Dot(...,ngrow): 5.803015182e-27
+MLCGSolver_BiCGStab: Half Iter           5 Dots(v,v) before Lp.normalize -> dotxy: 6.039569845e-26, Dot(...,nghost): 6.21023947e-26, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(v,v) after  Lp.normalize -> dotxy: 4.160005085e-29, Dot(...,nghost): 4.263846813e-29, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(rh,v) -> dotxy: 4.4021401e-27, Dot(...,nghost): 2.81736634e-27, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(sol,sol) -> dotxy: 1.29086719e-20, Dot(...,nghost): 1.610560289e-20, Dot(...,ngrow): 1.610560289e-20
+MLCGSolver_BiCGStab: Half Iter           5 Dots(s  ,s  ) -> dotxy: 1.255383438e-30, Dot(...,nghost): 2.128478134e-30, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 rel. err. 0.0001989856382
+MLCGSolver_BiCGStab: Iteration           5 Dots(sh,sh) before Lp.apply -> dotxy: 1.255383438e-30, Dot(...,nghost): 2.128478134e-30, Dot(...,ngrow): 4.448826838e-28
+MLCGSolver_BiCGStab: Iteration           5 Dots(sh,sh) after  Lp.apply -> dotxy: 1.255383438e-30, Dot(...,nghost): 2.128478134e-30, Dot(...,ngrow): 2.447966292e-30
+MLCGSolver_BiCGStab: Iteration           5 Dots(t,t) before Lp.normalize -> dotxy: 2.023095703e-27, Dot(...,nghost): 3.273297896e-27, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(t,t) after  Lp.normalize -> dotxy: 1.649175138e-30, Dot(...,nghost): 2.321871828e-30, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(s,t) -> dotxy: 1.27193721e-30, Dot(...,nghost): 2.019916638e-30, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(sol,sol) -> dotxy: 1.290865726e-20, Dot(...,nghost): 1.610551392e-20, Dot(...,ngrow): 1.610551392e-20
+MLCGSolver_BiCGStab: Iteration           5 Dots(r  ,r  ) -> dotxy: 2.743934698e-31, Dot(...,nghost): 3.938647322e-31, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 rel. err. 8.254906434e-05
+MLCGSolver_BiCGStab: Final: Iteration    5 rel. err. 8.254906434e-05
+MLCGSolver_BiCGstab: Keep new solution.
+MLCGSolver_BiCGStab: Final: Iteration    5 Dots(sol,sol) -> dotxy: 1.290865726e-20, Dot(...,nghost): 1.610551392e-20, Dot(...,ngrow): 1.610551392e-20
+MLMG: Iteration   7 Fine resid/bnorm = 3.782056702e-11
+MLCGSolver_BiCGStab: nghost = (0,0)
+MLCGSolver_BiCGStab: ngrow  = (1,1)
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 8.285195731e-23, Dot(...,nghost): 1.094724806e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) after  Lp.normalize -> dotxy: 8.538451601e-26, Dot(...,nghost): 1.096143505e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(sorig,sorig) -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(rh,rh) -> dotxy: 8.538451601e-26, Dot(...,nghost): 1.096143505e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after sol.setVal(0) -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
+MLCGSolver_BiCGStab: Initial error (error0) =        1.295600004e-13
+MLCGSolver_BiCGStab: Post_Calc           0 Dots(rh,r) -> dotxy: 8.538451601e-26, Dot(...,nghost): 1.096143505e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           0 Dots(p,p) -> dotxy: 8.538451601e-26, Dot(...,nghost): 1.096143505e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(ph,ph) before Lp.apply -> dotxy: 8.538451601e-26, Dot(...,nghost): 1.096143505e-25, Dot(...,ngrow): 1.096143505e-25
+MLCGSolver_BiCGStab: Half Iter           1 Dots(ph,ph) after  Lp.apply -> dotxy: 8.538451601e-26, Dot(...,nghost): 1.096143505e-25, Dot(...,ngrow): 1.45577283e-25
+MLCGSolver_BiCGStab: Half Iter           1 Dots(v,v) before Lp.normalize -> dotxy: 6.217515323e-24, Dot(...,nghost): 8.760932356e-24, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(v,v) after  Lp.normalize -> dotxy: 8.850311333e-27, Dot(...,nghost): 1.110243324e-26, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(rh,v) -> dotxy: 1.594910966e-26, Dot(...,nghost): 2.257864412e-26, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 Dots(sol,sol) -> dotxy: 2.447171887e-24, Dot(...,nghost): 3.141613604e-24, Dot(...,ngrow): 3.141613604e-24
+MLCGSolver_BiCGStab: Half Iter           1 Dots(s  ,s  ) -> dotxy: 1.682707613e-25, Dot(...,nghost): 1.860645507e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           1 rel. err. 2.104066557
+MLCGSolver_BiCGStab: Iteration           1 Dots(sh,sh) before Lp.apply -> dotxy: 1.682707613e-25, Dot(...,nghost): 1.860645507e-25, Dot(...,ngrow): 1.860645507e-25
+MLCGSolver_BiCGStab: Iteration           1 Dots(sh,sh) after  Lp.apply -> dotxy: 1.682707613e-25, Dot(...,nghost): 1.860645507e-25, Dot(...,ngrow): 3.137717136e-25
+MLCGSolver_BiCGStab: Iteration           1 Dots(t,t) before Lp.normalize -> dotxy: 1.288021736e-22, Dot(...,nghost): 1.662643461e-22, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(t,t) after  Lp.normalize -> dotxy: 1.679283271e-25, Dot(...,nghost): 1.987788605e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(s,t) -> dotxy: 1.47445865e-25, Dot(...,nghost): 1.631364473e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 Dots(sol,sol) -> dotxy: 2.57689756e-24, Dot(...,nghost): 3.179183389e-24, Dot(...,ngrow): 3.179183389e-24
+MLCGSolver_BiCGStab: Iteration           1 Dots(r  ,r  ) -> dotxy: 3.880908258e-26, Dot(...,nghost): 5.283304286e-26, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           1 rel. err. 0.5270737079
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(rh,r) -> dotxy: 2.894044392e-26, Dot(...,nghost): 4.127594598e-26, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) before      -> dotxy: 8.538451601e-26, Dot(...,nghost): 1.096143505e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) after Saxpy -> dotxy: 6.41999759e-26, Dot(...,nghost): 7.852420705e-26, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           1 Dots(p,p) after  Xpay -> dotxy: 4.393087331e-25, Dot(...,nghost): 5.59856715e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(ph,ph) before Lp.apply -> dotxy: 4.393087331e-25, Dot(...,nghost): 5.59856715e-25, Dot(...,ngrow): 5.958196475e-25
+MLCGSolver_BiCGStab: Half Iter           2 Dots(ph,ph) after  Lp.apply -> dotxy: 4.393087331e-25, Dot(...,nghost): 5.59856715e-25, Dot(...,ngrow): 7.549815486e-25
+MLCGSolver_BiCGStab: Half Iter           2 Dots(v,v) before Lp.normalize -> dotxy: 7.216397441e-24, Dot(...,nghost): 1.041537165e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(v,v) after  Lp.normalize -> dotxy: 5.91161037e-27, Dot(...,nghost): 8.423490549e-27, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(rh,v) -> dotxy: 1.297944161e-26, Dot(...,nghost): 2.069476771e-26, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 Dots(sol,sol) -> dotxy: 9.348955696e-24, Dot(...,nghost): 1.171647682e-23, Dot(...,ngrow): 1.171647682e-23
+MLCGSolver_BiCGStab: Half Iter           2 Dots(s  ,s  ) -> dotxy: 3.329852195e-26, Dot(...,nghost): 4.019516456e-26, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           2 rel. err. 0.566274097
+MLCGSolver_BiCGStab: Iteration           2 Dots(sh,sh) before Lp.apply -> dotxy: 3.329852195e-26, Dot(...,nghost): 4.019516456e-26, Dot(...,ngrow): 1.679023275e-25
+MLCGSolver_BiCGStab: Iteration           2 Dots(sh,sh) after  Lp.apply -> dotxy: 3.329852195e-26, Dot(...,nghost): 4.019516456e-26, Dot(...,ngrow): 5.986817569e-26
+MLCGSolver_BiCGStab: Iteration           2 Dots(t,t) before Lp.normalize -> dotxy: 2.380404372e-23, Dot(...,nghost): 3.029440895e-23, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(t,t) after  Lp.normalize -> dotxy: 2.136009051e-26, Dot(...,nghost): 2.73115898e-26, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(s,t) -> dotxy: 2.093480875e-26, Dot(...,nghost): 2.49229321e-26, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 Dots(sol,sol) -> dotxy: 9.67361976e-24, Dot(...,nghost): 1.201293592e-23, Dot(...,ngrow): 1.201293592e-23
+MLCGSolver_BiCGStab: Iteration           2 Dots(r  ,r  ) -> dotxy: 1.278052755e-26, Dot(...,nghost): 1.757659995e-26, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           2 rel. err. 0.3321645202
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(rh,r) -> dotxy: 1.23206844e-26, Dot(...,nghost): 1.871487467e-26, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) before      -> dotxy: 4.393087331e-25, Dot(...,nghost): 5.59856715e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) after Saxpy -> dotxy: 3.926728556e-25, Dot(...,nghost): 4.829033077e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           2 Dots(p,p) after  Xpay -> dotxy: 4.68729815e-25, Dot(...,nghost): 5.930871654e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(ph,ph) before Lp.apply -> dotxy: 4.68729815e-25, Dot(...,nghost): 5.930871654e-25, Dot(...,ngrow): 7.882119991e-25
+MLCGSolver_BiCGStab: Half Iter           3 Dots(ph,ph) after  Lp.apply -> dotxy: 4.68729815e-25, Dot(...,nghost): 5.930871654e-25, Dot(...,ngrow): 8.155496623e-25
+MLCGSolver_BiCGStab: Half Iter           3 Dots(v,v) before Lp.normalize -> dotxy: 3.777682328e-24, Dot(...,nghost): 5.625521994e-24, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(v,v) after  Lp.normalize -> dotxy: 2.421783335e-27, Dot(...,nghost): 3.498543544e-27, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(rh,v) -> dotxy: 5.868824477e-27, Dot(...,nghost): 9.56157596e-27, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 Dots(sol,sol) -> dotxy: 2.04762245e-23, Dot(...,nghost): 2.557805112e-23, Dot(...,ngrow): 2.557805112e-23
+MLCGSolver_BiCGStab: Half Iter           3 Dots(s  ,s  ) -> dotxy: 1.042556048e-27, Dot(...,nghost): 1.198101237e-27, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           3 rel. err. 0.1016412313
+MLCGSolver_BiCGStab: Iteration           3 Dots(sh,sh) before Lp.apply -> dotxy: 1.042556048e-27, Dot(...,nghost): 1.198101237e-27, Dot(...,ngrow): 2.087111236e-26
+MLCGSolver_BiCGStab: Iteration           3 Dots(sh,sh) after  Lp.apply -> dotxy: 1.042556048e-27, Dot(...,nghost): 1.198101237e-27, Dot(...,ngrow): 1.875839898e-27
+MLCGSolver_BiCGStab: Iteration           3 Dots(t,t) before Lp.normalize -> dotxy: 1.424395459e-24, Dot(...,nghost): 1.818883171e-24, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(t,t) after  Lp.normalize -> dotxy: 1.189137189e-27, Dot(...,nghost): 1.479918192e-27, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(s,t) -> dotxy: 9.45246098e-28, Dot(...,nghost): 1.102264861e-27, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 Dots(sol,sol) -> dotxy: 2.055326044e-23, Dot(...,nghost): 2.563667637e-23, Dot(...,ngrow): 2.563667637e-23
+MLCGSolver_BiCGStab: Iteration           3 Dots(r  ,r  ) -> dotxy: 2.911791719e-28, Dot(...,nghost): 3.808306825e-28, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           3 rel. err. 0.0514861618
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(rh,r) -> dotxy: 1.418930954e-27, Dot(...,nghost): 2.104307925e-27, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) before      -> dotxy: 4.68729815e-25, Dot(...,nghost): 5.930871654e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) after Saxpy -> dotxy: 4.342171559e-25, Dot(...,nghost): 5.414511088e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           3 Dots(p,p) after  Xpay -> dotxy: 4.491959139e-26, Dot(...,nghost): 5.649122742e-26, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(ph,ph) before Lp.apply -> dotxy: 4.491959139e-26, Dot(...,nghost): 5.649122742e-26, Dot(...,ngrow): 2.789537243e-25
+MLCGSolver_BiCGStab: Half Iter           4 Dots(ph,ph) after  Lp.apply -> dotxy: 4.491959139e-26, Dot(...,nghost): 5.649122742e-26, Dot(...,ngrow): 7.831328997e-26
+MLCGSolver_BiCGStab: Half Iter           4 Dots(v,v) before Lp.normalize -> dotxy: 3.694741142e-25, Dot(...,nghost): 5.112980763e-25, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(v,v) after  Lp.normalize -> dotxy: 2.22494861e-28, Dot(...,nghost): 2.982020512e-28, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(rh,v) -> dotxy: 1.246270996e-27, Dot(...,nghost): 1.925909174e-27, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 Dots(sol,sol) -> dotxy: 2.276762362e-23, Dot(...,nghost): 2.841052716e-23, Dot(...,ngrow): 2.841052716e-23
+MLCGSolver_BiCGStab: Half Iter           4 Dots(s  ,s  ) -> dotxy: 1.47954573e-30, Dot(...,nghost): 1.91152738e-30, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           4 rel. err. 0.004175639975
+MLCGSolver_BiCGStab: Iteration           4 Dots(sh,sh) before Lp.apply -> dotxy: 1.47954573e-30, Dot(...,nghost): 1.91152738e-30, Dot(...,ngrow): 6.796501882e-28
+MLCGSolver_BiCGStab: Iteration           4 Dots(sh,sh) after  Lp.apply -> dotxy: 1.47954573e-30, Dot(...,nghost): 1.91152738e-30, Dot(...,ngrow): 2.713456325e-30
+MLCGSolver_BiCGStab: Iteration           4 Dots(t,t) before Lp.normalize -> dotxy: 3.599801365e-27, Dot(...,nghost): 5.070079775e-27, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(t,t) after  Lp.normalize -> dotxy: 2.88647285e-30, Dot(...,nghost): 3.702239973e-30, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(s,t) -> dotxy: 1.985609992e-30, Dot(...,nghost): 2.577967411e-30, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 Dots(sol,sol) -> dotxy: 2.2769159e-23, Dot(...,nghost): 2.841012099e-23, Dot(...,ngrow): 2.841012099e-23
+MLCGSolver_BiCGStab: Iteration           4 Dots(r  ,r  ) -> dotxy: 1.136409576e-31, Dot(...,nghost): 1.166833874e-31, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           4 rel. err. 0.001501142886
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(rh,r) -> dotxy: 1.00936927e-29, Dot(...,nghost): 2.622082938e-30, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) before      -> dotxy: 4.491959139e-26, Dot(...,nghost): 5.649122742e-26, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) after Saxpy -> dotxy: 4.204858079e-26, Dot(...,nghost): 5.252897409e-26, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Post_Calc           4 Dots(p,p) after  Xpay -> dotxy: 6.543102467e-30, Dot(...,nghost): 7.928536816e-30, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(ph,ph) before Lp.apply -> dotxy: 6.543102467e-30, Dot(...,nghost): 7.928536816e-30, Dot(...,ngrow): 2.182999108e-26
+MLCGSolver_BiCGStab: Half Iter           5 Dots(ph,ph) after  Lp.apply -> dotxy: 6.543102467e-30, Dot(...,nghost): 7.928536816e-30, Dot(...,ngrow): 1.10365271e-29
+MLCGSolver_BiCGStab: Half Iter           5 Dots(v,v) before Lp.normalize -> dotxy: 1.102593841e-28, Dot(...,nghost): 1.137931587e-28, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(v,v) after  Lp.normalize -> dotxy: 7.527270234e-32, Dot(...,nghost): 7.736712602e-32, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(rh,v) -> dotxy: 8.241307484e-30, Dot(...,nghost): 5.741718782e-30, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 Dots(sol,sol) -> dotxy: 2.279830834e-23, Dot(...,nghost): 2.844602082e-23, Dot(...,ngrow): 2.844602082e-23
+MLCGSolver_BiCGStab: Half Iter           5 Dots(s  ,s  ) -> dotxy: 2.232795578e-33, Dot(...,nghost): 3.80455652e-33, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Half Iter           5 rel. err. 0.000202208462
+MLCGSolver_BiCGStab: Iteration           5 Dots(sh,sh) before Lp.apply -> dotxy: 2.232795578e-33, Dot(...,nghost): 3.80455652e-33, Dot(...,ngrow): 8.057335019e-31
+MLCGSolver_BiCGStab: Iteration           5 Dots(sh,sh) after  Lp.apply -> dotxy: 2.232795578e-33, Dot(...,nghost): 3.80455652e-33, Dot(...,ngrow): 4.334384752e-33
+MLCGSolver_BiCGStab: Iteration           5 Dots(t,t) before Lp.normalize -> dotxy: 3.569394606e-30, Dot(...,nghost): 5.81281342e-30, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(t,t) after  Lp.normalize -> dotxy: 2.839719374e-33, Dot(...,nghost): 4.044865092e-33, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(s,t) -> dotxy: 2.226143341e-33, Dot(...,nghost): 3.571713491e-33, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 Dots(sol,sol) -> dotxy: 2.279828314e-23, Dot(...,nghost): 2.844586078e-23, Dot(...,ngrow): 2.844586078e-23
+MLCGSolver_BiCGStab: Iteration           5 Dots(r  ,r  ) -> dotxy: 4.876533573e-34, Dot(...,nghost): 6.903658584e-34, Dot(...,ngrow): N/A
+MLCGSolver_BiCGStab: Iteration           5 rel. err. 8.647877262e-05
+MLCGSolver_BiCGStab: Final: Iteration    5 rel. err. 8.647877262e-05
+MLCGSolver_BiCGstab: Keep new solution.
+MLCGSolver_BiCGStab: Final: Iteration    5 Dots(sol,sol) -> dotxy: 2.279828314e-23, Dot(...,nghost): 2.844586078e-23, Dot(...,ngrow): 2.844586078e-23
+MLMG: Iteration   8 Fine resid/bnorm = 1.591110408e-12
+MLMG: Final Iter. 8 resid, resid/bnorm = 2.418865108e-11, 1.591110408e-12
+MLMG: Timers: Solve = 0.013161085 Iter = 0.01192769 Bottom = 0.004563904
+Unused ParmParse Variables:
+  [TOP]::amr.plot_file(nvals = 1)  :: [EB_Node_2D_plt]
+  [TOP]::amr.check_file(nvals = 1)  :: [EB_Node_2D_chk]
+  [TOP]::amr.checkpoint_files_output(nvals = 1)  :: [0]
+
+AMReX (23.11-4-ga7afcba3cffd) finalized

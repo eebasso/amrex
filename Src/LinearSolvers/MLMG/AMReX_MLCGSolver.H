@@ -169,33 +169,19 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         return ret;
     }
 
+    RT rho = dotxy(rh,r);
+    PrintDots(Post_Calc,"Dots(rh,r)",rh,r);
+    p.LocalCopy(r,0,0,ncomp,nghost); // This is the true initialization. Move this to here to avoid iter==1 check every iteration
+    PrintDots(Post_Calc, "Dots(p,p)",p,p);
+
     for (; iter <= maxiter; ++iter)
     {
         Half_Iter = TitleHalf_Iter + std::to_string(iter);
         Iteration = TitleIteration + std::to_string(iter);
-        Post_Calc = TitlePost_Calc + std::to_string(iter-1);
-
-        const RT rho = dotxy(rh,r);
-        PrintDots(Post_Calc,"Dots(rh,r)",rh,r);
-
+        Post_Calc = TitlePost_Calc + std::to_string(iter);
         if ( rho == 0 )
         {
             ret = 1; break;
-        }
-        if ( iter == 1 )
-        {
-            p.LocalCopy(r,0,0,ncomp,nghost);
-            PrintDots(Post_Calc, "Dots(p,p)",p,p);
-        }
-        else
-        {
-            const RT beta = (rho/rho_1)*(alpha/omega);
-            // amrex::Print() << Iteration << " beta: " << beta << '\n';
-            PrintDots(Post_Calc, "Dots(p,p) before     ",p,p);
-            MF::Saxpy(p, -omega, v, 0, 0, ncomp, nghost); // p += -omega*v
-            PrintDots(Post_Calc, "Dots(p,p) after Saxpy",p,p);
-            MF::Xpay(p, beta, r, 0, 0, ncomp, nghost); // p = r + beta*p
-            PrintDots(Post_Calc, "Dots(p,p) after  Xpay",p,p);
         }
         ph.LocalCopy(p,0,0,ncomp,nghost);
         PrintDots(Half_Iter,"Dots(ph,ph) before Lp.apply",ph,ph);
@@ -286,6 +272,15 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
             ret = 4; break;
         }
         rho_1 = rho;
+        rho = dotxy(rh,r);
+        PrintDots(Post_Calc,"Dots(rh,r)",rh,r);
+        const RT beta = (rho/rho_1)*(alpha/omega);
+        // amrex::Print() << Iteration << " beta: " << beta << '\n';
+        PrintDots(Post_Calc, "Dots(p,p) before     ",p,p);
+        MF::Saxpy(p, -omega, v, 0, 0, ncomp, nghost); // p += -omega*v
+        PrintDots(Post_Calc, "Dots(p,p) after Saxpy",p,p);
+        MF::Xpay(p, beta, r, 0, 0, ncomp, nghost); // p = r + beta*p
+        PrintDots(Post_Calc, "Dots(p,p) after  Xpay",p,p);
     }
 
     if ( verbose > 0 )
