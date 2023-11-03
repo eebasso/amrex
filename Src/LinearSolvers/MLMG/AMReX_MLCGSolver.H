@@ -52,6 +52,10 @@ public:
 
     [[nodiscard]] int getNumIters () const noexcept { return iter; }
 
+    // Array<RT, 3> Dots (const MF& x, const MF& y);
+
+    void PrintDots (const std::string& title, const char* names, const MF& x, const MF& y);
+
 private:
 
     MLLinOpT<MF>& Lp;
@@ -61,6 +65,7 @@ private:
     int verbose   = 0;
     int maxiter   = 100;
     IntVect nghost = IntVect(0);
+    IntVect ngrow = IntVect(0);
     int iter = -1;
 };
 
@@ -87,6 +92,14 @@ int
 MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 {
     BL_PROFILE("MLCGSolver::bicgstab");
+    std::string TitleHalf_Iter = "MLCGSolver_BiCGStab: Half Iter           ";
+    std::string TitleIteration = "MLCGSolver_BiCGStab: Iteration           ";
+    std::string TitlePost_Calc = "MLCGSolver_BiCGStab: Post_Calc           ";
+
+    amrex::Print() << "MLCGSolver_BiCGStab: nghost = " << nghost << "\n";
+    amrex::Print() << "MLCGSolver_BiCGStab: ngrow  = " << sol.nGrowVect() << "\n";
+
+    ngrow = sol.nGrowVect();
 
     const int ncomp = sol.nComp();
 
@@ -98,6 +111,8 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     MF sh(ba, dm, ncomp, sol.nGrowVect(), MFInfo(), factory);
     ph.setVal(RT(0.0));
     sh.setVal(RT(0.0));
+    PrintDots(TitleIteration + std::to_string(0),"Dots(ph,ph) initialized",ph,ph);
+    PrintDots(TitleIteration + std::to_string(0),"Dots(sh,sh) initialized",sh,sh);
 
     MF sorig(ba, dm, ncomp, nghost, MFInfo(), factory);
     MF p    (ba, dm, ncomp, nghost, MFInfo(), factory);
@@ -107,8 +122,8 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     MF v    (ba, dm, ncomp, nghost, MFInfo(), factory);
     MF t    (ba, dm, ncomp, nghost, MFInfo(), factory);
 
+    // Compute residual r
     Lp.correctionResidual(amrlev, mglev, r, sol, rhs, MLLinOpT<MF>::BCMode::Homogeneous);
-
     // Then normalize
     Lp.normalize(amrlev, mglev, r);
 
@@ -120,73 +135,84 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     RT rnorm = norm_inf(r);
     const RT rnorm0 = rnorm;
 
-    if ( verbose > 0 )
-    {
+    // if ( verbose > 0 )
+    // {
         amrex::Print() << "MLCGSolver_BiCGStab: Initial error (error0) =        " << rnorm0 << '\n';
-    }
+    // }
     int ret = 0;
     iter = 1;
-    RT rho_1 = 0, alpha = 0, omega = 0;
+    RT alpha, beta, omega, rho, rho_1, rhTv;
 
     if ( rnorm0 == 0 || rnorm0 < eps_abs )
     {
-        if ( verbose > 0 )
-        {
+        // if ( verbose > 0 )
+        // {
             amrex::Print() << "MLCGSolver_BiCGStab: niter = 0,"
                            << ", rnorm = " << rnorm
                            << ", eps_abs = " << eps_abs << std::endl;
-        }
+        // }
         return ret;
     }
 
+    rho = dotxy(rh,r);
+    p.LocalCopy(r,0,0,ncomp,nghost); // This is the true initialization. Move this to here to avoid iter==1 check every iteration
+    PrintDots(TitlePost_Calc+std::to_string(0),"Dots(rh,r)",rh,r);
+    PrintDots(TitlePost_Calc+std::to_string(0),"Dots(p,p)",p,p);
     for (; iter <= maxiter; ++iter)
     {
-        const RT rho = dotxy(rh,r);
-        if ( rho == 0 )
+        std::string Half_Iter = TitleHalf_Iter + std::to_string(iter);
+        std::string Iteration = TitleIteration + std::to_string(iter);
+        std::string Post_Calc = TitlePost_Calc + std::to_string(iter);
+
+        if ( rho == RT(0.0) )
         {
             ret = 1; break;
         }
-        if ( iter == 1 )
-        {
-            p.LocalCopy(r,0,0,ncomp,nghost);
-        }
-        else
-        {
-            const RT beta = (rho/rho_1)*(alpha/omega);
-            MF::Saxpy(p, -omega, v, 0, 0, ncomp, nghost); // p += -omega*v
-            MF::Xpay(p, beta, r, 0, 0, ncomp, nghost); // p = r + beta*p
-        }
         ph.LocalCopy(p,0,0,ncomp,nghost);
+        // ph.LocalCopy(p,0,0,ncomp,sol.nGrowVect());
+        PrintDots(Half_Iter,"Dots(ph,ph) before Lp.apply",ph,ph);
         Lp.apply(amrlev, mglev, v, ph, MLLinOpT<MF>::BCMode::Homogeneous, MLLinOpT<MF>::StateMode::Correction);
-        Lp.normalize(amrlev, mglev, v);
+        PrintDots(Half_Iter,"Dots(ph,ph) after  Lp.apply",ph,ph);
 
-        RT rhTv = dotxy(rh,v);
-        if ( rhTv != RT(0.0) )
-        {
-            alpha = rho/rhTv;
-        }
-        else
+        PrintDots(Half_Iter,"Dots(v,v) before Lp.normalize",v,v);
+        Lp.normalize(amrlev, mglev, v);
+        PrintDots(Half_Iter,"Dots(v,v) after  Lp.normalize",v,v);
+
+        rhTv = dotxy(rh,v);
+        PrintDots(Half_Iter,"Dots(rh,v)",rh,v);
+
+        if ( rhTv == RT(0.0) )
         {
             ret = 2; break;
         }
+        alpha = rho/rhTv;
+        // amrex::Print() << Half_Iter << " alpha: " << alpha << "\n";
         MF::Saxpy(sol, alpha, ph, 0, 0, ncomp, nghost); // sol += alpha * ph
         MF::LinComb(s, RT(1.0), r, 0, -alpha, v, 0, 0, ncomp, nghost); // s = r - alpha * v
+        // MF::Saxpy(r,  -alpha, v,  0, 0, ncomp, nghost); // r -= alpha * v
+        PrintDots(Half_Iter,"Dots(sol,sol)",sol,sol);
+        PrintDots(Half_Iter,"Dots(s  ,s  )",s  ,s  );
 
         rnorm = norm_inf(s);
 
-        if ( verbose > 2 && ParallelDescriptor::IOProcessor() )
-        {
+        // if ( verbose > 2 && ParallelDescriptor::IOProcessor() )
+        // {
             amrex::Print() << "MLCGSolver_BiCGStab: Half Iter "
                            << std::setw(11) << iter
                            << " rel. err. "
                            << rnorm/(rnorm0) << '\n';
-        }
+        // }
 
         if ( rnorm < eps_rel*rnorm0 || rnorm < eps_abs ) { break; }
 
         sh.LocalCopy(s,0,0,ncomp,nghost);
+        PrintDots(Iteration,"Dots(sh,sh) before Lp.apply",sh,sh);
         Lp.apply(amrlev, mglev, t, sh, MLLinOpT<MF>::BCMode::Homogeneous, MLLinOpT<MF>::StateMode::Correction);
+        PrintDots(Iteration,"Dots(sh,sh) after  Lp.apply",sh,sh);
+
+        PrintDots(Iteration,"Dots(t,t) before Lp.normalize",t,t);
         Lp.normalize(amrlev, mglev, t);
+        PrintDots(Iteration,"Dots(t,t) after  Lp.normalize",t,t);
         //
         // This is a little funky.  I want to elide one of the reductions
         // in the following two dotxy()s.  We do that by calculating the "local"
@@ -198,60 +224,78 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         ParallelAllReduce::Sum(tvals,2,Lp.BottomCommunicator());
         BL_PROFILE_VAR_STOP(blp_par);
 
-        if ( tvals[0] != RT(0.0) )
-        {
-            omega = tvals[1]/tvals[0];
-        }
-        else
+        if ( tvals[0] == RT(0.0) )
         {
             ret = 3; break;
         }
+        omega = tvals[1]/tvals[0];
+        // amrex::Print() << Iteration << " tvals[0] = dotxy(t,t): " << tvals[0]
+        //                             << " tvals[1] = dotxy(t,r): " << tvals[1] << '\n';
+        // PrintDots(Iteration,"Dots(t,t)",t,t);
+        PrintDots(Iteration,"Dots(s,t)",t,s);
+
         MF::Saxpy(sol, omega, sh, 0, 0, ncomp, nghost); // sol += omega * sh
         MF::LinComb(r, RT(1.0), s, 0, -omega, t, 0, 0, ncomp, nghost); // r = s - omega * t
+        // MF::Saxpy(r,  -omega, t,  0, 0, ncomp, nghost); // r -= omega * t
+        PrintDots(Iteration,"Dots(sol,sol)",sol,sol);
+        PrintDots(Iteration,"Dots(r  ,r  )",r,r);
 
         rnorm = norm_inf(r);
 
-        if ( verbose > 2 )
-        {
+        // if ( verbose > 2 )
+        // {
             amrex::Print() << "MLCGSolver_BiCGStab: Iteration "
                            << std::setw(11) << iter
                            << " rel. err. "
                            << rnorm/(rnorm0) << '\n';
-        }
+        // }
 
         if ( rnorm < eps_rel*rnorm0 || rnorm < eps_abs ) { break; }
 
-        if ( omega == 0 )
+        if ( omega == RT(0.0) )
         {
             ret = 4; break;
         }
         rho_1 = rho;
+        rho = dotxy(rh,r);
+        PrintDots(Post_Calc,"Dots(rh,r)",rh,r);
+
+        beta = (rho/rho_1)*(alpha/omega);
+        // amrex::Print() << Iteration << " beta: " << beta << '\n';
+
+        PrintDots(Post_Calc, "Dots(p,p) before     ",p,p);
+        MF::Saxpy(p, -omega, v, 0, 0, ncomp, nghost); // p += -omega*v
+        PrintDots(Post_Calc, "Dots(p,p) after Saxpy",p,p);
+        MF::Xpay(p, beta, r, 0, 0, ncomp, nghost); // p = r + beta*p
+        PrintDots(Post_Calc, "Dots(p,p) after  Xpay",p,p);
     }
 
-    if ( verbose > 0 )
-    {
+    // if ( verbose > 0 )
+    // {
         amrex::Print() << "MLCGSolver_BiCGStab: Final: Iteration "
                        << std::setw(4) << iter
                        << " rel. err. "
                        << rnorm/(rnorm0) << '\n';
-    }
+    // }
 
     if ( ret == 0 && rnorm > eps_rel*rnorm0 && rnorm > eps_abs)
     {
-        if ( verbose > 0 && ParallelDescriptor::IOProcessor() ) {
+        // if ( verbose > 0 && ParallelDescriptor::IOProcessor() ) {
             amrex::Warning("MLCGSolver_BiCGStab:: failed to converge!");
-        }
+        // }
         ret = 8;
     }
 
     if ( ( ret == 0 || ret == 8 ) && (rnorm < rnorm0) )
     {
-        sol.LocalAdd(sorig, 0, 0, ncomp, nghost);
+        // keep updated solution
+        amrex::Print() << "MLCGSolver_BiCGstab: Keep new solution.\n";
     }
     else
     {
-        sol.setVal(RT(0.0));
-        sol.LocalAdd(sorig, 0, 0, ncomp, nghost);
+        // reset solution to original copy
+        amrex::Print() << "MLCGSolver_BiCGstab: Reset solution.\n";
+        sol.LocalCopy(sorig, 0, 0, ncomp, nghost);
     }
 
     return ret;
@@ -413,6 +457,35 @@ MLCGSolverT<MF>::norm_inf (const MF& res, bool local) -> RT
     }
     return result;
 }
+
+// template <typename MF>
+// auto
+// MLCGSolverT<MF>::Dots (const MF& x, const MF& y) -> Array<RT, 3>
+// {
+//     RT dot1 = dotxy(x,y);
+//     RT dot2 = Dot(x,0,y,0,x.nComp(),nghost);
+//     RT dot3 = Dot(x,0,y,0,x.nComp(),ngrow);
+//     return {dot1, dot2, dot3};
+// }
+
+template <typename MF>
+void
+MLCGSolverT<MF>::PrintDots (const std::string& title, const char* name, const MF& x, const MF& y)
+{
+    amrex::Print() << title << " " << name << " -> ";
+    amrex::Print() << "dotxy: " ;
+    amrex::Print() << dotxy(x,y);
+    amrex::Print() << " , Dot(...,nghost): ";
+    amrex::Print() << Dot(x,0,y,0,x.nComp(),nghost);
+    amrex::Print() << " , Dot(...,ngrow): ";
+    if (x.nGrowVect().allGE(ngrow) && y.nGrowVect().allGE(ngrow)) {
+        amrex::Print() << Dot(x,0,y,0,x.nComp(),ngrow) << "\n";
+    }
+    else {
+        amrex::Print() << "N/A" << "\n";
+    }
+}
+
 
 using MLCGSolver = MLCGSolverT<MultiFab>;
 
