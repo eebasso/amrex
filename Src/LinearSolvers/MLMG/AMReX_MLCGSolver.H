@@ -97,6 +97,9 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         printedHeader = true;
     }
 
+    ngrow = sol.nGrowVect();
+    verbose = 3;
+
     std::string MLCGSolverTitle = "MLCGSolver_BiCGStab: ";
     std::string TitleHalf_Iter = "MLCGSolver_BiCGStab: Half Iter           ";
     std::string TitleIteration = "MLCGSolver_BiCGStab: Iteration           ";
@@ -109,9 +112,6 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     amrex::Print() << "MLCGSolver_BiCGStab: nghost = " << nghost << "\n";
     amrex::Print() << "MLCGSolver_BiCGStab: ngrow  = " << sol.nGrowVect() << "\n";
 
-    ngrow = sol.nGrowVect();
-    nghost = sol.nGrowVect();
-    verbose = 3;
 
     const int ncomp = sol.nComp();
 
@@ -126,18 +126,18 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     // PrintDots(Iteration,"Dots(ph,ph) initialized",ph,ph);
     // PrintDots(Iteration,"Dots(sh,sh) initialized",sh,sh);
 
-    MF sorig(ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF p    (ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF r    (ba, dm, ncomp, nghost, MFInfo(), factory);
+    MF sorig(ba, dm, ncomp, ngrow, MFInfo(), factory);
+    MF p    (ba, dm, ncomp, ngrow, MFInfo(), factory);
+    MF r    (ba, dm, ncomp, ngrow, MFInfo(), factory);
     // MF s    (ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF rh   (ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF v    (ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF t    (ba, dm, ncomp, nghost, MFInfo(), factory);
-    sorig.setVal(RT(0.0));
-    p.setVal(RT(0.0));
+    MF rh   (ba, dm, ncomp, ngrow, MFInfo(), factory);
+    MF v    (ba, dm, ncomp, ngrow, MFInfo(), factory);
+    MF t    (ba, dm, ncomp, ngrow, MFInfo(), factory);
+    // sorig.setVal(RT(0.0));
+    // p.setVal(RT(0.0));
     r.setVal(RT(0.0));
     // s.setVal(RT(0.0));
-    rh.setVal(RT(0.0));
+    // rh.setVal(RT(0.0));
     v.setVal(RT(0.0));
     t.setVal(RT(0.0));
 
@@ -151,10 +151,10 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     Lp.normalize(amrlev, mglev, r);
     PrintDots(Iteration,"Dots(r,r) after  Lp.normalize",r,r);
 
-    sorig.LocalCopy(sol,0,0,ncomp,nghost);
+    sorig.LocalCopy(sol,0,0,ncomp,ngrow);
     PrintDots(Iteration,"Dots(sorig,sorig)",sorig,sorig);
 
-    rh.LocalCopy   (r  ,0,0,ncomp,nghost);
+    rh.LocalCopy   (r  ,0,0,ncomp,ngrow);
     PrintDots(Iteration,"Dots(rh,rh)",rh,rh);
 
     sol.setVal(RT(0.0));
@@ -184,7 +184,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 
     rho = dotxy(rh,r);
     PrintDots(Post_Calc,"Dots(rh,r)",rh,r);
-    p.LocalCopy(r,0,0,ncomp,nghost);
+    p.LocalCopy(r,0,0,ncomp,ngrow);
     PrintDots(Post_Calc, "Dots(p,p)",p,p);
 
     for (; iter <= maxiter; ++iter)
@@ -215,9 +215,9 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         }
         alpha = rho/rhTv;
         // amrex::Print() << Half_Iter << " alpha: " << alpha << "\n";
-        MF::Saxpy(sol, alpha, p, 0, 0, ncomp, nghost); // sol += alpha * p
+        MF::Saxpy(sol, alpha, p, 0, 0, ncomp, ngrow); // sol += alpha * p
         // MF::LinComb(s, RT(1.0), r, 0, -alpha, v, 0, 0, ncomp, nghost); // s = r - alpha * v
-        MF::Saxpy(r,  -alpha, v, 0, 0, ncomp, nghost); // r -= alpha * v
+        MF::Saxpy(r,  -alpha, v, 0, 0, ncomp, ngrow); // r -= alpha * v
         PrintDots(Half_Iter,"Dots(sol,sol)",sol,sol);
         PrintDots(Half_Iter,"Dots(r  ,r  )",r  ,r  );
 
@@ -259,9 +259,9 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         omega = tvals[1]/tvals[0];
         PrintDots(Iteration,"Dots(r,t)",t,r);
 
-        MF::Saxpy(sol, omega, r, 0, 0, ncomp, nghost); // sol += omega * r
+        MF::Saxpy(sol, omega, r, 0, 0, ncomp, ngrow); // sol += omega * r
         // MF::LinComb(r, RT(1.0), s, 0, -omega, t, 0, 0, ncomp, nghost); // r = s - omega * t
-        MF::Saxpy(r,  -omega, t,  0, 0, ncomp, nghost); // r -= omega * t
+        MF::Saxpy(r,  -omega, t,  0, 0, ncomp, ngrow); // r -= omega * t
         PrintDots(Iteration,"Dots(sol,sol)",sol,sol);
         PrintDots(Iteration,"Dots(r  ,r  )",r,r);
 
@@ -290,9 +290,9 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         // amrex::Print() << Iteration << " beta: " << beta << '\n';
 
         PrintDots(Post_Calc, "Dots(p,p) before     ",p,p);
-        MF::Saxpy(p, -omega, v, 0, 0, ncomp, nghost); // p += -omega*v
+        MF::Saxpy(p, -omega, v, 0, 0, ncomp, ngrow); // p += -omega*v
         PrintDots(Post_Calc, "Dots(p,p) after Saxpy",p,p);
-        MF::Xpay(p, beta, r, 0, 0, ncomp, nghost); // p = r + beta*p
+        MF::Xpay(p, beta, r, 0, 0, ncomp, ngrow); // p = r + beta*p
         PrintDots(Post_Calc, "Dots(p,p) after  Xpay",p,p);
     }
 
@@ -318,7 +318,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     {
         // keep updated solution
         amrex::Print() << "MLCGSolver_BiCGstab: Keep new solution.\n";
-        sol.LocalAdd(sorig, 0, 0, ncomp, nghost);
+        sol.LocalAdd(sorig, 0, 0, ncomp, ngrow);
         PrintDots(IterationFinal,"Dots(sol,sol)",sol,sol);
     }
     else
@@ -326,7 +326,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         // reset solution to original copy
         amrex::Print() << "MLCGSolver_BiCGstab: Reset solution.\n";
         sol.setVal(RT(0.0));
-        sol.LocalAdd(sorig, 0, 0, ncomp, nghost);
+        sol.LocalAdd(sorig, 0, 0, ncomp, ngrow);
         PrintDots(IterationFinal,"Dots(sol,sol)",sol,sol);
     }
 
