@@ -215,7 +215,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         }
         alpha = rho/rhTv;
         // amrex::Print() << Half_Iter << " alpha: " << alpha << "\n";
-        MF::Saxpy(sol, alpha, p, 0, 0, ncomp, ngrow); // sol += alpha * p
+        MF::Saxpy(sol, alpha, p, 0, 0, ncomp, nghost); // sol += alpha * p
         // MF::LinComb(s, RT(1.0), r, 0, -alpha, v, 0, 0, ncomp, nghost); // s = r - alpha * v
         MF::Saxpy(r,  -alpha, v, 0, 0, ncomp, ngrow); // r -= alpha * v
         PrintDots(Half_Iter,"Dots(sol,sol)",sol,sol);
@@ -259,7 +259,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         omega = tvals[1]/tvals[0];
         PrintDots(Iteration,"Dots(r,t)",t,r);
 
-        MF::Saxpy(sol, omega, r, 0, 0, ncomp, ngrow); // sol += omega * r
+        MF::Saxpy(sol, omega, r, 0, 0, ncomp, nghost); // sol += omega * r
         // MF::LinComb(r, RT(1.0), s, 0, -omega, t, 0, 0, ncomp, nghost); // r = s - omega * t
         MF::Saxpy(r,  -omega, t,  0, 0, ncomp, ngrow); // r -= omega * t
         PrintDots(Iteration,"Dots(sol,sol)",sol,sol);
