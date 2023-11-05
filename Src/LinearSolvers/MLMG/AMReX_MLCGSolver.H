@@ -67,6 +67,8 @@ private:
     int iter = -1;
 };
 
+static bool printedHeader = false;
+
 template <typename MF>
 MLCGSolverT<MF>::MLCGSolverT (MLLinOpT<MF>& _lp, Type _typ)
     : Lp(_lp), solver_type(_typ), mglev(_lp.NMGLevels(0)-1)
@@ -90,6 +92,10 @@ int
 MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 {
     BL_PROFILE("MLCGSolver::bicgstab");
+    if (!printedHeader) {
+        amrex::Print() << "MLCGSolver_BiCGStab: print-test branch" << "\n";
+        printedHeader = true;
+    }
     std::string MLCGSolverTitle = "MLCGSolver_BiCGStab: ";
     std::string TitleHalf_Iter = "MLCGSolver_BiCGStab: Half Iter           ";
     std::string TitleIteration = "MLCGSolver_BiCGStab: Iteration           ";
@@ -265,10 +271,12 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         {
             ret = 4; break;
         }
+        RT rho_1 = rho;
         rho = dotxy(rh,r);
         PrintDots(Post_Calc,"Dots(rh,r)",rh,r);
 
-        beta = rho/(rhTv*omega);
+        beta = (rho/rho_1)*(alpha/omega);
+        // beta = rho/(rhTv*omega);
         // amrex::Print() << Iteration << " beta: " << beta << '\n';
 
         PrintDots(Post_Calc, "Dots(p,p) before     ",p,p);
@@ -489,9 +497,9 @@ MLCGSolverT<MF>::PrintDots (const std::string& title, const char* name, const MF
     amrex::Print() << title << " " << name << " -> ";
     amrex::Print() << "dotxy: " ;
     amrex::Print() << dotxy(x,y);
-    amrex::Print() << " , Dot(...,nghost): ";
+    amrex::Print() << ", Dot(...,nghost): ";
     amrex::Print() << Dot(x,0,y,0,x.nComp(),nghost);
-    amrex::Print() << " , Dot(...,ngrow): ";
+    amrex::Print() << ", Dot(...,ngrow): ";
     if (x.nGrowVect().allGE(ngrow) && y.nGrowVect().allGE(ngrow)) {
         amrex::Print() << Dot(x,0,y,0,x.nComp(),ngrow) << "\n";
     }
