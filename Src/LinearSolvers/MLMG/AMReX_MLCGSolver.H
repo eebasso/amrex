@@ -80,6 +80,7 @@ template <typename MF>
 int
 MLCGSolverT<MF>::solve (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 {
+    verbose = 5;
     if (solver_type == Type::BiCGStab) {
         return solve_bicgstab(sol,rhs,eps_rel,eps_abs);
     } else {
@@ -98,7 +99,6 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     }
 
     ngrow = sol.nGrowVect();
-    verbose = 3;
 
     std::string MLCGSolverTitle = "MLCGSolver_BiCGStab: ";
     std::string TitleHalf_Iter = "MLCGSolver_BiCGStab: Half Iter           ";
@@ -110,7 +110,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     std::string Post_Calc = TitlePost_Calc + std::to_string(0);
 
     amrex::Print() << "MLCGSolver_BiCGStab: nghost = " << nghost << "\n";
-    amrex::Print() << "MLCGSolver_BiCGStab: ngrow  = " << sol.nGrowVect() << "\n";
+    amrex::Print() << "MLCGSolver_BiCGStab: ngrow  = " << ngrow << "\n";
 
 
     const int ncomp = sol.nComp();
@@ -126,13 +126,21 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     // PrintDots(Iteration,"Dots(ph,ph) initialized",ph,ph);
     // PrintDots(Iteration,"Dots(sh,sh) initialized",sh,sh);
 
-    MF sorig(ba, dm, ncomp, ngrow, MFInfo(), factory);
-    MF p    (ba, dm, ncomp, ngrow, MFInfo(), factory);
-    MF r    (ba, dm, ncomp, ngrow, MFInfo(), factory);
+    // MF sorig(ba, dm, ncomp, ngrow, MFInfo(), factory);
+    // MF p    (ba, dm, ncomp, ngrow, MFInfo(), factory);
+    // MF r    (ba, dm, ncomp, ngrow, MFInfo(), factory);
     // MF s    (ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF rh   (ba, dm, ncomp, ngrow, MFInfo(), factory);
-    MF v    (ba, dm, ncomp, ngrow, MFInfo(), factory);
-    MF t    (ba, dm, ncomp, ngrow, MFInfo(), factory);
+    // MF rh   (ba, dm, ncomp, ngrow, MFInfo(), factory);
+    // MF v    (ba, dm, ncomp, ngrow, MFInfo(), factory);
+    // MF t    (ba, dm, ncomp, ngrow, MFInfo(), factory);
+
+    MF sorig = Lp.make(amrlev, mglev, ngrow);
+    MF p     = Lp.make(amrlev, mglev, ngrow);
+    MF r     = Lp.make(amrlev, mglev, ngrow);
+    MF rh    = Lp.make(amrlev, mglev, ngrow);
+    MF v     = Lp.make(amrlev, mglev, ngrow);
+    MF t     = Lp.make(amrlev, mglev, ngrow);
+
     // sorig.setVal(RT(0.0));
     // p.setVal(RT(0.0));
     r.setVal(RT(0.0));
@@ -157,8 +165,8 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     rh.LocalCopy   (r  ,0,0,ncomp,ngrow);
     PrintDots(Iteration,"Dots(rh,rh)",rh,rh);
 
-    sol.setVal(RT(0.0));
-    PrintDots(Iteration,"Dots(sol,sol) after sol.setVal(0)",sol,sol);
+    // sol.setVal(RT(0.0));
+    // PrintDots(Iteration,"Dots(sol,sol) after sol.setVal(0)",sol,sol);
 
     RT rnorm = norm_inf(r);
     const RT rnorm0 = rnorm;
@@ -179,6 +187,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
                            << ", rnorm = " << rnorm
                            << ", eps_abs = " << eps_abs << std::endl;
         }
+        sol.setVal(RT(0.0));
         return ret;
     }
 
@@ -325,8 +334,9 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     {
         // reset solution to original copy
         amrex::Print() << "MLCGSolver_BiCGstab: Reset solution.\n";
-        sol.setVal(RT(0.0));
-        sol.LocalAdd(sorig, 0, 0, ncomp, ngrow);
+        // sol.setVal(RT(0.0));
+        // sol.LocalAdd(sorig, 0, 0, ncomp, ngrow);
+        sol.LocalCopy(sorig, 0, 0, ncomp, ngrow);
         PrintDots(IterationFinal,"Dots(sol,sol)",sol,sol);
     }
 

@@ -303,8 +303,9 @@ private:
     Vector<Vector<MF> > rescor;  //!< = res - L(cor)
                                  //!  Residual of the correction form
 
-    enum timer_types { solve_time=0, iter_time, bottom_time, ntimers };
+    enum timer_types { solve_time=0, iter_time, bottom_time, oneIter_time, smooth_time, mgVcycle_time, mgFcycle_time, mgVcycle_nonsmooth_time, ntimers };
     Vector<double> timer;
+    // Vector<Timer> timer;
 
     RT m_rhsnorm0 = RT(-1.0);
     RT m_init_resnorm0 = RT(-1.0);
@@ -345,6 +346,8 @@ MLMGT<MF>::solve (const Vector<AMF*>& a_sol, const Vector<AMF const*>& a_rhs,
                   RT a_tol_rel, RT a_tol_abs, const char* checkpoint_file) -> RT
 {
     BL_PROFILE("MLMG::solve()");
+
+    verbose = 5;
 
     if constexpr (std::is_same<AMF,MultiFab>()) {
         if (checkpoint_file != nullptr) {
@@ -414,6 +417,7 @@ MLMGT<MF>::solve (const Vector<AMF*>& a_sol, const Vector<AMF const*>& a_rhs,
         }
     } else {
         auto iter_start_time = amrex::second();
+        // timer[iter_time].start();
         bool converged = false;
 
         const int niters = do_fixed_number_of_iters ? do_fixed_number_of_iters : max_iters;
@@ -495,6 +499,7 @@ MLMGT<MF>::solve (const Vector<AMF*>& a_sol, const Vector<AMF const*>& a_rhs,
                 amrex::Abort("MLMG failed.");
             }
         }
+        // timer[iter_time].stop();
         timer[iter_time] = amrex::second() - iter_start_time;
     }
 
@@ -511,15 +516,23 @@ MLMGT<MF>::solve (const Vector<AMF*>& a_sol, const Vector<AMF const*>& a_rhs,
         }
     }
 
+    // timer[solve_time].stop();
     timer[solve_time] = amrex::second() - solve_start_time;
     if (verbose >= 1) {
         ParallelReduce::Max<double>(timer.data(), timer.size(), 0,
                                     ParallelContext::CommunicatorSub());
         if (ParallelContext::MyProcSub() == 0)
         {
-            amrex::AllPrint() << "MLMG: Timers: Solve = " << timer[solve_time]
+            amrex::AllPrint() << "MLMG: Timers:"
+                              << " Solve = " << timer[solve_time]
                               << " Iter = " << timer[iter_time]
-                              << " Bottom = " << timer[bottom_time] << "\n";
+                              << " Bottom = " << timer[bottom_time]
+                              << " OneIter = " << timer[oneIter_time]
+                              << " Smooth = " << timer[smooth_time]
+                              << " mgVcycle = " << timer[mgVcycle_time]
+                              << " mgVcycle non-smooth = " << timer[mgVcycle_nonsmooth_time]
+                              << " mgFcycle = " << timer[mgFcycle_time]
+                              << "\n";
         }
     }
 
@@ -788,6 +801,7 @@ MLMGT<MF>::compResidual (const Vector<MF*>& a_res, const Vector<MF*>& a_sol,
         {
             if (sol_is_alias[alev])
             {
+                amrex::Print() << "MLMG::compResidual: linop.make(...) called\n";
                 sol[alev] = linop.make(alev, 0, ng_sol);
             }
             sol[alev].LocalCopy(*a_sol[alev], 0, 0, ncomp, IntVect(0));
@@ -932,6 +946,7 @@ MLMGT<MF>::prepareForSolve (Vector<AMF*> const& a_sol, Vector<AMF const*> const&
     AMREX_ASSERT(namrlevs <= a_rhs.size());
 
     timer.assign(ntimers, 0.0);
+    // timer.assign(ntimers, Timer());
 
     IntVect ng_rhs(0);
     IntVect ng_sol(1);
@@ -979,6 +994,7 @@ MLMGT<MF>::prepareForSolve (Vector<AMF*> const& a_sol, Vector<AMF const*> const&
             }
             if (!sol_is_alias[alev]) {
                 if (!solve_called) {
+                    amrex::Print() << "MLMG::prepareForSolve: 1st linop.make(...) called\n";
                     sol[alev] = linop.make(alev, 0, ng_sol);
                 }
                 sol[alev].LocalCopy(*a_sol[alev], 0, 0, ncomp, IntVect(0));
@@ -992,6 +1008,7 @@ MLMGT<MF>::prepareForSolve (Vector<AMF*> const& a_sol, Vector<AMF const*> const&
     {
         if (cf_strategy == CFStrategy::ghostnodes) { ng_rhs = IntVect(linop.getNGrow(alev)); }
         if (!solve_called) {
+            amrex::Print() << "MLMG::prepareForSolve: 2nd linop.make(...) called\n";
             rhs[alev] = linop.make(alev, 0, ng_rhs);
         }
         rhs[alev].LocalCopy(*a_rhs[alev], 0, 0, ncomp, ng_rhs);
@@ -1028,6 +1045,7 @@ MLMGT<MF>::prepareForSolve (Vector<AMF*> const& a_sol, Vector<AMF const*> const&
     IntVect ng = linop.isCellCentered() ? IntVect(0) : IntVect(1);
     if (cf_strategy == CFStrategy::ghostnodes) { ng = ng_rhs; }
     if (!solve_called) {
+        amrex::Print() << "MLMG::prepareForSolve: 3rd+4th linop.make(Vector<Vector<MF>,ng) called\n";
         linop.make(res, ng);
         linop.make(rescor, ng);
     }
@@ -1052,6 +1070,7 @@ MLMGT<MF>::prepareForSolve (Vector<AMF*> const& a_sol, Vector<AMF const*> const&
             if (!solve_called) {
                 IntVect _ng = ng;
                 if (cf_strategy == CFStrategy::ghostnodes) { _ng=IntVect(linop.getNGrow(alev,mglev)); }
+                amrex::Print() << "MLMG::prepareForSolve: 5th linop.make(...) called\n";
                 cor[alev][mglev] = linop.make(alev, mglev, _ng);
             }
             cor[alev][mglev].setVal(RT(0.0));
@@ -1068,6 +1087,7 @@ MLMGT<MF>::prepareForSolve (Vector<AMF*> const& a_sol, Vector<AMF const*> const&
             if (!solve_called) {
                 IntVect _ng = ng;
                 if (cf_strategy == CFStrategy::ghostnodes) { _ng=IntVect(linop.getNGrow(alev,mglev)); }
+                amrex::Print() << "MLMG::prepareForSolve: 6th linop.make(...) called\n";
                 cor_hold[alev][mglev] = linop.make(alev, mglev, _ng);
             }
             cor_hold[alev][mglev].setVal(RT(0.0));
@@ -1079,6 +1099,7 @@ MLMGT<MF>::prepareForSolve (Vector<AMF*> const& a_sol, Vector<AMF const*> const&
         if (!solve_called) {
             IntVect _ng = ng;
             if (cf_strategy == CFStrategy::ghostnodes) { _ng=IntVect(linop.getNGrow(alev)); }
+            amrex::Print() << "MLMG::prepareForSolve: 7th linop.make(...) called\n";
             cor_hold[alev][0] = linop.make(alev, 0, _ng);
         }
         cor_hold[alev][0].setVal(RT(0.0));
@@ -1142,6 +1163,8 @@ template <typename MF>
 void MLMGT<MF>::oneIter (int iter)
 {
     BL_PROFILE("MLMG::oneIter()");
+    auto oneIter_start_time = amrex::second();
+    // timer[oneIter_time].start();
 
     for (int alev = finest_amr_lev; alev > 0; --alev)
     {
@@ -1204,6 +1227,9 @@ void MLMGT<MF>::oneIter (int iter)
     }
 
     linop.averageDownAndSync(sol);
+
+    timer[oneIter_time] += amrex::second()- oneIter_start_time;
+    // timer[oneIter_time].stop();
 }
 
 template <typename MF>
@@ -1222,6 +1248,10 @@ void
 MLMGT<MF>::mgVcycle (int amrlev, int mglev_top)
 {
     BL_PROFILE("MLMG::mgVcycle()");
+    // timer[mgVcycle_time].start();
+    // timer[mgVcycle_nonsmooth_time].start();
+    auto mgVcycle_start_time = amrex::second();
+    auto mgVcycle_nonsmooth_start_time = amrex::second();
 
     const int mglev_bottom = linop.NMGLevels(amrlev) - 1;
 
@@ -1239,7 +1269,15 @@ MLMGT<MF>::mgVcycle (int amrlev, int mglev_top)
         cor[amrlev][mglev].setVal(RT(0.0));
         bool skip_fillboundary = true;
         for (int i = 0; i < nu1; ++i) {
+            // timer[mgVcycle_nonsmooth_time].stop();
+            // timer[smooth_time].start();
+            timer[mgVcycle_nonsmooth_time] += amrex::second() - mgVcycle_nonsmooth_start_time;
+            auto smooth_start_time = amrex::second();
             linop.smooth(amrlev, mglev, cor[amrlev][mglev], res[amrlev][mglev], skip_fillboundary);
+            timer[smooth_time] += amrex::second() - smooth_start_time;
+            mgVcycle_nonsmooth_start_time = amrex::second();
+            // timer[smooth_time].stop();
+            // timer[mgVcycle_nonsmooth_time].start();
             skip_fillboundary = false;
         }
 
@@ -1286,8 +1324,16 @@ MLMGT<MF>::mgVcycle (int amrlev, int mglev_top)
         cor[amrlev][mglev_bottom].setVal(RT(0.0));
         bool skip_fillboundary = true;
         for (int i = 0; i < nu1; ++i) {
+            // timer[mgVcycle_nonsmooth_time].stop();
+            // timer[smooth_time].start();
+            timer[mgVcycle_nonsmooth_time] += amrex::second() - mgVcycle_nonsmooth_start_time;
+            auto smooth_start_time = amrex::second();
             linop.smooth(amrlev, mglev_bottom, cor[amrlev][mglev_bottom],
                          res[amrlev][mglev_bottom], skip_fillboundary);
+            timer[smooth_time] += amrex::second() - smooth_start_time;
+            mgVcycle_nonsmooth_start_time = amrex::second();
+            // timer[smooth_time].stop();
+            // timer[mgVcycle_nonsmooth_time].start();
             skip_fillboundary = false;
         }
         if (verbose >= 4)
@@ -1313,7 +1359,13 @@ MLMGT<MF>::mgVcycle (int amrlev, int mglev_top)
                            << "   UP: Norm before smooth " << norm << "\n";
         }
         for (int i = 0; i < nu2; ++i) {
+            // timer[smooth_time].start();
+            timer[mgVcycle_nonsmooth_time] += amrex::second() - mgVcycle_nonsmooth_start_time;
+            auto smooth_start_time = amrex::second();
             linop.smooth(amrlev, mglev, cor[amrlev][mglev], res[amrlev][mglev]);
+            timer[smooth_time] += amrex::second() - smooth_start_time;
+            mgVcycle_nonsmooth_start_time = amrex::second();
+            // timer[smooth_time].stop();
         }
 
         if (cf_strategy == CFStrategy::ghostnodes) { computeResOfCorrection(amrlev, mglev); }
@@ -1326,6 +1378,10 @@ MLMGT<MF>::mgVcycle (int amrlev, int mglev_top)
                            << "   UP: Norm after  smooth " << norm << "\n";
         }
     }
+    // timer[mgVcycle_nonsmooth_time].stop();
+    // timer[mgVcycle_time].stop();
+    timer[mgVcycle_time] += amrex::second() - mgVcycle_start_time;
+    timer[mgVcycle_nonsmooth_time] += amrex::second() - mgVcycle_nonsmooth_start_time;
 }
 
 // FMG cycle on the coarsest AMR level.
@@ -1336,6 +1392,8 @@ void
 MLMGT<MF>::mgFcycle ()
 {
     BL_PROFILE("MLMG::mgFcycle()");
+    auto mgFcycle_start_time = amrex::second();
+    // timer[mgFcycle_time].start();
 
 #ifdef AMREX_USE_EB
     AMREX_ASSERT(linop.isCellCentered());
@@ -1368,9 +1426,11 @@ MLMGT<MF>::mgFcycle ()
         mgVcycle(amrlev, mglev);
         cor[amrlev][mglev].LocalAdd(cor_hold[amrlev][mglev], 0, 0, ncomp, nghost);
     }
+    // timer[mgFcycle_time].stop();
+    timer[mgFcycle_time] += amrex::second() - mgFcycle_start_time;
 }
 
-// At the true bottom of the coarset AMR level.
+// At the true bottom of the coarsest AMR level.
 // in  : Residual (res) as b
 // out : Correction (cor) as x
 template <typename MF>
@@ -1420,6 +1480,7 @@ MLMGT<MF>::actualBottomSolve ()
     if (!linop.isBottomActive()) { return; }
 
     auto bottom_start_time = amrex::second();
+    // timer[bottom_time].start();
 
     ParallelContext::push(linop.BottomCommunicator());
 
@@ -1434,7 +1495,11 @@ MLMGT<MF>::actualBottomSolve ()
     {
         bool skip_fillboundary = true;
         for (int i = 0; i < nuf; ++i) {
+            auto smooth_start_time = amrex::second();
+            // timer[smooth_time].start();
             linop.smooth(amrlev, mglev, x, b, skip_fillboundary);
+            // timer[smooth_time].stop();
+            timer[smooth_time] += amrex::second() - smooth_start_time;
             skip_fillboundary = false;
         }
     }
@@ -1445,6 +1510,7 @@ MLMGT<MF>::actualBottomSolve ()
         if (linop.isBottomSingular() && linop.getEnforceSingularSolvable())
         {
             const IntVect ng = b.nGrowVect();
+            amrex::Print() << "MLMG::actualBottomSolve: linop.make(...) called\n";
             raii_b = linop.make(amrlev, mglev, ng);
             raii_b.LocalCopy(b, 0, 0, ncomp, ng);
             bottom_b = &raii_b;
@@ -1508,13 +1574,18 @@ MLMGT<MF>::actualBottomSolve ()
             }
             const int n = (ret==0) ? nub : nuf;
             for (int i = 0; i < n; ++i) {
+                auto smooth_start_time = amrex::second();
+                // timer[smooth_time].start();
                 linop.smooth(amrlev, mglev, x, b);
+                // timer[smooth_time].stop();
+                timer[smooth_time] += amrex::second() - smooth_start_time;
             }
         }
     }
 
     ParallelContext::pop();
 
+    // timer[bottom_time].stop();
     timer[bottom_time] += amrex::second() - bottom_start_time;
 }
 

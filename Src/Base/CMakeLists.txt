@@ -236,6 +236,8 @@ foreach(D IN LISTS AMReX_SPACEDIM)
        AMReX_TagParallelFor.H
        AMReX_CTOParallelForImpl.H
        AMReX_ParReduce.H
+       AMReX_Timer.H
+       AMReX_Timer.cpp
        # CUDA --------------------------------------------------------------------
        AMReX_CudaGraph.H
        # Machine model -----------------------------------------------------------

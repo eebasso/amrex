@@ -1380,6 +1380,7 @@ MLLinOpT<MF>::make (Vector<Vector<MF> >& mf, IntVect const& ng) const
     for (int alev = 0; alev < m_num_amr_levels; ++alev) {
         mf[alev].resize(m_num_mg_levels[alev]);
         for (int mlev = 0; mlev < m_num_mg_levels[alev]; ++mlev) {
+            amrex::Print() << "MLLinOpT<MF>::make(mf,ng): call on MLLinOpT<MF>::make(amrlev,mglev,ng)\n";
             mf[alev][mlev] = make(alev, mlev, ng);
         }
     }
@@ -1389,6 +1390,7 @@ template <typename MF>
 MF
 MLLinOpT<MF>::make (int amrlev, int mglev, IntVect const& ng) const
 {
+    amrex::Print() << "MLLinOpT<MF>::make(amrlev,mglev,ng) called\n";
     return MF(amrex::convert(m_grids[amrlev][mglev], m_ixtype),
               m_dmap[amrlev][mglev], getNComp(), ng, MFInfo(),
               *m_factory[amrlev][mglev]);
