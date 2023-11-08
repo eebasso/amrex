@@ -215,7 +215,7 @@ extern "C" {
                 Array4<Real const> const& finevolarr = fvolume.const_array(mfi);
                 AMREX_HOST_DEVICE_PARALLEL_FOR_4D(bx, ncomp, i, j, k, n,
                 {
-                    amrex_avgdown_with_vol(i,j,k,n,crsearr,finearr,finevolarr,0,scomp,rr);
+                    amrex_avgdown_cells_with_vol(i,j,k,n,crsearr,finearr,finevolarr,0,scomp,rr);
                 });
             }
         }

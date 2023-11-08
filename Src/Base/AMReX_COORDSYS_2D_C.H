@@ -209,6 +209,58 @@ amrex_setdloga (Box const& bx, Array4<Real> const& dloga,
     }
 }
 
+AMREX_GPU_HOST_DEVICE
+inline
+void
+amrex_rz_setvol (int i, int j, Array4<Real> const& vol,
+                 GpuArray<Real,2> const& offset, GpuArray<Real,2> const& dx)
+{
+    constexpr Real pi = Real(3.1415926535897932);
+    Real ri = offset[0] + dx[0]*(i);
+    Real ro = ri + dx[0];
+    Real v = pi*dx[1]*dx[0]*(ro + ri);
+    vol(i,j,0) = std::abs(v);
 }
+
+AMREX_GPU_HOST_DEVICE
+inline
+void
+amrex_spherical_setvol (int i, int j, Array4<Real> const& vol,
+                        GpuArray<Real,2> const& offset, GpuArray<Real,2> const& dx)
+{}
+
+AMREX_GPU_HOST_DEVICE
+inline
+void
+amrex_rz_setarea_r (int i, int j, Array4<Real> const& area,
+                    GpuArray<Real,2> const& offset, GpuArray<Real,2> const& dx)
+{}
+
+AMREX_GPU_HOST_DEVICE
+inline
+void
+amrex_rz_setarea_z (int i, int j, Array4<Real> const& area,
+                    GpuArray<Real,2> const& offset, GpuArray<Real,2> const& dx)
+{}
+
+AMREX_GPU_HOST_DEVICE
+inline
+void
+amrex_spherical_setarea_r (int i, int j, Array4<Real> const& area,
+                           GpuArray<Real,2> const& offset, GpuArray<Real,2> const& dx)
+{}
+
+AMREX_GPU_HOST_DEVICE
+inline
+void
+amrex_spherical_setarea_z (int i, int j, Array4<Real> const& area,
+                           GpuArray<Real,2> const& offset, GpuArray<Real,2> const& dx)
+{}
+
+
+
+}
+
+
 
 #endif

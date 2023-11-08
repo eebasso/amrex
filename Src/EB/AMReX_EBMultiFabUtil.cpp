@@ -333,10 +333,10 @@ EB_set_covered_faces (const Array<MultiFab*,AMREX_SPACEDIM>& umac, const int sco
 }
 
 void
-EB_average_down (const MultiFab& S_fine, MultiFab& S_crse, const MultiFab& vol_fine,
+EB_average_down_cells (const MultiFab& S_fine, MultiFab& S_crse, const MultiFab& vol_fine,
                  const MultiFab& vfrac_fine, int scomp, int ncomp, const IntVect& ratio)
 {
-    BL_PROFILE("EB_average_down");
+    BL_PROFILE("EB_average_down_cells");
 
     AMREX_ASSERT(S_fine.ixType().cellCentered());
     AMREX_ASSERT(S_crse.ixType().cellCentered());
@@ -369,7 +369,7 @@ EB_average_down (const MultiFab& S_fine, MultiFab& S_crse, const MultiFab& vol_f
         {
             AMREX_HOST_DEVICE_PARALLEL_FOR_4D(tbx, ncomp, i, j, k, n,
             {
-                amrex_avgdown_with_vol(i,j,k,n, crse_arr, fine_arr, vol, 0, scomp, ratio);
+                amrex_avgdown_cells_with_vol(i,j,k,n, crse_arr, fine_arr, vol, 0, scomp, ratio);
             });
         }
         else if (typ == FabType::singlevalued)
@@ -377,7 +377,7 @@ EB_average_down (const MultiFab& S_fine, MultiFab& S_crse, const MultiFab& vol_f
             Array4<Real const> const& vfrac = vfrac_fine.const_array(mfi);
             AMREX_HOST_DEVICE_FOR_3D(tbx, i, j, k,
             {
-                eb_avgdown_with_vol(i,j,k,fine_arr,scomp,crse_arr,0,vol,vfrac,dratio,ncomp);
+                eb_avgdown_cells_with_vol(i,j,k,fine_arr,scomp,crse_arr,0,vol,vfrac,dratio,ncomp);
             });
         }
         else
@@ -391,17 +391,17 @@ EB_average_down (const MultiFab& S_fine, MultiFab& S_crse, const MultiFab& vol_f
 
 
 void
-EB_average_down (const MultiFab& S_fine, MultiFab& S_crse, int scomp, int ncomp, int ratio)
+EB_average_down_cells (const MultiFab& S_fine, MultiFab& S_crse, int scomp, int ncomp, int ratio)
 {
-    EB_average_down(S_fine, S_crse, scomp, ncomp, IntVect(ratio));
+    EB_average_down_cells(S_fine, S_crse, scomp, ncomp, IntVect(ratio));
 }
 
 void
-EB_average_down (const MultiFab& S_fine, MultiFab& S_crse, int scomp, int ncomp, const IntVect& ratio)
+EB_average_down_cells (const MultiFab& S_fine, MultiFab& S_crse, int scomp, int ncomp, const IntVect& ratio)
 {
     if (!S_fine.hasEBFabFactory())
     {
-        amrex::average_down(S_fine, S_crse, scomp, ncomp, ratio);
+        amrex::average_down_cells(S_fine, S_crse, scomp, ncomp, ratio);
     }
     else
     {
@@ -437,7 +437,7 @@ EB_average_down (const MultiFab& S_fine, MultiFab& S_crse, int scomp, int ncomp,
                 {
                     AMREX_LAUNCH_HOST_DEVICE_LAMBDA(tbx, b,
                     {
-                        amrex_avgdown(b,crse,fine,scomp,scomp,ncomp,ratio);
+                        amrex_avgdown_cells(b,crse,fine,scomp,scomp,ncomp,ratio);
                     });
                 }
                 else
@@ -445,7 +445,7 @@ EB_average_down (const MultiFab& S_fine, MultiFab& S_crse, int scomp, int ncomp,
                     Array4<Real const> const& vfrc = vfrac_fine.const_array(mfi);
                     AMREX_HOST_DEVICE_FOR_3D(tbx, i, j, k,
                     {
-                        eb_avgdown(i,j,k,fine,scomp,crse,scomp,vfrc,dratio,ncomp);
+                        eb_avgdown_cells(i,j,k,fine,scomp,crse,scomp,vfrc,dratio,ncomp);
                     });
                 }
             }
@@ -482,7 +482,7 @@ EB_average_down (const MultiFab& S_fine, MultiFab& S_crse, int scomp, int ncomp,
                     Array4<Real const> const& vfrc = vfrac_fine.const_array(mfi);
                     AMREX_HOST_DEVICE_FOR_3D(tbx, i, j, k,
                     {
-                        eb_avgdown(i,j,k,fine_arr,scomp,crse_arr,0,vfrc,dratio,ncomp);
+                        eb_avgdown_cells(i,j,k,fine_arr,scomp,crse_arr,0,vfrc,dratio,ncomp);
                     });
                 }
                 else

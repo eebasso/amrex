@@ -338,7 +338,7 @@ void amrex_avgdown_edges (int i, int j, int k, int n, Array4<Real> const& crse,
 
 template <typename T>
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-void amrex_avgdown (Box const& bx, Array4<T> const& crse,
+void amrex_avgdown_cells (Box const& bx, Array4<T> const& crse,
                     Array4<T const> const& fine,
                     int ccomp, int fcomp, int ncomp,
                     IntVect const& ratio) noexcept
@@ -370,7 +370,7 @@ void amrex_avgdown (Box const& bx, Array4<T> const& crse,
 
 template <typename T>
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-void amrex_avgdown (int i, int j, int k, int n, Array4<T> const& crse,
+void amrex_avgdown_cells (int i, int j, int k, int n, Array4<T> const& crse,
                     Array4<T const> const& fine,
                     int ccomp, int fcomp, IntVect const& ratio) noexcept
 {
@@ -391,7 +391,7 @@ void amrex_avgdown (int i, int j, int k, int n, Array4<T> const& crse,
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-void amrex_avgdown_with_vol (int i, int j, int k, int n, Array4<Real> const& crse,
+void amrex_avgdown_cells_with_vol (int i, int j, int k, int n, Array4<Real> const& crse,
                              Array4<Real const> const& fine,
                              Array4<Real const> const& fv,
                              int ccomp, int fcomp, IntVect const& ratio) noexcept
