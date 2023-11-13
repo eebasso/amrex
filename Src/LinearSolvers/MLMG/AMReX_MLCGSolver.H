@@ -98,6 +98,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         printedHeader = true;
     }
 
+    // nghost = IntVect(AMREX_D_DECL(0,0,0));
     ngrow = sol.nGrowVect();
 
     std::string MLCGSolverTitle = "MLCGSolver_BiCGStab: ";
@@ -112,43 +113,26 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     amrex::Print() << "MLCGSolver_BiCGStab: nghost = " << nghost << "\n";
     amrex::Print() << "MLCGSolver_BiCGStab: ngrow  = " << ngrow << "\n";
 
-
     const int ncomp = sol.nComp();
+    MF ph    = Lp.make(amrlev, mglev, ngrow);
+    MF sh    = Lp.make(amrlev, mglev, ngrow);
 
-    const BoxArray& ba = sol.boxArray();
-    const DistributionMapping& dm = sol.DistributionMap();
-    const auto& factory = sol.Factory();
+    MF sorig = Lp.make(amrlev, mglev, nghost);
+    MF p     = Lp.make(amrlev, mglev, nghost);
+    MF r     = Lp.make(amrlev, mglev, nghost);
 
-    // MF ph(ba, dm, ncomp, sol.nGrowVect(), MFInfo(), factory);
-    // MF sh(ba, dm, ncomp, sol.nGrowVect(), MFInfo(), factory);
-    // ph.setVal(RT(0.0));
-    // sh.setVal(RT(0.0));
-    // PrintDots(Iteration,"Dots(ph,ph) initialized",ph,ph);
-    // PrintDots(Iteration,"Dots(sh,sh) initialized",sh,sh);
+    MF rh    = Lp.make(amrlev, mglev, nghost);
+    MF v     = Lp.make(amrlev, mglev, nghost);
+    MF t     = Lp.make(amrlev, mglev, nghost);
 
-    // MF sorig(ba, dm, ncomp, ngrow, MFInfo(), factory);
-    // MF p    (ba, dm, ncomp, ngrow, MFInfo(), factory);
-    // MF r    (ba, dm, ncomp, ngrow, MFInfo(), factory);
-    // MF s    (ba, dm, ncomp, nghost, MFInfo(), factory);
-    // MF rh   (ba, dm, ncomp, ngrow, MFInfo(), factory);
-    // MF v    (ba, dm, ncomp, ngrow, MFInfo(), factory);
-    // MF t    (ba, dm, ncomp, ngrow, MFInfo(), factory);
-
-    MF sorig = Lp.make(amrlev, mglev, ngrow);
-    MF p     = Lp.make(amrlev, mglev, ngrow);
-    MF r     = Lp.make(amrlev, mglev, ngrow);
-    MF rh    = Lp.make(amrlev, mglev, ngrow);
-    MF v     = Lp.make(amrlev, mglev, ngrow);
-    MF t     = Lp.make(amrlev, mglev, ngrow);
-
-    // sorig.setVal(RT(0.0));
-    // p.setVal(RT(0.0));
+    ph.setVal(RT(0.0));
+    sh.setVal(RT(0.0));
+    sorig.setVal(RT(0.0));
+    p.setVal(RT(0.0));
     r.setVal(RT(0.0));
-    // s.setVal(RT(0.0));
-    // rh.setVal(RT(0.0));
+    rh.setVal(RT(0.0));
     v.setVal(RT(0.0));
     t.setVal(RT(0.0));
-
 
     PrintDots(Iteration,"Dots(sol,sol) before Lp.correctionResidual",sol,sol);
     Lp.correctionResidual(amrlev, mglev, r, sol, rhs, MLLinOpT<MF>::BCMode::Homogeneous);
@@ -159,14 +143,14 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     Lp.normalize(amrlev, mglev, r);
     PrintDots(Iteration,"Dots(r,r) after  Lp.normalize",r,r);
 
-    sorig.LocalCopy(sol,0,0,ncomp,ngrow);
+    sorig.LocalCopy(sol,0,0,ncomp,nghost);
     PrintDots(Iteration,"Dots(sorig,sorig)",sorig,sorig);
 
-    rh.LocalCopy   (r  ,0,0,ncomp,ngrow);
+    rh.LocalCopy   (r  ,0,0,ncomp,nghost);
     PrintDots(Iteration,"Dots(rh,rh)",rh,rh);
 
-    // sol.setVal(RT(0.0));
-    // PrintDots(Iteration,"Dots(sol,sol) after sol.setVal(0)",sol,sol);
+    sol.setVal(RT(0.0));
+    PrintDots(Iteration,"Dots(sol,sol) after sol.setVal(0)",sol,sol);
 
     RT rnorm = norm_inf(r);
     const RT rnorm0 = rnorm;
@@ -177,9 +161,8 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     }
     int ret = 0;
     iter = 1;
-    RT alpha, beta, omega, rho, rhTv;
 
-    if ( rnorm0 == 0 || rnorm0 < eps_abs )
+    if ( rnorm0 == RT(0.0) || rnorm0 < eps_abs )
     {
         if ( verbose > 0 )
         {
@@ -187,48 +170,46 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
                            << ", rnorm = " << rnorm
                            << ", eps_abs = " << eps_abs << std::endl;
         }
-        sol.setVal(RT(0.0));
         return ret;
     }
 
-    rho = dotxy(rh,r);
+    RT rho = dotxy(rh,r);
     PrintDots(Post_Calc,"Dots(rh,r)",rh,r);
-    p.LocalCopy(r,0,0,ncomp,ngrow);
-    PrintDots(Post_Calc, "Dots(p,p)",p,p);
+    p.LocalCopy(r, 0, 0, ncomp, nghost);
+    PrintDots(Post_Calc,"Dots(p,p)",p,p);
 
     for (; iter <= maxiter; ++iter)
     {
         Half_Iter = TitleHalf_Iter + std::to_string(iter);
         Iteration = TitleIteration + std::to_string(iter);
         Post_Calc = TitlePost_Calc + std::to_string(iter);
-        if ( rho == 0 )
+
+        if ( rho == RT(0.0) )
         {
             ret = 1; break;
         }
-        // ph.LocalCopy(p,0,0,ncomp,nghost);
-        // ph.LocalCopy(p,0,0,ncomp,sol.nGrowVect());
-        PrintDots(Half_Iter,"Dots(p,p) before Lp.apply",p,p);
-        Lp.apply(amrlev, mglev, v, p, MLLinOpT<MF>::BCMode::Homogeneous, MLLinOpT<MF>::StateMode::Correction);
-        PrintDots(Half_Iter,"Dots(p,p) after  Lp.apply",p,p);
+        ph.LocalCopy(p,0,0,ncomp,nghost);
+        PrintDots(Half_Iter,"Dots(ph,ph) before Lp.apply",ph,ph);
+        Lp.apply(amrlev, mglev, v, ph, MLLinOpT<MF>::BCMode::Homogeneous, MLLinOpT<MF>::StateMode::Correction);
+        PrintDots(Half_Iter,"Dots(ph,ph) after  Lp.apply",ph,ph);
 
         PrintDots(Half_Iter,"Dots(v,v) before Lp.normalize",v,v);
         Lp.normalize(amrlev, mglev, v);
         PrintDots(Half_Iter,"Dots(v,v) after  Lp.normalize",v,v);
 
-        rhTv = dotxy(rh,v);
+        const RT rhTv = dotxy(rh,v);
         PrintDots(Half_Iter,"Dots(rh,v)",rh,v);
 
         if ( rhTv == RT(0.0) )
         {
             ret = 2; break;
         }
-        alpha = rho/rhTv;
+        const RT alpha = rho/rhTv;
         // amrex::Print() << Half_Iter << " alpha: " << alpha << "\n";
-        MF::Saxpy(sol, alpha, p, 0, 0, ncomp, nghost); // sol += alpha * p
-        // MF::LinComb(s, RT(1.0), r, 0, -alpha, v, 0, 0, ncomp, nghost); // s = r - alpha * v
-        MF::Saxpy(r,  -alpha, v, 0, 0, ncomp, ngrow); // r -= alpha * v
+        MF::Saxpy(sol, alpha, ph, 0, 0, ncomp, nghost); // sol += alpha * ph
+        MF::Saxpy(r,  -alpha, v, 0, 0, ncomp, nghost); // r -= alpha * v
         PrintDots(Half_Iter,"Dots(sol,sol)",sol,sol);
-        PrintDots(Half_Iter,"Dots(r  ,r  )",r  ,r  );
+        PrintDots(Half_Iter,"Dots(s  ,s  )",r,r);
 
         rnorm = norm_inf(r);
 
@@ -242,10 +223,10 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 
         if ( rnorm < eps_rel*rnorm0 || rnorm < eps_abs ) { break; }
 
-        // sh.LocalCopy(s,0,0,ncomp,nghost);
-        PrintDots(Iteration,"Dots(r,r) before Lp.apply",r,r);
-        Lp.apply(amrlev, mglev, t, r, MLLinOpT<MF>::BCMode::Homogeneous, MLLinOpT<MF>::StateMode::Correction);
-        PrintDots(Iteration,"Dots(r,r) after  Lp.apply",r,r);
+        sh.LocalCopy(r,0,0,ncomp,nghost);
+        PrintDots(Iteration,"Dots(sh,sh) before Lp.apply",sh,sh);
+        Lp.apply(amrlev, mglev, t, sh, MLLinOpT<MF>::BCMode::Homogeneous, MLLinOpT<MF>::StateMode::Correction);
+        PrintDots(Iteration,"Dots(sh,sh) after  Lp.apply",sh,sh);
 
         PrintDots(Iteration,"Dots(t,t) before Lp.normalize",t,t);
         Lp.normalize(amrlev, mglev, t);
@@ -265,12 +246,11 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         {
             ret = 3; break;
         }
-        omega = tvals[1]/tvals[0];
-        PrintDots(Iteration,"Dots(r,t)",t,r);
+        const RT omega = tvals[1]/tvals[0];
+        PrintDots(Iteration,"Dots(s,t)",t,r);
 
-        MF::Saxpy(sol, omega, r, 0, 0, ncomp, nghost); // sol += omega * r
-        // MF::LinComb(r, RT(1.0), s, 0, -omega, t, 0, 0, ncomp, nghost); // r = s - omega * t
-        MF::Saxpy(r,  -omega, t,  0, 0, ncomp, ngrow); // r -= omega * t
+        MF::Saxpy(sol, omega, sh, 0, 0, ncomp, nghost); // sol += omega * sh
+        MF::Saxpy(r,  -omega, t, 0, 0, ncomp, nghost); // r -= omega * t
         PrintDots(Iteration,"Dots(sol,sol)",sol,sol);
         PrintDots(Iteration,"Dots(r  ,r  )",r,r);
 
@@ -290,18 +270,15 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         {
             ret = 4; break;
         }
-        RT rho_1 = rho;
+        const RT rho_1 = rho;
         rho = dotxy(rh,r);
         PrintDots(Post_Calc,"Dots(rh,r)",rh,r);
 
-        beta = (rho/rho_1)*(alpha/omega);
-        // beta = rho/(rhTv*omega);
-        // amrex::Print() << Iteration << " beta: " << beta << '\n';
-
+        const RT beta = (rho/rho_1)*(alpha/omega);
         PrintDots(Post_Calc, "Dots(p,p) before     ",p,p);
-        MF::Saxpy(p, -omega, v, 0, 0, ncomp, ngrow); // p += -omega*v
+        MF::Saxpy(p, -omega, v, 0, 0, ncomp, nghost); // p += -omega*v
         PrintDots(Post_Calc, "Dots(p,p) after Saxpy",p,p);
-        MF::Xpay(p, beta, r, 0, 0, ncomp, ngrow); // p = r + beta*p
+        MF::Xpay(p, beta, r, 0, 0, ncomp, nghost); // p = r + beta*p
         PrintDots(Post_Calc, "Dots(p,p) after  Xpay",p,p);
     }
 
@@ -327,16 +304,15 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     {
         // keep updated solution
         amrex::Print() << "MLCGSolver_BiCGstab: Keep new solution.\n";
-        sol.LocalAdd(sorig, 0, 0, ncomp, ngrow);
+        sol.LocalAdd(sorig, 0, 0, ncomp, nghost);
         PrintDots(IterationFinal,"Dots(sol,sol)",sol,sol);
     }
     else
     {
         // reset solution to original copy
         amrex::Print() << "MLCGSolver_BiCGstab: Reset solution.\n";
-        // sol.setVal(RT(0.0));
-        // sol.LocalAdd(sorig, 0, 0, ncomp, ngrow);
-        sol.LocalCopy(sorig, 0, 0, ncomp, ngrow);
+        sol.setVal(RT(0.0));
+        sol.LocalAdd(sorig, 0, 0, ncomp, nghost);
         PrintDots(IterationFinal,"Dots(sol,sol)",sol,sol);
     }
 
@@ -499,16 +475,6 @@ MLCGSolverT<MF>::norm_inf (const MF& res, bool local) -> RT
     }
     return result;
 }
-
-// template <typename MF>
-// auto
-// MLCGSolverT<MF>::Dots (const MF& x, const MF& y) -> Array<RT, 3>
-// {
-//     RT dot1 = dotxy(x,y);
-//     RT dot2 = Dot(x,0,y,0,x.nComp(),nghost);
-//     RT dot3 = Dot(x,0,y,0,x.nComp(),ngrow);
-//     return {dot1, dot2, dot3};
-// }
 
 template <typename MF>
 void

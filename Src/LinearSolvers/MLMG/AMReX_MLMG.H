@@ -1248,6 +1248,7 @@ void
 MLMGT<MF>::mgVcycle (int amrlev, int mglev_top)
 {
     BL_PROFILE("MLMG::mgVcycle()");
+    amrex::Print() << "Start mgVcycle() for amrlev = " << amrlev << ", mglev = " << mglev_top;
     // timer[mgVcycle_time].start();
     // timer[mgVcycle_nonsmooth_time].start();
     auto mgVcycle_start_time = amrex::second();
@@ -1349,15 +1350,20 @@ MLMGT<MF>::mgVcycle (int amrlev, int mglev_top)
     for (int mglev = mglev_bottom-1; mglev >= mglev_top; --mglev)
     {
         BL_PROFILE_VAR("MLMG::mgVcycle_up::"+std::to_string(mglev), blp_mgv_up_lev);
+        amrex::Print() << "mglev = " << mglev << "step 0" <<"\n";
         // cor_fine += I(cor_crse)
         addInterpCorrection(amrlev, mglev);
+        amrex::Print() << "mglev = " << mglev << "step 1" <<"\n";
         if (verbose >= 4)
         {
             computeResOfCorrection(amrlev, mglev);
+            amrex::Print() << "mglev = " << mglev << "step 2" <<"\n";
             RT norm = rescor[amrlev][mglev].norminf(0,ncomp,IntVect(0));
+            amrex::Print() << "mglev = " << mglev << "step 3" <<"\n";
             amrex::Print() << "AT LEVEL "  << amrlev << " " << mglev
                            << "   UP: Norm before smooth " << norm << "\n";
         }
+        amrex::Print() << "mglev = " << mglev << "step 4" <<"\n";
         for (int i = 0; i < nu2; ++i) {
             // timer[smooth_time].start();
             timer[mgVcycle_nonsmooth_time] += amrex::second() - mgVcycle_nonsmooth_start_time;
@@ -1368,7 +1374,9 @@ MLMGT<MF>::mgVcycle (int amrlev, int mglev_top)
             // timer[smooth_time].stop();
         }
 
+        amrex::Print() << "mglev = " << mglev << "step 5" <<"\n";
         if (cf_strategy == CFStrategy::ghostnodes) { computeResOfCorrection(amrlev, mglev); }
+        amrex::Print() << "mglev = " << mglev << "step 6" <<"\n";
 
         if (verbose >= 4)
         {
@@ -1377,11 +1385,14 @@ MLMGT<MF>::mgVcycle (int amrlev, int mglev_top)
             amrex::Print() << "AT LEVEL "  << amrlev << " " << mglev
                            << "   UP: Norm after  smooth " << norm << "\n";
         }
+        amrex::Print() << "mglev = " << mglev << "step 7" <<"\n";
     }
     // timer[mgVcycle_nonsmooth_time].stop();
     // timer[mgVcycle_time].stop();
+    amrex::Print() << "mgVcycle: before record mgVcycle start and nonsmooth times.\n";
     timer[mgVcycle_time] += amrex::second() - mgVcycle_start_time;
     timer[mgVcycle_nonsmooth_time] += amrex::second() - mgVcycle_nonsmooth_start_time;
+    amrex::Print() << "mgVcycle: after record mgVcycle start and nonsmooth times.\n";
 }
 
 // FMG cycle on the coarsest AMR level.
