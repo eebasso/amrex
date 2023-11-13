@@ -1,11 +1,71 @@
-Initializing AMReX (23.11-9-ge410f2f97130-dirty)...
+Initializing AMReX (23.11-10-g8d598e62924d-dirty)...
 MPI initialized with 4 MPI processes
 MPI initialized with thread support level 0
-AMReX (23.11-9-ge410f2f97130-dirty) initialized
+AMReX (23.11-10-g8d598e62924d-dirty) initialized
+MLMG::prepareForSolve: 2nd linop.make(...) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLMG::prepareForSolve: 3rd+4th linop.make(Vector<Vector<MF>,ng) called
+MLLinOpT<MF>::make(mf,ng): call on MLLinOpT<MF>::make(amrlev,mglev,ng)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(mf,ng): call on MLLinOpT<MF>::make(amrlev,mglev,ng)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(mf,ng): call on MLLinOpT<MF>::make(amrlev,mglev,ng)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(mf,ng): call on MLLinOpT<MF>::make(amrlev,mglev,ng)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(mf,ng): call on MLLinOpT<MF>::make(amrlev,mglev,ng)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(mf,ng): call on MLLinOpT<MF>::make(amrlev,mglev,ng)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(mf,ng): call on MLLinOpT<MF>::make(amrlev,mglev,ng)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(mf,ng): call on MLLinOpT<MF>::make(amrlev,mglev,ng)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(mf,ng): call on MLLinOpT<MF>::make(amrlev,mglev,ng)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(mf,ng): call on MLLinOpT<MF>::make(amrlev,mglev,ng)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(mf,ng): call on MLLinOpT<MF>::make(amrlev,mglev,ng)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(mf,ng): call on MLLinOpT<MF>::make(amrlev,mglev,ng)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLMG::prepareForSolve: 5th linop.make(...) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLMG::prepareForSolve: 5th linop.make(...) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLMG::prepareForSolve: 5th linop.make(...) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLMG::prepareForSolve: 5th linop.make(...) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLMG::prepareForSolve: 5th linop.make(...) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLMG::prepareForSolve: 5th linop.make(...) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLMG::prepareForSolve: 6th linop.make(...) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLMG::prepareForSolve: 6th linop.make(...) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLMG::prepareForSolve: 6th linop.make(...) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLMG::prepareForSolve: 6th linop.make(...) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLMG::prepareForSolve: 6th linop.make(...) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLMG: # of AMR levels: 1
       # of MG levels on the coarsest AMR level: 6
 MLMG: Initial rhs               = 15.20237123
 MLMG: Initial residual (resid0) = 15.20237123
+AT LEVEL 0 0   DN: Norm before smooth 15.20237123
+AT LEVEL 0 0   DN: Norm after  smooth 8.974903011
+AT LEVEL 0 1   DN: Norm before smooth 5.456241718
+AT LEVEL 0 1   DN: Norm after  smooth 3.222105383
+AT LEVEL 0 2   DN: Norm before smooth 2.495086203
+AT LEVEL 0 2   DN: Norm after  smooth 1.184467988
+AT LEVEL 0 3   DN: Norm before smooth 0.6847901687
+AT LEVEL 0 3   DN: Norm after  smooth 0.2255916472
+AT LEVEL 0 4   DN: Norm before smooth 0.1598471639
+AT LEVEL 0 4   DN: Norm after  smooth 0.03990560821
+AT LEVEL 0 5   DN: Norm before bottom 0.02226176752
 MLCGSolver_BiCGStab: print-development branch
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
@@ -138,7 +198,29 @@ MLCGSolver_BiCGStab: Iteration           6 rel. err. 6.184783643e-05
 MLCGSolver_BiCGStab: Final: Iteration    6 rel. err. 6.184783643e-05
 MLCGSolver_BiCGstab: Keep new solution.
 MLCGSolver_BiCGStab: Final: Iteration    6 Dots(sol,sol) -> dotxy: 6.748507224e-05, Dot(...,nghost): 8.592673721e-05, Dot(...,ngrow): 8.592673721e-05
+AT LEVEL 0 5   UP: Norm after  bottom 1.354727887e-06
+AT LEVEL 0 4   UP: Norm before smooth 0.07361411169
+AT LEVEL 0 4   UP: Norm after  smooth 0.002866184108
+AT LEVEL 0 3   UP: Norm before smooth 0.6576397184
+AT LEVEL 0 3   UP: Norm after  smooth 0.01592928826
+AT LEVEL 0 2   UP: Norm before smooth 2.03847853
+AT LEVEL 0 2   UP: Norm after  smooth 0.1126604933
+AT LEVEL 0 1   UP: Norm before smooth 12.556316
+AT LEVEL 0 1   UP: Norm after  smooth 0.2130062459
+AT LEVEL 0 0   UP: Norm before smooth 24.94599778
+AT LEVEL 0 0   UP: Norm after  smooth 0.8390014061
 MLMG: Iteration   1 Fine resid/bnorm = 0.05518885136
+AT LEVEL 0 0   DN: Norm before smooth 0.8390014061
+AT LEVEL 0 0   DN: Norm after  smooth 0.2410735263
+AT LEVEL 0 1   DN: Norm before smooth 0.1541428244
+AT LEVEL 0 1   DN: Norm after  smooth 0.1172204957
+AT LEVEL 0 2   DN: Norm before smooth 0.08792931257
+AT LEVEL 0 2   DN: Norm after  smooth 0.04462372628
+AT LEVEL 0 3   DN: Norm before smooth 0.02885622899
+AT LEVEL 0 3   DN: Norm after  smooth 0.01164983231
+AT LEVEL 0 4   DN: Norm before smooth 0.006783136996
+AT LEVEL 0 4   DN: Norm after  smooth 0.002556874644
+AT LEVEL 0 5   DN: Norm before bottom 0.001216159312
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
@@ -262,7 +344,29 @@ MLCGSolver_BiCGStab: Half Iter           6 rel. err. 3.937275724e-05
 MLCGSolver_BiCGStab: Final: Iteration    6 rel. err. 3.937275724e-05
 MLCGSolver_BiCGstab: Keep new solution.
 MLCGSolver_BiCGStab: Final: Iteration    6 Dots(sol,sol) -> dotxy: 5.544121522e-07, Dot(...,nghost): 7.056439545e-07, Dot(...,ngrow): 7.056439545e-07
+AT LEVEL 0 5   UP: Norm after  bottom 4.152045801e-08
+AT LEVEL 0 4   UP: Norm before smooth 0.005134888486
+AT LEVEL 0 4   UP: Norm after  smooth 0.0001937170785
+AT LEVEL 0 3   UP: Norm before smooth 0.03775673878
+AT LEVEL 0 3   UP: Norm after  smooth 0.0009297409982
+AT LEVEL 0 2   UP: Norm before smooth 0.1001872493
+AT LEVEL 0 2   UP: Norm after  smooth 0.00489408402
+AT LEVEL 0 1   UP: Norm before smooth 0.5638518735
+AT LEVEL 0 1   UP: Norm after  smooth 0.008409900803
+AT LEVEL 0 0   UP: Norm before smooth 1.237837875
+AT LEVEL 0 0   UP: Norm after  smooth 0.0421407137
 MLMG: Iteration   2 Fine resid/bnorm = 0.00277198294
+AT LEVEL 0 0   DN: Norm before smooth 0.0421407137
+AT LEVEL 0 0   DN: Norm after  smooth 0.01392676807
+AT LEVEL 0 1   DN: Norm before smooth 0.007748993383
+AT LEVEL 0 1   DN: Norm after  smooth 0.005513566777
+AT LEVEL 0 2   DN: Norm before smooth 0.003970620532
+AT LEVEL 0 2   DN: Norm after  smooth 0.002090223937
+AT LEVEL 0 3   DN: Norm before smooth 0.001279354517
+AT LEVEL 0 3   DN: Norm after  smooth 0.0005807032898
+AT LEVEL 0 4   DN: Norm before smooth 0.0003445168536
+AT LEVEL 0 4   DN: Norm after  smooth 0.0001592930252
+AT LEVEL 0 5   DN: Norm before bottom 7.445927042e-05
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
@@ -386,7 +490,29 @@ MLCGSolver_BiCGStab: Half Iter           6 rel. err. 3.551254416e-05
 MLCGSolver_BiCGStab: Final: Iteration    6 rel. err. 3.551254416e-05
 MLCGSolver_BiCGstab: Keep new solution.
 MLCGSolver_BiCGStab: Final: Iteration    6 Dots(sol,sol) -> dotxy: 2.721808495e-09, Dot(...,nghost): 3.461531065e-09, Dot(...,ngrow): 3.461531065e-09
+AT LEVEL 0 5   UP: Norm after  bottom 2.389504853e-09
+AT LEVEL 0 4   UP: Norm before smooth 0.0003340592034
+AT LEVEL 0 4   UP: Norm after  smooth 1.218211749e-05
+AT LEVEL 0 3   UP: Norm before smooth 0.002080872537
+AT LEVEL 0 3   UP: Norm after  smooth 5.248923505e-05
+AT LEVEL 0 2   UP: Norm before smooth 0.005531129082
+AT LEVEL 0 2   UP: Norm after  smooth 0.000231659774
+AT LEVEL 0 1   UP: Norm before smooth 0.0269006576
+AT LEVEL 0 1   UP: Norm after  smooth 0.0004339108293
+AT LEVEL 0 0   UP: Norm before smooth 0.06898401207
+AT LEVEL 0 0   UP: Norm after  smooth 0.001978387034
 MLMG: Iteration   3 Fine resid/bnorm = 0.0001301367401
+AT LEVEL 0 0   DN: Norm before smooth 0.001978387034
+AT LEVEL 0 0   DN: Norm after  smooth 0.001057338928
+AT LEVEL 0 1   DN: Norm before smooth 0.0005778460121
+AT LEVEL 0 1   DN: Norm after  smooth 0.0003432855728
+AT LEVEL 0 2   DN: Norm before smooth 0.0001987455154
+AT LEVEL 0 2   DN: Norm after  smooth 0.0001238417427
+AT LEVEL 0 3   DN: Norm before smooth 6.786844535e-05
+AT LEVEL 0 3   DN: Norm after  smooth 2.990267832e-05
+AT LEVEL 0 4   DN: Norm before smooth 1.900225005e-05
+AT LEVEL 0 4   DN: Norm after  smooth 9.621811155e-06
+AT LEVEL 0 5   DN: Norm before bottom 4.518522751e-06
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
@@ -498,7 +624,29 @@ MLCGSolver_BiCGStab: Iteration           5 rel. err. 9.21791061e-05
 MLCGSolver_BiCGStab: Final: Iteration    5 rel. err. 9.21791061e-05
 MLCGSolver_BiCGstab: Keep new solution.
 MLCGSolver_BiCGStab: Final: Iteration    5 Dots(sol,sol) -> dotxy: 1.118192141e-11, Dot(...,nghost): 1.421134292e-11, Dot(...,ngrow): 1.421134292e-11
+AT LEVEL 0 5   UP: Norm after  bottom 8.186252619e-10
+AT LEVEL 0 4   UP: Norm before smooth 2.073405515e-05
+AT LEVEL 0 4   UP: Norm after  smooth 7.372324286e-07
+AT LEVEL 0 3   UP: Norm before smooth 0.0001142577756
+AT LEVEL 0 3   UP: Norm after  smooth 2.930901869e-06
+AT LEVEL 0 2   UP: Norm before smooth 0.0003193810408
+AT LEVEL 0 2   UP: Norm after  smooth 1.155094158e-05
+AT LEVEL 0 1   UP: Norm before smooth 0.001324268221
+AT LEVEL 0 1   UP: Norm after  smooth 2.859785995e-05
+AT LEVEL 0 0   UP: Norm before smooth 0.004866466915
+AT LEVEL 0 0   UP: Norm after  smooth 0.0001228763515
 MLMG: Iteration   4 Fine resid/bnorm = 8.082709579e-06
+AT LEVEL 0 0   DN: Norm before smooth 0.0001228763516
+AT LEVEL 0 0   DN: Norm after  smooth 7.581371266e-05
+AT LEVEL 0 1   DN: Norm before smooth 4.135133895e-05
+AT LEVEL 0 1   DN: Norm after  smooth 2.339758525e-05
+AT LEVEL 0 2   DN: Norm before smooth 1.252958189e-05
+AT LEVEL 0 2   DN: Norm after  smooth 7.736006475e-06
+AT LEVEL 0 3   DN: Norm before smooth 4.275942887e-06
+AT LEVEL 0 3   DN: Norm after  smooth 1.827542704e-06
+AT LEVEL 0 4   DN: Norm before smooth 1.105818223e-06
+AT LEVEL 0 4   DN: Norm after  smooth 5.764152402e-07
+AT LEVEL 0 5   DN: Norm before bottom 2.737355366e-07
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
@@ -610,7 +758,29 @@ MLCGSolver_BiCGStab: Iteration           5 rel. err. 8.384993619e-05
 MLCGSolver_BiCGStab: Final: Iteration    5 rel. err. 8.384993619e-05
 MLCGSolver_BiCGstab: Keep new solution.
 MLCGSolver_BiCGStab: Final: Iteration    5 Dots(sol,sol) -> dotxy: 4.346366902e-14, Dot(...,nghost): 5.520909393e-14, Dot(...,ngrow): 5.520909393e-14
+AT LEVEL 0 5   UP: Norm after  bottom 5.578809068e-11
+AT LEVEL 0 4   UP: Norm before smooth 1.272394001e-06
+AT LEVEL 0 4   UP: Norm after  smooth 4.439914191e-08
+AT LEVEL 0 3   UP: Norm before smooth 6.392482759e-06
+AT LEVEL 0 3   UP: Norm after  smooth 1.658449738e-07
+AT LEVEL 0 2   UP: Norm before smooth 1.911082879e-05
+AT LEVEL 0 2   UP: Norm after  smooth 5.998133785e-07
+AT LEVEL 0 1   UP: Norm before smooth 8.216666011e-05
+AT LEVEL 0 1   UP: Norm after  smooth 1.884485983e-06
+AT LEVEL 0 0   UP: Norm before smooth 0.0003361715653
+AT LEVEL 0 0   UP: Norm after  smooth 8.607298304e-06
 MLMG: Iteration   5 Fine resid/bnorm = 5.661813004e-07
+AT LEVEL 0 0   DN: Norm before smooth 8.607298312e-06
+AT LEVEL 0 0   DN: Norm after  smooth 5.269765642e-06
+AT LEVEL 0 1   DN: Norm before smooth 2.870034236e-06
+AT LEVEL 0 1   DN: Norm after  smooth 1.607042369e-06
+AT LEVEL 0 2   DN: Norm before smooth 8.488753242e-07
+AT LEVEL 0 2   DN: Norm after  smooth 5.130989057e-07
+AT LEVEL 0 3   DN: Norm before smooth 2.847442488e-07
+AT LEVEL 0 3   DN: Norm after  smooth 1.143947008e-07
+AT LEVEL 0 4   DN: Norm before smooth 6.674643158e-08
+AT LEVEL 0 4   DN: Norm after  smooth 3.486697775e-08
+AT LEVEL 0 5   DN: Norm before bottom 1.672301291e-08
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
@@ -722,7 +892,29 @@ MLCGSolver_BiCGStab: Iteration           5 rel. err. 8.774768674e-05
 MLCGSolver_BiCGStab: Final: Iteration    5 rel. err. 8.774768674e-05
 MLCGSolver_BiCGstab: Keep new solution.
 MLCGSolver_BiCGStab: Final: Iteration    5 Dots(sol,sol) -> dotxy: 1.668197539e-16, Dot(...,nghost): 2.118165997e-16, Dot(...,ngrow): 2.118165997e-16
+AT LEVEL 0 5   UP: Norm after  bottom 3.663434116e-12
+AT LEVEL 0 4   UP: Norm before smooth 7.824239433e-08
+AT LEVEL 0 4   UP: Norm after  smooth 2.696094179e-09
+AT LEVEL 0 3   UP: Norm before smooth 3.676152077e-07
+AT LEVEL 0 3   UP: Norm after  smooth 9.580560659e-09
+AT LEVEL 0 2   UP: Norm before smooth 1.242686514e-06
+AT LEVEL 0 2   UP: Norm after  smooth 3.228858155e-08
+AT LEVEL 0 1   UP: Norm before smooth 5.55507197e-06
+AT LEVEL 0 1   UP: Norm after  smooth 1.241580531e-07
+AT LEVEL 0 0   UP: Norm before smooth 2.286382859e-05
+AT LEVEL 0 0   UP: Norm after  smooth 5.897429905e-07
 MLMG: Iteration   6 Fine resid/bnorm = 3.879282785e-08
+AT LEVEL 0 0   DN: Norm before smooth 5.8974297e-07
+AT LEVEL 0 0   DN: Norm after  smooth 3.593896685e-07
+AT LEVEL 0 1   DN: Norm before smooth 1.955220675e-07
+AT LEVEL 0 1   DN: Norm after  smooth 1.093885083e-07
+AT LEVEL 0 2   DN: Norm before smooth 5.781102951e-08
+AT LEVEL 0 2   DN: Norm after  smooth 3.434857435e-08
+AT LEVEL 0 3   DN: Norm before smooth 1.903002406e-08
+AT LEVEL 0 3   DN: Norm after  smooth 7.286369818e-09
+AT LEVEL 0 4   DN: Norm before smooth 4.132528155e-09
+AT LEVEL 0 4   DN: Norm after  smooth 2.152839877e-09
+AT LEVEL 0 5   DN: Norm before bottom 1.03371193e-09
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
@@ -834,7 +1026,29 @@ MLCGSolver_BiCGStab: Iteration           5 rel. err. 9.209844295e-05
 MLCGSolver_BiCGStab: Final: Iteration    5 rel. err. 9.209844295e-05
 MLCGSolver_BiCGstab: Keep new solution.
 MLCGSolver_BiCGStab: Final: Iteration    5 Dots(sol,sol) -> dotxy: 6.438359311e-19, Dot(...,nghost): 8.172833648e-19, Dot(...,ngrow): 8.172833648e-19
+AT LEVEL 0 5   UP: Norm after  bottom 2.3550436e-13
+AT LEVEL 0 4   UP: Norm before smooth 4.846863448e-09
+AT LEVEL 0 4   UP: Norm after  smooth 1.658036881e-10
+AT LEVEL 0 3   UP: Norm before smooth 2.176686848e-08
+AT LEVEL 0 3   UP: Norm after  smooth 5.656013721e-10
+AT LEVEL 0 2   UP: Norm before smooth 8.238900311e-08
+AT LEVEL 0 2   UP: Norm after  smooth 2.123335169e-09
+AT LEVEL 0 1   UP: Norm before smooth 3.724069327e-07
+AT LEVEL 0 1   UP: Norm after  smooth 8.17997534e-09
+AT LEVEL 0 0   UP: Norm before smooth 1.538188842e-06
+AT LEVEL 0 0   UP: Norm after  smooth 3.984742489e-08
 MLMG: Iteration   7 Fine resid/bnorm = 2.62113256e-09
+AT LEVEL 0 0   DN: Norm before smooth 3.984743022e-08
+AT LEVEL 0 0   DN: Norm after  smooth 2.421270929e-08
+AT LEVEL 0 1   DN: Norm before smooth 1.316275903e-08
+AT LEVEL 0 1   DN: Norm after  smooth 7.35859155e-09
+AT LEVEL 0 2   DN: Norm before smooth 3.88965997e-09
+AT LEVEL 0 2   DN: Norm after  smooth 2.294862258e-09
+AT LEVEL 0 3   DN: Norm before smooth 1.270530164e-09
+AT LEVEL 0 3   DN: Norm after  smooth 4.700756029e-10
+AT LEVEL 0 4   DN: Norm before smooth 2.604615153e-10
+AT LEVEL 0 4   DN: Norm after  smooth 1.349059968e-10
+AT LEVEL 0 5   DN: Norm before bottom 6.463521896e-11
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
@@ -946,7 +1160,29 @@ MLCGSolver_BiCGStab: Iteration           5 rel. err. 9.444806189e-05
 MLCGSolver_BiCGStab: Final: Iteration    5 rel. err. 9.444806189e-05
 MLCGSolver_BiCGstab: Keep new solution.
 MLCGSolver_BiCGStab: Final: Iteration    5 Dots(sol,sol) -> dotxy: 2.513438654e-21, Dot(...,nghost): 3.190061837e-21, Dot(...,ngrow): 3.190061837e-21
+AT LEVEL 0 5   UP: Norm after  bottom 1.501433942e-14
+AT LEVEL 0 4   UP: Norm before smooth 3.027592492e-10
+AT LEVEL 0 4   UP: Norm after  smooth 1.032674869e-11
+AT LEVEL 0 3   UP: Norm before smooth 1.323915512e-09
+AT LEVEL 0 3   UP: Norm after  smooth 3.404961082e-11
+AT LEVEL 0 2   UP: Norm before smooth 5.44218705e-09
+AT LEVEL 0 2   UP: Norm after  smooth 1.421409061e-10
+AT LEVEL 0 1   UP: Norm before smooth 2.480807552e-08
+AT LEVEL 0 1   UP: Norm after  smooth 5.390192994e-10
+AT LEVEL 0 0   UP: Norm before smooth 1.027270793e-07
+AT LEVEL 0 0   UP: Norm after  smooth 2.668341904e-09
 MLMG: Iteration   8 Fine resid/bnorm = 1.755209644e-10
+AT LEVEL 0 0   DN: Norm before smooth 2.668334859e-09
+AT LEVEL 0 0   DN: Norm after  smooth 1.618408602e-09
+AT LEVEL 0 1   DN: Norm before smooth 8.793594389e-10
+AT LEVEL 0 1   DN: Norm after  smooth 4.912808772e-10
+AT LEVEL 0 2   DN: Norm before smooth 2.596933186e-10
+AT LEVEL 0 2   DN: Norm after  smooth 1.530952622e-10
+AT LEVEL 0 3   DN: Norm before smooth 8.475668285e-11
+AT LEVEL 0 3   DN: Norm after  smooth 3.061006084e-11
+AT LEVEL 0 4   DN: Norm before smooth 1.674467733e-11
+AT LEVEL 0 4   DN: Norm after  smooth 8.560902492e-12
+AT LEVEL 0 5   DN: Norm before bottom 4.080865895e-12
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
@@ -1058,7 +1294,29 @@ MLCGSolver_BiCGStab: Iteration           5 rel. err. 9.5491852e-05
 MLCGSolver_BiCGStab: Final: Iteration    5 rel. err. 9.5491852e-05
 MLCGSolver_BiCGstab: Keep new solution.
 MLCGSolver_BiCGStab: Final: Iteration    5 Dots(sol,sol) -> dotxy: 9.928570418e-24, Dot(...,nghost): 1.260058675e-23, Dot(...,ngrow): 1.260058675e-23
+AT LEVEL 0 5   UP: Norm after  bottom 9.561953323e-16
+AT LEVEL 0 4   UP: Norm before smooth 1.905221275e-11
+AT LEVEL 0 4   UP: Norm after  smooth 6.502072993e-13
+AT LEVEL 0 3   UP: Norm before smooth 8.235986935e-11
+AT LEVEL 0 3   UP: Norm after  smooth 2.099884939e-12
+AT LEVEL 0 2   UP: Norm before smooth 3.588225142e-10
+AT LEVEL 0 2   UP: Norm after  smooth 9.494692869e-12
+AT LEVEL 0 1   UP: Norm before smooth 1.646022204e-09
+AT LEVEL 0 1   UP: Norm after  smooth 3.553060992e-11
+AT LEVEL 0 0   UP: Norm before smooth 6.827759833e-09
+AT LEVEL 0 0   UP: Norm after  smooth 1.776557636e-10
 MLMG: Iteration   9 Fine resid/bnorm = 1.168470428e-11
+AT LEVEL 0 0   DN: Norm before smooth 1.776352121e-10
+AT LEVEL 0 0   DN: Norm after  smooth 1.076285308e-10
+AT LEVEL 0 1   DN: Norm before smooth 5.845739077e-11
+AT LEVEL 0 1   DN: Norm after  smooth 3.264141777e-11
+AT LEVEL 0 2   DN: Norm before smooth 1.725386816e-11
+AT LEVEL 0 2   DN: Norm after  smooth 1.020326608e-11
+AT LEVEL 0 3   DN: Norm before smooth 5.65052843e-12
+AT LEVEL 0 3   DN: Norm after  smooth 2.00647418e-12
+AT LEVEL 0 4   DN: Norm before smooth 1.104175853e-12
+AT LEVEL 0 4   DN: Norm after  smooth 5.486151527e-13
+AT LEVEL 0 5   DN: Norm before bottom 2.59569558e-13
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
@@ -1170,12 +1428,23 @@ MLCGSolver_BiCGStab: Iteration           5 rel. err. 9.560829361e-05
 MLCGSolver_BiCGStab: Final: Iteration    5 rel. err. 9.560829361e-05
 MLCGSolver_BiCGstab: Keep new solution.
 MLCGSolver_BiCGStab: Final: Iteration    5 Dots(sol,sol) -> dotxy: 3.959979294e-26, Dot(...,nghost): 5.025752222e-26, Dot(...,ngrow): 5.025752222e-26
+AT LEVEL 0 5   UP: Norm after  bottom 6.09346768e-17
+AT LEVEL 0 4   UP: Norm before smooth 1.205759242e-12
+AT LEVEL 0 4   UP: Norm after  smooth 4.128500219e-14
+AT LEVEL 0 3   UP: Norm before smooth 5.214746913e-12
+AT LEVEL 0 3   UP: Norm after  smooth 1.314860352e-13
+AT LEVEL 0 2   UP: Norm before smooth 2.363818466e-11
+AT LEVEL 0 2   UP: Norm after  smooth 6.334612072e-13
+AT LEVEL 0 1   UP: Norm before smooth 1.089449629e-10
+AT LEVEL 0 1   UP: Norm after  smooth 2.342985905e-12
+AT LEVEL 0 0   UP: Norm before smooth 4.524331341e-10
+AT LEVEL 0 0   UP: Norm after  smooth 1.178494705e-11
 MLMG: Iteration  10 Fine resid/bnorm = 7.77325191e-13
 MLMG: Final Iter. 10 resid, resid/bnorm = 1.181718612e-11, 7.77325191e-13
-MLMG: Timers: Solve = 2.087299123 Iter = 1.78037133 Bottom = 0.007138191
+MLMG: Timers: Solve = 3.738583132 Iter = 3.246423998 Bottom = 0.010035306 OneIter = 3.089245655 Smooth = 2.055074331 mgVcycle = 3.070985257 mgVcycle non-smooth = 1.067136867 mgFcycle = 0
 Unused ParmParse Variables:
   [TOP]::amr.plot_file(nvals = 1)  :: [EB_Node_3D_plt]
   [TOP]::amr.check_file(nvals = 1)  :: [EB_Node_3D_chk]
   [TOP]::amr.checkpoint_files_output(nvals = 1)  :: [0]
 
-AMReX (23.11-9-ge410f2f97130-dirty) finalized
+AMReX (23.11-10-g8d598e62924d-dirty) finalized
