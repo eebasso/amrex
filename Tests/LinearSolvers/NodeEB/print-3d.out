@@ -66,9 +66,18 @@ AT LEVEL 0 3   DN: Norm after  smooth 0.2255916472
 AT LEVEL 0 4   DN: Norm before smooth 0.1598471639
 AT LEVEL 0 4   DN: Norm after  smooth 0.03990560821
 AT LEVEL 0 5   DN: Norm before bottom 0.02226176752
-MLCGSolver_BiCGStab: print-development branch
+MLCGSolver_BiCGStab: print-test-2 branch
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 0.003933324375, Dot(...,nghost): 0.00564118167, Dot(...,ngrow): N/A
@@ -223,6 +232,15 @@ AT LEVEL 0 4   DN: Norm after  smooth 0.002556874644
 AT LEVEL 0 5   DN: Norm before bottom 0.001216159312
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 1.60891853e-05, Dot(...,nghost): 2.309346592e-05, Dot(...,ngrow): N/A
@@ -369,6 +387,15 @@ AT LEVEL 0 4   DN: Norm after  smooth 0.0001592930252
 AT LEVEL 0 5   DN: Norm before bottom 7.445927042e-05
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 6.047641748e-08, Dot(...,nghost): 8.694567633e-08, Dot(...,ngrow): N/A
@@ -515,6 +542,15 @@ AT LEVEL 0 4   DN: Norm after  smooth 9.621811155e-06
 AT LEVEL 0 5   DN: Norm before bottom 4.518522751e-06
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 2.153711754e-10, Dot(...,nghost): 3.098600436e-10, Dot(...,ngrow): N/A
@@ -649,6 +685,15 @@ AT LEVEL 0 4   DN: Norm after  smooth 5.764152402e-07
 AT LEVEL 0 5   DN: Norm before bottom 2.737355366e-07
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 7.705881219e-13, Dot(...,nghost): 1.10880149e-12, Dot(...,ngrow): N/A
@@ -783,6 +828,15 @@ AT LEVEL 0 4   DN: Norm after  smooth 3.486697775e-08
 AT LEVEL 0 5   DN: Norm before bottom 1.672301291e-08
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 2.826016442e-15, Dot(...,nghost): 4.065876526e-15, Dot(...,ngrow): N/A
@@ -917,6 +971,15 @@ AT LEVEL 0 4   DN: Norm after  smooth 2.152839877e-09
 AT LEVEL 0 5   DN: Norm before bottom 1.03371193e-09
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 1.067199474e-17, Dot(...,nghost): 1.535204347e-17, Dot(...,ngrow): N/A
@@ -1051,6 +1114,15 @@ AT LEVEL 0 4   DN: Norm after  smooth 1.349059968e-10
 AT LEVEL 0 5   DN: Norm before bottom 6.463521896e-11
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 4.140077989e-20, Dot(...,nghost): 5.955420005e-20, Dot(...,ngrow): N/A
@@ -1185,6 +1257,15 @@ AT LEVEL 0 4   DN: Norm after  smooth 8.560902492e-12
 AT LEVEL 0 5   DN: Norm before bottom 4.080865895e-12
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 1.642091839e-22, Dot(...,nghost): 2.36234446e-22, Dot(...,ngrow): N/A
@@ -1319,6 +1400,15 @@ AT LEVEL 0 4   DN: Norm after  smooth 5.486151527e-13
 AT LEVEL 0 5   DN: Norm before bottom 2.59569558e-13
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
+MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 6.624294828e-25, Dot(...,nghost): 9.531877081e-25, Dot(...,ngrow): N/A
@@ -1441,7 +1531,7 @@ AT LEVEL 0 0   UP: Norm before smooth 4.524331341e-10
 AT LEVEL 0 0   UP: Norm after  smooth 1.178494705e-11
 MLMG: Iteration  10 Fine resid/bnorm = 7.77325191e-13
 MLMG: Final Iter. 10 resid, resid/bnorm = 1.181718612e-11, 7.77325191e-13
-MLMG: Timers: Solve = 3.738583132 Iter = 3.246423998 Bottom = 0.010035306 OneIter = 3.089245655 Smooth = 2.055074331 mgVcycle = 3.070985257 mgVcycle non-smooth = 1.067136867 mgFcycle = 0
+MLMG: Timers: Solve = 6.607947672 Iter = 5.795596083 Bottom = 0.034911755 OneIter = 5.522587735 Smooth = 3.644008835 mgVcycle = 5.494052983 mgVcycle non-smooth = 1.905611862 mgFcycle = 0
 Unused ParmParse Variables:
   [TOP]::amr.plot_file(nvals = 1)  :: [EB_Node_3D_plt]
   [TOP]::amr.check_file(nvals = 1)  :: [EB_Node_3D_chk]

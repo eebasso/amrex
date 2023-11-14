@@ -80,6 +80,7 @@ template <typename MF>
 int
 MLCGSolverT<MF>::solve (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 {
+    verbose = 5;
     if (solver_type == Type::BiCGStab) {
         return solve_bicgstab(sol,rhs,eps_rel,eps_abs);
     } else {
@@ -93,9 +94,13 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 {
     BL_PROFILE("MLCGSolver::bicgstab");
     if (!printedHeader) {
-        amrex::Print() << "MLCGSolver_BiCGStab: print-development branch" << "\n";
+        amrex::Print() << "MLCGSolver_BiCGStab: print-test-2 branch" << "\n";
         printedHeader = true;
     }
+
+    // nghost = IntVect(AMREX_D_DECL(0,0,0));
+    ngrow = sol.nGrowVect();
+
     std::string MLCGSolverTitle = "MLCGSolver_BiCGStab: ";
     std::string TitleHalf_Iter = "MLCGSolver_BiCGStab: Half Iter           ";
     std::string TitleIteration = "MLCGSolver_BiCGStab: Iteration           ";
@@ -106,31 +111,29 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     std::string Post_Calc = TitlePost_Calc + std::to_string(0);
 
     amrex::Print() << "MLCGSolver_BiCGStab: nghost = " << nghost << "\n";
-    amrex::Print() << "MLCGSolver_BiCGStab: ngrow  = " << sol.nGrowVect() << "\n";
-
-    ngrow = sol.nGrowVect();
-    verbose = 3;
+    amrex::Print() << "MLCGSolver_BiCGStab: ngrow  = " << ngrow << "\n";
 
     const int ncomp = sol.nComp();
+    MF ph    = Lp.make(amrlev, mglev, ngrow);
+    MF sh    = Lp.make(amrlev, mglev, ngrow);
 
-    const BoxArray& ba = sol.boxArray();
-    const DistributionMapping& dm = sol.DistributionMap();
-    const auto& factory = sol.Factory();
+    MF sorig = Lp.make(amrlev, mglev, nghost);
+    MF p     = Lp.make(amrlev, mglev, nghost);
+    MF r     = Lp.make(amrlev, mglev, nghost);
+    MF s     = Lp.make(amrlev, mglev, nghost);
+    MF rh    = Lp.make(amrlev, mglev, nghost);
+    MF v     = Lp.make(amrlev, mglev, nghost);
+    MF t     = Lp.make(amrlev, mglev, nghost);
 
-    MF ph(ba, dm, ncomp, sol.nGrowVect(), MFInfo(), factory);
-    MF sh(ba, dm, ncomp, sol.nGrowVect(), MFInfo(), factory);
     ph.setVal(RT(0.0));
     sh.setVal(RT(0.0));
-    // PrintDots(Iteration,"Dots(ph,ph) initialized",ph,ph);
-    // PrintDots(Iteration,"Dots(sh,sh) initialized",sh,sh);
-
-    MF sorig(ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF p    (ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF r    (ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF s    (ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF rh   (ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF v    (ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF t    (ba, dm, ncomp, nghost, MFInfo(), factory);
+    sorig.setVal(RT(0.0));
+    p.setVal(RT(0.0));
+    r.setVal(RT(0.0));
+    s.setVal(RT(0.0));
+    rh.setVal(RT(0.0));
+    v.setVal(RT(0.0));
+    t.setVal(RT(0.0));
 
     PrintDots(Iteration,"Dots(sol,sol) before Lp.correctionResidual",sol,sol);
     Lp.correctionResidual(amrlev, mglev, r, sol, rhs, MLLinOpT<MF>::BCMode::Homogeneous);
