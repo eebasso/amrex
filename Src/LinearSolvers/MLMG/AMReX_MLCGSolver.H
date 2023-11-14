@@ -120,6 +120,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     MF sorig = Lp.make(amrlev, mglev, nghost);
     MF p     = Lp.make(amrlev, mglev, nghost);
     MF r     = Lp.make(amrlev, mglev, nghost);
+
     MF rh    = Lp.make(amrlev, mglev, nghost);
     MF v     = Lp.make(amrlev, mglev, nghost);
     MF t     = Lp.make(amrlev, mglev, nghost);
@@ -162,7 +163,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     iter = 1;
     RT rho_1 = 0, alpha = 0, omega = 0;
 
-    if ( rnorm0 == 0 || rnorm0 < eps_abs )
+    if ( rnorm0 == RT(0.0) || rnorm0 < eps_abs )
     {
         if ( verbose > 0 )
         {
@@ -182,7 +183,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         const RT rho = dotxy(rh,r);
         PrintDots(Post_Calc,"Dots(rh,r)",rh,r);
 
-        if ( rho == 0 )
+        if ( rho == RT(0.0) )
         {
             ret = 1; break;
         }
@@ -210,20 +211,17 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         Lp.normalize(amrlev, mglev, v);
         PrintDots(Half_Iter,"Dots(v,v) after  Lp.normalize",v,v);
 
-        RT rhTv = dotxy(rh,v);
+        const RT rhTv = dotxy(rh,v);
         PrintDots(Half_Iter,"Dots(rh,v)",rh,v);
 
-        if ( rhTv != RT(0.0) )
-        {
-            alpha = rho/rhTv;
-        }
-        else
+        if ( rhTv == RT(0.0) )
         {
             ret = 2; break;
         }
+        alpha = rho/rhTv;
         // amrex::Print() << Half_Iter << " alpha: " << alpha << "\n";
         MF::Saxpy(sol, alpha, ph, 0, 0, ncomp, nghost); // sol += alpha * ph
-        MF::Saxpy(r,  -alpha, v,  0, 0, ncomp, nghost); // r -= alpha * v
+        MF::Saxpy(r,  -alpha, v, 0, 0, ncomp, nghost); // r -= alpha * v
         PrintDots(Half_Iter,"Dots(sol,sol)",sol,sol);
         PrintDots(Half_Iter,"Dots(s  ,s  )",r,r);
 
@@ -258,21 +256,17 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         ParallelAllReduce::Sum(tvals,2,Lp.BottomCommunicator());
         BL_PROFILE_VAR_STOP(blp_par);
 
-        if ( tvals[0] != RT(0.0) )
-        {
-            omega = tvals[1]/tvals[0];
-        }
-        else
+        if ( tvals[0] == RT(0.0) )
         {
             ret = 3; break;
         }
+        omega = tvals[1]/tvals[0];
         PrintDots(Iteration,"Dots(s,t)",t,r);
 
         MF::Saxpy(sol, omega, sh, 0, 0, ncomp, nghost); // sol += omega * sh
-        MF::Saxpy(r,  -omega, t,  0, 0, ncomp, nghost); // r -= omega * t
+        MF::Saxpy(r,  -omega, t, 0, 0, ncomp, nghost); // r -= omega * t
         PrintDots(Iteration,"Dots(sol,sol)",sol,sol);
         PrintDots(Iteration,"Dots(r  ,r  )",r,r);
-
 
         rnorm = norm_inf(r);
 
@@ -286,7 +280,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 
         if ( rnorm < eps_rel*rnorm0 || rnorm < eps_abs ) { break; }
 
-        if ( omega == 0 )
+        if ( omega == RT(0.0) )
         {
             ret = 4; break;
         }
