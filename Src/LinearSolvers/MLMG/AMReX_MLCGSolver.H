@@ -174,26 +174,25 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         return ret;
     }
 
+    RT rho = dotxy(rh,r);
+    PrintDots(Post_Calc,"Dots(rh,r)",rh,r);
+    p.LocalCopy(r,0,0,ncomp,nghost);
+    PrintDots(Post_Calc, "Dots(p,p)",p,p);
+
     for (; iter <= maxiter; ++iter)
     {
         Half_Iter = TitleHalf_Iter + std::to_string(iter);
         Iteration = TitleIteration + std::to_string(iter);
         Post_Calc = TitlePost_Calc + std::to_string(iter-1);
 
-        const RT rho = dotxy(rh,r);
-        PrintDots(Post_Calc,"Dots(rh,r)",rh,r);
-
         if ( rho == RT(0.0) )
         {
             ret = 1; break;
         }
-        if ( iter == 1 )
+        if ( iter > 1 )
         {
-            p.LocalCopy(r,0,0,ncomp,nghost);
-            PrintDots(Post_Calc, "Dots(p,p)",p,p);
-        }
-        else
-        {
+            rho = dotxy(rh,r);
+            PrintDots(Post_Calc,"Dots(rh,r)",rh,r);
             const RT beta = (rho/rho_1)*(alpha/omega);
             // amrex::Print() << Iteration << " beta: " << beta << '\n';
             PrintDots(Post_Calc, "Dots(p,p) before     ",p,p);
