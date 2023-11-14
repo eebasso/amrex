@@ -1521,7 +1521,7 @@ AT LEVEL 0 0   UP: Norm before smooth 4.524331341e-10
 AT LEVEL 0 0   UP: Norm after  smooth 1.178494705e-11
 MLMG: Iteration  10 Fine resid/bnorm = 7.77325191e-13
 MLMG: Final Iter. 10 resid, resid/bnorm = 1.181718612e-11, 7.77325191e-13
-MLMG: Timers: Solve = 5.129576851 Iter = 4.463657589 Bottom = 0.081091127 OneIter = 4.250517152 Smooth = 2.785348113 mgVcycle = 4.226999956 mgVcycle non-smooth = 1.476819306 mgFcycle = 0
+MLMG: Timers: Solve = 5.372049927 Iter = 4.687721954 Bottom = 0.064052568 OneIter = 4.436209701 Smooth = 2.923172709 mgVcycle = 4.411502609 mgVcycle non-smooth = 1.513427942 mgFcycle = 0
 Unused ParmParse Variables:
   [TOP]::amr.plot_file(nvals = 1)  :: [EB_Node_3D_plt]
   [TOP]::amr.check_file(nvals = 1)  :: [EB_Node_3D_chk]
