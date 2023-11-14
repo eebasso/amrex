@@ -161,7 +161,6 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     }
     int ret = 0;
     iter = 1;
-    RT rho_1 = 0, alpha = 0, omega = 0;
 
     if ( rnorm0 == RT(0.0) || rnorm0 < eps_abs )
     {
@@ -205,7 +204,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         {
             ret = 2; break;
         }
-        alpha = rho/rhTv;
+        const RT alpha = rho/rhTv;
         // amrex::Print() << Half_Iter << " alpha: " << alpha << "\n";
         MF::Saxpy(sol, alpha, ph, 0, 0, ncomp, nghost); // sol += alpha * ph
         MF::Saxpy(r,  -alpha, v, 0, 0, ncomp, nghost); // r -= alpha * v
@@ -247,7 +246,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         {
             ret = 3; break;
         }
-        omega = tvals[1]/tvals[0];
+        const RT omega = tvals[1]/tvals[0];
         PrintDots(Iteration,"Dots(s,t)",t,r);
 
         MF::Saxpy(sol, omega, sh, 0, 0, ncomp, nghost); // sol += omega * sh
@@ -271,7 +270,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         {
             ret = 4; break;
         }
-        rho_1 = rho;
+        const RT rho_1 = rho;
         rho = dotxy(rh,r);
         PrintDots(Post_Calc,"Dots(rh,r)",rh,r);
 
