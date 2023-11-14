@@ -192,6 +192,7 @@ void
 MLNodeLaplacian::Fapply (int amrlev, int mglev, MultiFab& out, const MultiFab& in) const
 {
     BL_PROFILE("MLNodeLaplacian::Fapply()");
+    amrex::Print() << "MLNodeLaplacian::Fapply: start" << "\n";
 
     const auto& sigma = m_sigma[amrlev][mglev];
     const auto& stencil = m_stencil[amrlev][mglev];
@@ -265,23 +266,33 @@ MLNodeLaplacian::Fapply (int amrlev, int mglev, MultiFab& out, const MultiFab& i
 #ifdef AMREX_USE_OMP
 #pragma omp parallel
 #endif
+        amrex::Print() << "MLNodeLaplacian::Fapply: step 1" << "\n";
         for (MFIter mfi(out,TilingIfNotGPU()); mfi.isValid(); ++mfi)
         {
+            // amrex::Print() << "MLNodeLaplacian::Fapply: MFIter loop start" << "\n";
             const Box& bx = mfi.tilebox();
+            // amrex::Print() << "MLNodeLaplacian::Fapply: MFIter loop step 1" << "\n";
             Array4<Real const> const& xarr = in.const_array(mfi);
+            // amrex::Print() << "MLNodeLaplacian::Fapply: MFIter loop step 2" << "\n";
             Array4<Real> const& yarr = out.array(mfi);
+            // amrex::Print() << "MLNodeLaplacian::Fapply: MFIter loop step 3" << "\n";
             Array4<int const> const& dmskarr = dmsk.const_array(mfi);
 
+            // amrex::Print() << "MLNodeLaplacian::Fapply: MFIter loop if block" << "\n";
             if (m_coarsening_strategy == CoarseningStrategy::RAP)
             {
+                // amrex::Print() << "MLNodeLaplacian::Fapply: MFIter loop: CoarseningStrategy::RAP start" << "\n";
                 Array4<Real const> const& stenarr = stencil->const_array(mfi);
+                // amrex::Print() << "MLNodeLaplacian::Fapply: MFIter loop: CoarseningStrategy::RAP step 1" << "\n";
                 amrex::LoopConcurrentOnCpu(bx, [&] (int i, int j, int k) noexcept
                 {
                     yarr(i,j,k) = mlndlap_adotx_sten(i,j,k,xarr,stenarr,dmskarr);
                 });
+                // amrex::Print() << "MLNodeLaplacian::Fapply: MFIter loop: CoarseningStrategy::RAP end" << "\n";
             }
             else if (sigma[0] == nullptr)
             {
+                // amrex::Print() << "MLNodeLaplacian::Fapply: MFIter loop sigma[0] == nullptr" << "\n";
                 Real const_sigma = m_const_sigma;
 #if (AMREX_SPACEDIM == 2)
                 amrex::LoopConcurrentOnCpu(bx, [&] (int i, int j, int k) noexcept
@@ -298,6 +309,7 @@ MLNodeLaplacian::Fapply (int amrlev, int mglev, MultiFab& out, const MultiFab& i
             else if ( (m_use_harmonic_average && mglev > 0) ||
                        m_use_mapped )
             {
+                // amrex::Print() << "MLNodeLaplacian::Fapply: MFIter loop m_use_harmonic_average && mglev > 0 || m_use_mapped" << "\n";
                 AMREX_D_TERM(Array4<Real const> const& sxarr = sigma[0]->const_array(mfi);,
                              Array4<Real const> const& syarr = sigma[1]->const_array(mfi);,
                              Array4<Real const> const& szarr = sigma[2]->const_array(mfi););
@@ -317,6 +329,7 @@ MLNodeLaplacian::Fapply (int amrlev, int mglev, MultiFab& out, const MultiFab& i
             }
             else
             {
+                // amrex::Print() << "MLNodeLaplacian::Fapply: MFIter loop else start" << "\n";
                 Array4<Real const> const& sarr = sigma[0]->const_array(mfi);
 #if (AMREX_SPACEDIM == 2)
                 amrex::LoopConcurrentOnCpu(bx, [&] (int i, int j, int k) noexcept
@@ -328,10 +341,13 @@ MLNodeLaplacian::Fapply (int amrlev, int mglev, MultiFab& out, const MultiFab& i
                 {
                     yarr(i,j,k) = mlndlap_adotx_aa(i,j,k,xarr,sarr,dmskarr, dxinvarr);
                 });
+                // amrex::Print() << "MLNodeLaplacian::Fapply: MFIter loop else end" << "\n";
 #endif
            }
+            // amrex::Print() << "MLNodeLaplacian::Fapply: MFIter loop end" << "\n";
         }
     }
+    amrex::Print() << "MLNodeLaplacian::Fapply: end" << "\n";
 }
 
 void

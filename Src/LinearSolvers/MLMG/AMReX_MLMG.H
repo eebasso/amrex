@@ -26,6 +26,7 @@ public:
 
     using BCMode   = typename MLLinOpT<MF>::BCMode;
     using Location = typename MLLinOpT<MF>::Location;
+    using StateMode = typename MLLinOpT<MF>::StateMode;
 
     using BottomSolver = amrex::BottomSolver;
     enum class CFStrategy : int {none,ghostnodes};
@@ -173,6 +174,8 @@ public:
 
     void mgVcycle (int amrlev, int mglev);
     void mgFcycle ();
+
+    // void smooth (int amrlev, int mglev, MF& sol, const MF& rhs, bool skip_fillboundary=false);
 
     void bottomSolve ();
     void NSolve (MLMGT<MF>& a_solver, MF& a_sol, MF& a_rhs);
@@ -345,6 +348,8 @@ MLMGT<MF>::solve (const Vector<AMF*>& a_sol, const Vector<AMF const*>& a_rhs,
                   RT a_tol_rel, RT a_tol_abs, const char* checkpoint_file) -> RT
 {
     BL_PROFILE("MLMG::solve()");
+
+    verbose = 5;
 
     if constexpr (std::is_same<AMF,MultiFab>()) {
         if (checkpoint_file != nullptr) {
@@ -1369,6 +1374,20 @@ MLMGT<MF>::mgFcycle ()
         cor[amrlev][mglev].LocalAdd(cor_hold[amrlev][mglev], 0, 0, ncomp, nghost);
     }
 }
+
+// template <typename MF>
+// void
+// MLMGT<MF>::smooth (int amrlev, int mglev, MF& sol, const MF& rhs, bool skip_fillboundary)
+// {
+//     linop.smooth(amrlev, mglev, sol, rhs, skip_fillboundary);
+//     MLCGSolverT<MF> cg_solver(linop);
+//     cg_solver.setAMRLevel(amrlev);
+//     cg_solver.setMGLevel(mglev);
+//     cg_solver.setSolver(MLCGSolverT<MF>::Type::BiCGStab);
+//     cg_solver.setVerbose(5);
+//     cg_solver.setMaxIter(2);
+//     int ret = cg_solver.solve(sol, rhs, RT(-1.0), RT(-1.0));
+// }
 
 // At the true bottom of the coarset AMR level.
 // in  : Residual (res) as b

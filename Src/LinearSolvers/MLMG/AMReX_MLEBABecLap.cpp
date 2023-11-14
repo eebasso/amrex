@@ -850,6 +850,7 @@ MLEBABecLap::compGrad (int amrlev, const Array<MultiFab*,AMREX_SPACEDIM>& grad,
 void
 MLEBABecLap::normalize (int amrlev, int mglev, MultiFab& mf) const
 {
+    amrex::Print() << "MLEBABecLap::normalize start" << "\n";
     const MultiFab& acoef = m_a_coeffs[amrlev][mglev];
     AMREX_D_TERM(const MultiFab& bxcoef = m_b_coeffs[amrlev][mglev][0];,
                  const MultiFab& bycoef = m_b_coeffs[amrlev][mglev][1];,
@@ -938,6 +939,7 @@ MLEBABecLap::normalize (int amrlev, int mglev, MultiFab& mf) const
             });
         }
     }
+    amrex::Print() << "MLEBABecLap::normalize end" << "\n";
 }
 
 void

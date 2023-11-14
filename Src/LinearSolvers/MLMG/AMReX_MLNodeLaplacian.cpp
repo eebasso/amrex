@@ -839,6 +839,7 @@ void
 MLNodeLaplacian::normalize (int amrlev, int mglev, MultiFab& mf) const
 {
     BL_PROFILE("MLNodeLaplacian::normalize()");
+    amrex::Print() << "MLNodeLaplacian::normalize start" << "\n";
 
     if (m_sigma[0][0][0] == nullptr) { return; }
 
@@ -927,6 +928,7 @@ MLNodeLaplacian::normalize (int amrlev, int mglev, MultiFab& mf) const
             }
         }
     }
+    amrex::Print() << "MLNodeLaplacian::normalize end" << "\n";
 }
 
 void

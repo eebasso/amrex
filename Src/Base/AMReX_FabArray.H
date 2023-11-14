@@ -229,6 +229,7 @@ template <class DFAB, class SFAB,
 void
 Copy (FabArray<DFAB>& dst, FabArray<SFAB> const& src, int srccomp, int dstcomp, int numcomp, const IntVect& nghost)
 {
+    amrex::Print() << "amrex::Copy start" << "\n";
     BL_PROFILE("amrex::Copy()");
 
     using DT = typename DFAB::value_type;
@@ -263,6 +264,7 @@ Copy (FabArray<DFAB>& dst, FabArray<SFAB> const& src, int srccomp, int dstcomp, 
             }
         }
     }
+    amrex::Print() << "amrex::Copy end" << "\n";
 }
 
 template <class FAB,
@@ -1765,7 +1767,9 @@ void
 FabArray<FAB>::LocalCopy (FabArray<SFAB> const& src, int scomp, int dcomp, int ncomp,
                           IntVect const& nghost)
 {
+    amrex::Print() << "FabArray<FAB>::LocalCopy start" << "\n";
     amrex::Copy(*this, src, scomp, dcomp, ncomp, nghost);
+    amrex::Print() << "FabArray<FAB>::LocalCopy end" << "\n";
 }
 
 template <class FAB>
@@ -2454,6 +2458,7 @@ FabArray<FAB>::setVal (value_type val,
                        int        ncomp,
                        const IntVect& nghost)
 {
+    amrex::Print() << "FabArray<FAB>::setVal(val,comp,ncomp,nghost) start" << "\n";
     BL_ASSERT(nghost.allGE(IntVect::TheZeroVector()) && nghost.allLE(n_grow));
     BL_ASSERT(comp+ncomp <= n_comp);
 
@@ -2486,6 +2491,7 @@ FabArray<FAB>::setVal (value_type val,
             });
         }
     }
+    amrex::Print() << "FabArray<FAB>::setVal(val,comp,ncomp,nghost) end" << "\n";
 }
 
 template <class FAB>

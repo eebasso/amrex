@@ -3,6 +3,7 @@
 #include <AMReX_Config.H>
 
 #include <AMReX_Box.H>
+#include <AMReX_Print.H>
 
 namespace amrex {
 
@@ -187,6 +188,7 @@ void LoopOnCpu (Box const& bx, int ncomp, F&& f) noexcept
 template <class F>
 void LoopConcurrentOnCpu (Box const& bx, F&& f) noexcept
 {
+    // amrex::Print() << "LoopConcurrentOnCpu start" << "\n";
     const auto lo = amrex::lbound(bx);
     const auto hi = amrex::ubound(bx);
     for (int k = lo.z; k <= hi.z; ++k) {
@@ -195,6 +197,7 @@ void LoopConcurrentOnCpu (Box const& bx, F&& f) noexcept
     for (int i = lo.x; i <= hi.x; ++i) {
         f(i,j,k);
     }}}
+    // amrex::Print() << "LoopConcurrentOnCpu end" << "\n";
 }
 
 template <class F>

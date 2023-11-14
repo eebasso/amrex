@@ -45,6 +45,12 @@ public:
     void setNGhost(int _nghost) {nghost = IntVect(_nghost);}
     [[nodiscard]] int getNGhost() {return nghost[0];}
 
+    void setAMRLevel (int _amrlev) { amrlev = _amrlev; }
+    [[nodiscard]] int getAMRLevel () const { return amrlev; }
+
+    void setMGLevel (int _mglev) { mglev = _mglev; }
+    [[nodiscard]] int getMGLevel () const { return mglev; }
+
     [[nodiscard]] RT dotxy (const MF& r, const MF& z, bool local = false);
     [[nodiscard]] RT norm_inf (const MF& res, bool local = false);
     int solve_bicgstab (MF& solnL, const MF& rhsL, RT eps_rel, RT eps_abs);
@@ -56,8 +62,8 @@ private:
 
     MLLinOpT<MF>& Lp;
     Type solver_type;
-    const int amrlev = 0;
-    const int mglev;
+    int amrlev = 0;
+    int mglev;
     int verbose   = 0;
     int maxiter   = 100;
     IntVect nghost = IntVect(0);
@@ -87,14 +93,18 @@ int
 MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 {
     BL_PROFILE("MLCGSolver::bicgstab");
+    amrex::Print() << "MLCGSolver::solve_bicgstab start" << "\n";
 
     const int ncomp = sol.nComp();
 
+    amrex::Print() << "MLCGSolver_BiCGStab: make ph and sh" << "\n";
     MF ph = Lp.make(amrlev, mglev, sol.nGrowVect());
     MF sh = Lp.make(amrlev, mglev, sol.nGrowVect());
+    amrex::Print() << "MLCGSolver_BiCGStab: ph.setVal(0) and sh.setVal(0)" << "\n";
     ph.setVal(RT(0.0));
     sh.setVal(RT(0.0));
 
+    amrex::Print() << "MLCGSolver_BiCGStab: make sorig,p,r,s,rh,v,t" << "\n";
     MF sorig = Lp.make(amrlev, mglev, nghost);
     MF p     = Lp.make(amrlev, mglev, nghost);
     MF r     = Lp.make(amrlev, mglev, nghost);
@@ -103,16 +113,22 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     MF v     = Lp.make(amrlev, mglev, nghost);
     MF t     = Lp.make(amrlev, mglev, nghost);
 
+    amrex::Print() << "MLCGSolver_BiCGStab: Lp.correctionResidual(r,sol,rhs)" << "\n";
     Lp.correctionResidual(amrlev, mglev, r, sol, rhs, MLLinOpT<MF>::BCMode::Homogeneous);
 
+    amrex::Print() << "MLCGSolver_BiCGStab: Lp.normalize(r)" << "\n";
     // Then normalize
     Lp.normalize(amrlev, mglev, r);
 
+    amrex::Print() << "MLCGSolver_BiCGStab: LocalCopy sorig from sol" << "\n";
     sorig.LocalCopy(sol,0,0,ncomp,nghost);
+    amrex::Print() << "MLCGSolver_BiCGStab: LocalCopy rh from r" << "\n";
     rh.LocalCopy   (r  ,0,0,ncomp,nghost);
 
+    amrex::Print() << "MLCGSolver_BiCGStab: sol.setVal(0)" << "\n";
     sol.setVal(RT(0.0));
 
+    amrex::Print() << "MLCGSolver_BiCGStab: rnorm = norm_inf(r)" << "\n";
     RT rnorm = norm_inf(r);
     const RT rnorm0 = rnorm;
 
@@ -137,6 +153,8 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 
     for (; iter <= maxiter; ++iter)
     {
+        amrex::Print() << "solve_bicgstab: start iter = " << iter << "\n";
+        amrex::Print() << "Calculate rho" << "\n";
         const RT rho = dotxy(rh,r);
         if ( rho == 0 )
         {
@@ -144,18 +162,24 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         }
         if ( iter == 1 )
         {
+            amrex::Print() << "Local copy p from r" << "\n";
             p.LocalCopy(r,0,0,ncomp,nghost);
         }
         else
         {
+            amrex::Print() << "Calculate p" << "\n";
             const RT beta = (rho/rho_1)*(alpha/omega);
             MF::Saxpy(p, -omega, v, 0, 0, ncomp, nghost); // p += -omega*v
             MF::Xpay(p, beta, r, 0, 0, ncomp, nghost); // p = r + beta*p
         }
+        amrex::Print() << "Local copy ph from p" << "\n";
         ph.LocalCopy(p,0,0,ncomp,nghost);
+        amrex::Print() << "Lp.apply(v,ph)" << "\n";
         Lp.apply(amrlev, mglev, v, ph, MLLinOpT<MF>::BCMode::Homogeneous, MLLinOpT<MF>::StateMode::Correction);
+        amrex::Print() << "Lp.normalize(v)" << "\n";
         Lp.normalize(amrlev, mglev, v);
 
+        amrex::Print() << "Calculate rhTv" << "\n";
         RT rhTv = dotxy(rh,v);
         if ( rhTv != RT(0.0) )
         {
@@ -165,9 +189,12 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         {
             ret = 2; break;
         }
+        amrex::Print() << "Saxpy sol += alpha*ph" << "\n";
         MF::Saxpy(sol, alpha, ph, 0, 0, ncomp, nghost); // sol += alpha * ph
+        amrex::Print() << "Lincomb s = r - alpha*v" << "\n";
         MF::LinComb(s, RT(1.0), r, 0, -alpha, v, 0, 0, ncomp, nghost); // s = r - alpha * v
 
+        amrex::Print() << "rnorm = norm_inf(s)" << "\n";
         rnorm = norm_inf(s);
 
         if ( verbose > 2 && ParallelDescriptor::IOProcessor() )
@@ -180,14 +207,18 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 
         if ( rnorm < eps_rel*rnorm0 || rnorm < eps_abs ) { break; }
 
+        amrex::Print() << "LocalCopy sh from s" << "\n";
         sh.LocalCopy(s,0,0,ncomp,nghost);
+        amrex::Print() << "Lp.apply(t,sh)" << "\n";
         Lp.apply(amrlev, mglev, t, sh, MLLinOpT<MF>::BCMode::Homogeneous, MLLinOpT<MF>::StateMode::Correction);
+        amrex::Print() << "Lp.normalize(t)" << "\n";
         Lp.normalize(amrlev, mglev, t);
         //
         // This is a little funky.  I want to elide one of the reductions
         // in the following two dotxy()s.  We do that by calculating the "local"
         // values and then reducing the two local values at the same time.
         //
+        amrex::Print() << "tvals[2]" << "\n";
         RT tvals[2] = { dotxy(t,t,true), dotxy(t,s,true) };
 
         BL_PROFILE_VAR("MLCGSolver::ParallelAllReduce", blp_par);
@@ -202,9 +233,12 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         {
             ret = 3; break;
         }
+        amrex::Print() << "Saxpy sol += omega * sh" << "\n";
         MF::Saxpy(sol, omega, sh, 0, 0, ncomp, nghost); // sol += omega * sh
+        amrex::Print() << "Lincomb r = s - omega * t" << "\n";
         MF::LinComb(r, RT(1.0), s, 0, -omega, t, 0, 0, ncomp, nghost); // r = s - omega * t
 
+        amrex::Print() << "rnorm = norm_inf(r)" << "\n";
         rnorm = norm_inf(r);
 
         if ( verbose > 2 )
@@ -222,6 +256,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
             ret = 4; break;
         }
         rho_1 = rho;
+        amrex::Print() << "solve_bicgstab: end iter = " << iter << "\n";
     }
 
     if ( verbose > 0 )
@@ -250,6 +285,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         sol.LocalAdd(sorig, 0, 0, ncomp, nghost);
     }
 
+    amrex::Print() << "MLCGSolver::solve_bicgstab end" << "\n";
     return ret;
 }
 

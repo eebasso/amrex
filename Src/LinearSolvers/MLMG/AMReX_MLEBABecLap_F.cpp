@@ -12,6 +12,7 @@ void
 MLEBABecLap::Fapply (int amrlev, int mglev, MultiFab& out, const MultiFab& in) const
 {
     BL_PROFILE("MLEBABecLap::Fapply()");
+    amrex::Print() << "MLEBABecLap::Fapply: start" << "\n";
 
     const MultiFab& acoef = m_a_coeffs[amrlev][mglev];
     AMREX_D_TERM(const MultiFab& bxcoef = m_b_coeffs[amrlev][mglev][0];,
@@ -32,6 +33,8 @@ MLEBABecLap::Fapply (int amrlev, int mglev, MultiFab& out, const MultiFab& in) c
     const MultiCutFab* bcent = (factory) ? &(factory->getBndryCent()) : nullptr;
     const auto *const  ccent = (factory) ? &(factory->getCentroid()) : nullptr;
 
+    amrex::Print() << "MLEBABecLap::Fapply: step 1" << "\n";
+
     const bool is_eb_dirichlet =  isEBDirichlet();
     const bool is_eb_inhomog = m_is_eb_inhomog;
 
@@ -43,6 +46,8 @@ MLEBABecLap::Fapply (int amrlev, int mglev, MultiFab& out, const MultiFab& in) c
     const Real bscalar = m_b_scalar;
 
     const Box& domain_box = m_geom[amrlev][mglev].Domain();
+
+    amrex::Print() << "MLEBABecLap::Fapply: step 2" << "\n";
 
     AMREX_D_TERM(
         const int domlo_x = domain_box.smallEnd(0);
@@ -58,12 +63,15 @@ MLEBABecLap::Fapply (int amrlev, int mglev, MultiFab& out, const MultiFab& in) c
         const bool extdir_z = !(m_geom[amrlev][mglev].isPeriodic(2)););
 
     MFItInfo mfi_info;
+    amrex::Print() << "MLEBABecLap::Fapply: step 3" << "\n";
     if (Gpu::notInLaunchRegion()) { mfi_info.EnableTiling().SetDynamic(true); }
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (Gpu::notInLaunchRegion())
 #endif
+    amrex::Print() << "MLEBABecLap::Fapply: step 4" << "\n";
     for (MFIter mfi(out, mfi_info); mfi.isValid(); ++mfi)
     {
+        amrex::Print() << "MLEBABecLap::Fapply: MFIter loop start" << "\n";
         const Box& bx = mfi.tilebox();
         Array4<Real const> const& xfab = in.const_array(mfi);
         Array4<Real> const& yfab = out.array(mfi);
@@ -74,12 +82,15 @@ MLEBABecLap::Fapply (int amrlev, int mglev, MultiFab& out, const MultiFab& in) c
 
         auto fabtyp = (flags) ? (*flags)[mfi].getType(bx) : FabType::regular;
 
+        amrex::Print() << "MLEBABecLap::Fapply: Check FabType" << "\n";
         if (fabtyp == FabType::covered) {
+            amrex::Print() << "MLEBABecLap::Fapply: fabtyp == FabType::covered" << "\n";
             AMREX_HOST_DEVICE_PARALLEL_FOR_4D( bx, ncomp, i, j, k, n,
             {
                 yfab(i,j,k,n) = 0.0;
             });
         } else if (fabtyp == FabType::regular) {
+            amrex::Print() << "MLEBABecLap::Fapply: fabtyp == FabType::regular" << "\n";
             AMREX_HOST_DEVICE_PARALLEL_FOR_4D( bx, ncomp, i, j, k, n,
             {
                 mlabeclap_adotx(i,j,k,n, yfab, xfab, afab,
@@ -87,6 +98,7 @@ MLEBABecLap::Fapply (int amrlev, int mglev, MultiFab& out, const MultiFab& in) c
                                 dxinvarr, ascalar, bscalar);
             });
         } else {
+            amrex::Print() << "MLEBABecLap::Fapply: fabtyp == FabType::singlevalued" << "\n";
             Array4<int const> const& ccmfab = ccmask.const_array(mfi);
             Array4<EBCellFlag const> const& flagfab = flags->const_array(mfi);
             Array4<Real const> const& vfracfab = vfrac->const_array(mfi);
@@ -121,6 +133,7 @@ MLEBABecLap::Fapply (int amrlev, int mglev, MultiFab& out, const MultiFab& in) c
                                      AMREX_D_DECL(extdir_x, extdir_y, extdir_z));
                 amrex::ignore_unused(ccfab);
 #else
+                amrex::Print() << "MLEBABecLap::Fapply mlebabeclap_adotx_centroid" << "\n";
                AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bx, tbx,
                {
                    mlebabeclap_adotx_centroid(tbx, yfab, xfab, afab, AMREX_D_DECL(bxfab,byfab,bzfab),
@@ -136,6 +149,7 @@ MLEBABecLap::Fapply (int amrlev, int mglev, MultiFab& out, const MultiFab& in) c
                });
 #endif
             } else {
+                amrex::Print() << "MLEBABecLap::Fapply mlebabeclap_adotx" << "\n";
                AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bx, tbx,
                {
                    mlebabeclap_adotx(tbx, yfab, xfab, afab, AMREX_D_DECL(bxfab,byfab,bzfab),
@@ -151,6 +165,7 @@ MLEBABecLap::Fapply (int amrlev, int mglev, MultiFab& out, const MultiFab& in) c
             }
         }
     }
+    amrex::Print() << "MLEBABecLap::Fapply end" << "\n";
 }
 
 void

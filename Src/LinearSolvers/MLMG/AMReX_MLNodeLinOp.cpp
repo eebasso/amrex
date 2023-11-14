@@ -148,17 +148,23 @@ void
 MLNodeLinOp::correctionResidual (int amrlev, int mglev, MultiFab& resid, MultiFab& x, const MultiFab& b,
                                  BCMode /*bc_mode*/, const MultiFab* /*crse_bcdata*/)
 {
+    amrex::Print() << "MLNodeLinOp::correctionResidual start" << "\n";
     apply(amrlev, mglev, resid, x, BCMode::Homogeneous, StateMode::Correction);
     int ncomp = b.nComp();
+    amrex::Print() << "MLNodeLinOp::correctionResidual Xpay" << "\n";
     MultiFab::Xpay(resid, -1.0, b, 0, 0, ncomp, 0);
+    amrex::Print() << "MLNodeLinOp::correctionResidual end" << "\n";
 }
 
 void
 MLNodeLinOp::apply (int amrlev, int mglev, MultiFab& out, MultiFab& in, BCMode bc_mode,
                     StateMode s_mode, const MLMGBndry*) const
 {
+    amrex::Print() << "MLNodeLinOp::apply: applyBC" << "\n";
     applyBC(amrlev, mglev, in, bc_mode, s_mode);
+    amrex::Print() << "MLNodeLinOp::apply: Fapply" << "\n";
     Fapply(amrlev, mglev, out, in);
+    amrex::Print() << "MLNodeLinOp::apply end" << "\n";
 }
 
 void
