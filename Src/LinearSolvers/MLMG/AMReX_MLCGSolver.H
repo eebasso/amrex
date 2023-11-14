@@ -120,7 +120,6 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     MF sorig = Lp.make(amrlev, mglev, nghost);
     MF p     = Lp.make(amrlev, mglev, nghost);
     MF r     = Lp.make(amrlev, mglev, nghost);
-    MF s     = Lp.make(amrlev, mglev, nghost);
     MF rh    = Lp.make(amrlev, mglev, nghost);
     MF v     = Lp.make(amrlev, mglev, nghost);
     MF t     = Lp.make(amrlev, mglev, nghost);
@@ -130,7 +129,6 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     sorig.setVal(RT(0.0));
     p.setVal(RT(0.0));
     r.setVal(RT(0.0));
-    s.setVal(RT(0.0));
     rh.setVal(RT(0.0));
     v.setVal(RT(0.0));
     t.setVal(RT(0.0));
@@ -225,11 +223,11 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         }
         // amrex::Print() << Half_Iter << " alpha: " << alpha << "\n";
         MF::Saxpy(sol, alpha, ph, 0, 0, ncomp, nghost); // sol += alpha * ph
-        MF::LinComb(s, RT(1.0), r, 0, -alpha, v, 0, 0, ncomp, nghost); // s = r - alpha * v
+        MF::Saxpy(r,  -alpha, v,  0, 0, ncomp, nghost); // r -= alpha * v
         PrintDots(Half_Iter,"Dots(sol,sol)",sol,sol);
-        PrintDots(Half_Iter,"Dots(s  ,s  )",s,s);
+        PrintDots(Half_Iter,"Dots(s  ,s  )",r,r);
 
-        rnorm = norm_inf(s);
+        rnorm = norm_inf(r);
 
         if ( verbose > 2 && ParallelDescriptor::IOProcessor() )
         {
@@ -241,7 +239,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 
         if ( rnorm < eps_rel*rnorm0 || rnorm < eps_abs ) { break; }
 
-        sh.LocalCopy(s,0,0,ncomp,nghost);
+        sh.LocalCopy(r,0,0,ncomp,nghost);
         PrintDots(Iteration,"Dots(sh,sh) before Lp.apply",sh,sh);
         Lp.apply(amrlev, mglev, t, sh, MLLinOpT<MF>::BCMode::Homogeneous, MLLinOpT<MF>::StateMode::Correction);
         PrintDots(Iteration,"Dots(sh,sh) after  Lp.apply",sh,sh);
@@ -254,7 +252,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         // in the following two dotxy()s.  We do that by calculating the "local"
         // values and then reducing the two local values at the same time.
         //
-        RT tvals[2] = { dotxy(t,t,true), dotxy(t,s,true) };
+        RT tvals[2] = { dotxy(t,t,true), dotxy(t,r,true) };
 
         BL_PROFILE_VAR("MLCGSolver::ParallelAllReduce", blp_par);
         ParallelAllReduce::Sum(tvals,2,Lp.BottomCommunicator());
@@ -268,12 +266,13 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         {
             ret = 3; break;
         }
-        PrintDots(Iteration,"Dots(s,t)",t,s);
+        PrintDots(Iteration,"Dots(s,t)",t,r);
 
         MF::Saxpy(sol, omega, sh, 0, 0, ncomp, nghost); // sol += omega * sh
-        MF::LinComb(r, RT(1.0), s, 0, -omega, t, 0, 0, ncomp, nghost); // r = s - omega * t
+        MF::Saxpy(r,  -omega, t,  0, 0, ncomp, nghost); // r -= omega * t
         PrintDots(Iteration,"Dots(sol,sol)",sol,sol);
         PrintDots(Iteration,"Dots(r  ,r  )",r,r);
+
 
         rnorm = norm_inf(r);
 

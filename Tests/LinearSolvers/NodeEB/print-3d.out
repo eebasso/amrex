@@ -77,7 +77,6 @@ MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
-MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 0.003933324375, Dot(...,nghost): 0.00564118167, Dot(...,ngrow): N/A
@@ -240,7 +239,6 @@ MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
-MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 1.60891853e-05, Dot(...,nghost): 2.309346592e-05, Dot(...,ngrow): N/A
@@ -387,7 +385,6 @@ AT LEVEL 0 4   DN: Norm after  smooth 0.0001592930252
 AT LEVEL 0 5   DN: Norm before bottom 7.445927042e-05
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
-MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
@@ -550,7 +547,6 @@ MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
-MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 2.153711754e-10, Dot(...,nghost): 3.098600436e-10, Dot(...,ngrow): N/A
@@ -685,7 +681,6 @@ AT LEVEL 0 4   DN: Norm after  smooth 5.764152402e-07
 AT LEVEL 0 5   DN: Norm before bottom 2.737355366e-07
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
-MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
@@ -836,7 +831,6 @@ MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
-MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 2.826016442e-15, Dot(...,nghost): 4.065876526e-15, Dot(...,ngrow): N/A
@@ -971,7 +965,6 @@ AT LEVEL 0 4   DN: Norm after  smooth 2.152839877e-09
 AT LEVEL 0 5   DN: Norm before bottom 1.03371193e-09
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
-MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
@@ -1122,7 +1115,6 @@ MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
-MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 4.140077989e-20, Dot(...,nghost): 5.955420005e-20, Dot(...,ngrow): N/A
@@ -1257,7 +1249,6 @@ AT LEVEL 0 4   DN: Norm after  smooth 8.560902492e-12
 AT LEVEL 0 5   DN: Norm before bottom 4.080865895e-12
 MLCGSolver_BiCGStab: nghost = (0,0,0)
 MLCGSolver_BiCGStab: ngrow  = (1,1,1)
-MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
@@ -1408,7 +1399,6 @@ MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLLinOpT<MF>::make(amrlev,mglev,ng) called
-MLLinOpT<MF>::make(amrlev,mglev,ng) called
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) before Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(sol,sol) after  Lp.correctionResidual -> dotxy: 0, Dot(...,nghost): 0, Dot(...,ngrow): 0
 MLCGSolver_BiCGStab: Iteration           0 Dots(r,r) before Lp.normalize -> dotxy: 6.624294828e-25, Dot(...,nghost): 9.531877081e-25, Dot(...,ngrow): N/A
@@ -1531,7 +1521,7 @@ AT LEVEL 0 0   UP: Norm before smooth 4.524331341e-10
 AT LEVEL 0 0   UP: Norm after  smooth 1.178494705e-11
 MLMG: Iteration  10 Fine resid/bnorm = 7.77325191e-13
 MLMG: Final Iter. 10 resid, resid/bnorm = 1.181718612e-11, 7.77325191e-13
-MLMG: Timers: Solve = 6.607947672 Iter = 5.795596083 Bottom = 0.034911755 OneIter = 5.522587735 Smooth = 3.644008835 mgVcycle = 5.494052983 mgVcycle non-smooth = 1.905611862 mgFcycle = 0
+MLMG: Timers: Solve = 4.646320927 Iter = 4.04747376 Bottom = 0.014627813 OneIter = 3.861072792 Smooth = 2.570564415 mgVcycle = 3.840494681 mgVcycle non-smooth = 1.322701687 mgFcycle = 0
 Unused ParmParse Variables:
   [TOP]::amr.plot_file(nvals = 1)  :: [EB_Node_3D_plt]
   [TOP]::amr.check_file(nvals = 1)  :: [EB_Node_3D_chk]
