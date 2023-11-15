@@ -80,6 +80,7 @@ template <typename MF>
 int
 MLCGSolverT<MF>::solve (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 {
+    verbose = 5;
     if (solver_type == Type::BiCGStab) {
         return solve_bicgstab(sol,rhs,eps_rel,eps_abs);
     } else {
@@ -105,11 +106,10 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     std::string Iteration = TitleIteration + std::to_string(0);
     std::string Post_Calc = TitlePost_Calc + std::to_string(0);
 
-    amrex::Print() << "MLCGSolver_BiCGStab: nghost = " << nghost << "\n";
-    amrex::Print() << "MLCGSolver_BiCGStab: ngrow  = " << sol.nGrowVect() << "\n";
-
     ngrow = sol.nGrowVect();
-    verbose = 3;
+
+    amrex::Print() << "MLCGSolver_BiCGStab: nghost = " << nghost << "\n";
+    amrex::Print() << "MLCGSolver_BiCGStab: ngrow  = " << ngrow << "\n";
 
     const int ncomp = sol.nComp();
 
