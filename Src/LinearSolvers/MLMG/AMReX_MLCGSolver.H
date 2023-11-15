@@ -90,22 +90,18 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 
     const int ncomp = sol.nComp();
 
-    const BoxArray& ba = sol.boxArray();
-    const DistributionMapping& dm = sol.DistributionMap();
-    const auto& factory = sol.Factory();
-
-    MF ph(ba, dm, ncomp, sol.nGrowVect(), MFInfo(), factory);
-    MF sh(ba, dm, ncomp, sol.nGrowVect(), MFInfo(), factory);
+    MF ph = Lp.make(amrlev, mglev, sol.nGrowVect());
+    MF sh = Lp.make(amrlev, mglev, sol.nGrowVect());
     ph.setVal(RT(0.0));
     sh.setVal(RT(0.0));
 
-    MF sorig(ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF p    (ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF r    (ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF s    (ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF rh   (ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF v    (ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF t    (ba, dm, ncomp, nghost, MFInfo(), factory);
+    MF sorig = Lp.make(amrlev, mglev, nghost);
+    MF p     = Lp.make(amrlev, mglev, nghost);
+    MF r     = Lp.make(amrlev, mglev, nghost);
+    MF s     = Lp.make(amrlev, mglev, nghost);
+    MF rh    = Lp.make(amrlev, mglev, nghost);
+    MF v     = Lp.make(amrlev, mglev, nghost);
+    MF t     = Lp.make(amrlev, mglev, nghost);
 
     Lp.correctionResidual(amrlev, mglev, r, sol, rhs, MLLinOpT<MF>::BCMode::Homogeneous);
 
@@ -250,7 +246,8 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
     else
     {
         // reset solution to original copy
-        sol.LocalCopy(sorig, 0, 0, ncomp, nghost);
+        sol.setVal(RT(0.0));
+        sol.LocalAdd(sorig, 0, 0, ncomp, nghost);
     }
 
     return ret;
@@ -264,21 +261,19 @@ MLCGSolverT<MF>::solve_cg (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 
     const int ncomp = sol.nComp();
 
-    const BoxArray& ba = sol.boxArray();
-    const DistributionMapping& dm = sol.DistributionMap();
-    const auto& factory = sol.Factory();
-
-    MF p(ba, dm, ncomp, sol.nGrowVect(), MFInfo(), factory);
+    MF p = Lp.make(amrlev, mglev, sol.nGrowVect());
     p.setVal(RT(0.0));
 
-    MF sorig(ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF r    (ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF z    (ba, dm, ncomp, nghost, MFInfo(), factory);
-    MF q    (ba, dm, ncomp, nghost, MFInfo(), factory);
+    MF sorig = Lp.make(amrlev, mglev, nghost);
+    MF r     = Lp.make(amrlev, mglev, nghost);
+    MF z     = Lp.make(amrlev, mglev, nghost);
+    MF q     = Lp.make(amrlev, mglev, nghost);
 
     sorig.LocalCopy(sol,0,0,ncomp,nghost);
 
     Lp.correctionResidual(amrlev, mglev, r, sol, rhs, MLLinOpT<MF>::BCMode::Homogeneous);
+
+    sol.setVal(RT(0.0));
 
     RT       rnorm    = norm_inf(r);
     const RT rnorm0   = rnorm;
@@ -299,7 +294,6 @@ MLCGSolverT<MF>::solve_cg (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
                            << ", rnorm = " << rnorm
                            << ", eps_abs = " << eps_abs << std::endl;
         }
-        sol.setVal(RT(0.0)); // Not sure why we do this in this case
         return ret;
     }
 
@@ -377,12 +371,12 @@ MLCGSolverT<MF>::solve_cg (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
 
     if ( ( ret == 0 || ret == 8 ) && (rnorm < rnorm0) )
     {
-        // keep updated solution
+        sol.LocalAdd(sorig, 0, 0, ncomp, nghost);
     }
     else
     {
-        // reset solution to original copy
-        sol.LocalCopy(sorig, 0, 0, ncomp, nghost);
+        sol.setVal(RT(0.0));
+        sol.LocalAdd(sorig, 0, 0, ncomp, nghost);
     }
 
     return ret;
