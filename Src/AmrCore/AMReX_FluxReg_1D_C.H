@@ -10,11 +10,8 @@ namespace amrex {
 /**
  * \brief Add fine grid flux to flux register.
  *
- * Flux array is a fine grid edge based object, and
- * Register is a coarse grid edge based object.
- * It is assumed that the coarsened flux region contains the register
- * region.
- *
+ * Flux array is a fine grid edge based object, Register is a coarse grid edge based object.
+ * It is assumed that the coarsened flux region contains the register region.
  */
 AMREX_GPU_HOST_DEVICE inline void
 fluxreg_fineadd (Box const& bx, Array4<Real> const& reg, const int rcomp,
@@ -32,10 +29,9 @@ fluxreg_fineadd (Box const& bx, Array4<Real> const& reg, const int rcomp,
 
 /**
  * \brief Add fine grid flux times area to flux register.
- * Flux array is a fine grid
- * edge based object, Register is a coarse grid edge based object.
- * It is assumed that the coarsened flux region contains the register
- * region.
+ *
+ * Flux array is a fine grid edge based object, Register is a coarse grid edge based object.
+ * It is assumed that the coarsened flux region contains the register region.
  */
 AMREX_GPU_HOST_DEVICE inline void
 fluxreg_fineareaadd (Box const& bx, Array4<Real> const& reg, const int rcomp,
