@@ -6,23 +6,31 @@
 
 namespace amrex {
 
-// Tensor solver for high Reynolds flows with small gradient in viscosity.
-// The system it solves is
-//
-//   alpha a v - beta div dot tau = rhs
-//
-// where tau = eta [grad v + (grad v)^T] +  (kappa-(2/3)eta) (div v) I.
-// Here eta and kappa are shear and bulk viscosity, and I is identity tensor.
-//
-// The user needs to provide `a` by `setACoeffs`, eta by `setShearViscosity`,
-// and kappa by `setBulkViscosity`.  If `setBulkViscosity` is not called,
-// kappa is set to zero.  The user must also call `setEBShearViscosity` to set
-// viscosity on EB.  Optionally, `setEBBulkViscosity` can be used to set
-// bulk viscosity on EB.
-//
-// The scalars alpha and beta can be set with `setScalar(Real, Real)`.  If
-// they are not set, their default value is 1.
-
+/**
+ * \brief Cell-centered embedded boundary tensor solver for
+ * high Reynolds flows with small gradient in viscosity.
+ *
+ * The system it solves is
+ *
+ *   `A alpha v - B div dot tau = rhs`
+ *
+ * where `v` and `rhs` are cell-centered fields with SPACEDIM components, and
+ *
+ *   `tau = eta [grad v + (grad v)^T] + (kappa-(2/3)eta) (div v) I`.
+ *
+ * Here `eta` and `kappa` are shear and bulk viscosity fields, and `I` is the identity tensor.
+ *
+ * The user needs to provide `alpha` by `setACoeffs`, `eta` by `setShearViscosity`,
+ * and `kappa` by `setBulkViscosity`.  If `setBulkViscosity` is not called,
+ * `kappa` is set to zero.  The user must also call `setEBShearViscosity` to set
+ * viscosity on EB.  Optionally, `setEBBulkViscosity` can be used to set
+ * bulk viscosity on EB.
+ *
+ * The scalar constants `A` and `B` can be set with `setScalar(Real, Real)`. If
+ * they are not set, their default value is 1.
+ *
+ * Inherits from MLEBABecLap
+ */
 class MLEBTensorOp
     : public MLEBABecLap
 {

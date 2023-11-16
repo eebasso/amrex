@@ -6,9 +6,14 @@
 
 namespace amrex {
 
-// (alpha * a - beta * (del dot b grad)) phi = rhs
-// a, phi and rhs are nodal. b is cell-centered.
-
+/**
+ * \brief Nodal `A`,`alpha`,`B`,`beta` coefficient Laplacian operator.
+ *
+ * Solves `A * alpha - B * (del dot beta grad)) phi = rhs`,
+ *
+ * where `alpha`, `phi` and `rhs` are nodal, `beta` is cell-centered,
+ * and `A`, `B` are scalar constants.
+ */
 class MLNodeABecLaplacian
     : public MLNodeLinOp
 {

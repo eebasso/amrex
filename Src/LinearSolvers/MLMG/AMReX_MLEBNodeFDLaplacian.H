@@ -12,15 +12,26 @@
 
 namespace amrex {
 
-// Although the class has EB in the name, it works for non-EB build too.
-//
-// del dot (sigma grad phi) = rhs, for non-RZ
-// where phi and rhs are nodal multifab, and sigma is a tensor constant
-// with only diagonal components.  The EB is assumed to be Dirichlet.
-//
-// del dot (simga grad phi) - alpha/r^2 phi = rhs, for RZ where alpha is a
-// scalar constant that is zero by default.
-
+/**
+ * \brief Embedded boundary nodal finite-difference Laplacian solver.
+ *
+ * Although the class has EB in the name, it works for non-EB build too.
+ *
+ * For non-RZ coordinates, the linear operator solves
+ *
+ *   `del dot (sigma grad phi) = rhs'
+ *
+ * where `phi` and `rhs` are nodal multifab, and `sigma` is a tensor constant
+ * with only diagonal components. The EB is assumed to be Dirichlet.
+ *
+ * For RZ coordinates, the linear operator solve
+ *
+ *   `del dot (simga grad phi) - alpha/r^2 phi = rhs`, for RZ,
+ *
+ * where `alpha` is a scalar constant that is zero by default.
+ *
+ * Inherits from MLNodeLinOp.
+ */
 class MLEBNodeFDLaplacian
     : public MLNodeLinOp
 {

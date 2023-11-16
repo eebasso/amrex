@@ -90,6 +90,11 @@ template <typename T> class MLCGSolverT;
 template <typename T> class MLPoissonT;
 template <typename T> class MLABecLaplacianT;
 
+/**
+ * \brief Multi-level linear operator template.
+ *
+ * \tparam MF Typename that the linear operator acts on, typically MultiFab.
+ */
 template <typename MF>
 class MLLinOpT
 {

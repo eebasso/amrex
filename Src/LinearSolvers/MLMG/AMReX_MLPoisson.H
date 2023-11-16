@@ -8,8 +8,15 @@
 
 namespace amrex {
 
-// del dot grad phi
-
+/**
+ * \brief Cell-centered Poisson operator template class.
+ *
+ * Solves `del dot grad phi = rhs.`
+ *
+ * Inherits from MLCellABecLapT<MF>.
+ *
+ * \tparam MF Typename of phi and rhs, typically MultiFab
+ */
 template <typename MF>
 class MLPoissonT
     : public MLCellABecLapT<MF>

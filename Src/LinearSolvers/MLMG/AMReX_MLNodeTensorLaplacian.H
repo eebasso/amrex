@@ -6,11 +6,19 @@
 
 namespace amrex {
 
-// del dot (sigma grad phi) = rhs
-// where phi and rhs are nodal multifab, and sigma is a tensor constant.
-// It is assumed that tensor is symmetric tensor of rank AMREX_SPACEDIM.
-// Only periodic and Dirichlet are supported.
-
+/**
+ * \brief Multi-Level nodal tensor Laplacian solver:
+ *
+ *   `del dot (sigma grad phi) = rhs`
+ *
+ * where `phi` and `rhs` are nodal multifab, and `sigma` is a constant
+ * rank-2 symmetric tensor with AMREX_SPACEDIM*(AMREX_SPACEDIM+1)/2
+ * components.
+ *
+ * Only periodic and Dirichlet BCs are supported.
+ *
+ * Inherits from MLNodeLinOp
+ */
 class MLNodeTensorLaplacian
     : public MLNodeLinOp
 {

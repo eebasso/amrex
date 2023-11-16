@@ -9,8 +9,14 @@
 
 namespace amrex {
 
-// (alpha * a - beta * (del dot b grad)) phi
-
+/**
+ * \brief Cell-centered embedded boundary `A`,`alpha`,`B`,`beta` coefficient Laplacian operator.
+ *
+ * Solves `(A * alpha - B * (del dot beta grad)) phi = rhs` ,
+ *
+ * where `A` and `B` are scalar constants, `alpha` is a cell-centered field,
+ * and `beta` is a face-centered field.
+ */
 class MLEBABecLap
     : public MLCellABecLap
 {

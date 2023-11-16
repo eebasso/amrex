@@ -7,6 +7,14 @@
 
 namespace amrex {
 
+/**
+ * \brief Base class for cell-centered `A`-`B` coefficient Laplacian operator templates.
+ *
+ * Base class for MLABecLaplacianT, MLALaplacianT, and MLPoissonT.
+ * Inherits from template class MLCellLinOpT<MF>.
+ *
+ * \tparam MF FabArray-like class
+ */
 template <typename MF>
 class MLCellABecLapT  // NOLINT(cppcoreguidelines-virtual-class-destructor)
     : public MLCellLinOpT<MF>

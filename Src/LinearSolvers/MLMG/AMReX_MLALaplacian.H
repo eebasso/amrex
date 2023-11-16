@@ -8,6 +8,21 @@
 
 namespace amrex {
 
+/**
+ * \brief Cell-centered `A`,`alpha`,`B` coefficient Laplacian operator template.
+ *
+ * Solves `(A * alpha - B * (del dot grad)) phi = rhs` ,
+ *
+ * where `A` and `B` are scalar constants, and `alpha` is a scalar field.
+ * Use `setScalars` to set `A` and `B`, and use `setACoeffs` and
+ * `setBCoeffs` to set `alpha` and `beta`, respectively.
+ *
+ * Effectively the same as MLCellABecLapT with beta = 1.
+ *
+ * Inherits from MLCellABecLapT<MF>
+ *
+ * \tparam MF FabArray-like class
+ */
 template <typename MF>
 class MLALaplacianT
     : public MLCellABecLapT<MF>

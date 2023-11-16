@@ -11,6 +11,11 @@
 
 namespace amrex {
 
+/**
+ * \brief Multi-Level nodal linear operator.
+ *
+ * Inherits from MLLinOp = MLLinOpT<MultiFab>.
+ */
 class MLNodeLinOp
     : public MLLinOp
 {

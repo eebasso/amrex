@@ -7,8 +7,16 @@
 
 namespace amrex {
 
-// (alpha * a - beta * (del dot b grad)) phi
-
+/**
+ * \brief Cell-centered `A`,`alpha`,`B`,`beta` coefficient Laplacian operator template.
+ *
+ * Solves `(A * alpha - B * (del dot beta grad)) phi = rhs` ,
+ *
+ * where `A` and `B` are scalar constants, `alpha` is a cell-centered field,
+ * and `beta` is a face-centered field.
+ *
+ * \tparam MF Typename of phi and rhs, typically MultiFab
+ */
 template <typename MF>
 class MLABecLaplacianT
     : public MLCellABecLapT<MF>

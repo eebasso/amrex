@@ -6,9 +6,19 @@
 
 namespace amrex {
 
-// del dot (sigma grah phi) = rhs
-// where phi and rhs are nodal, and sigma is cell-centered.
-
+/**
+ * \brief Multi-level nodal Laplacian solver.
+ *
+ * Solves
+ *
+ * `del dot (sigma del phi) = rhs` ,
+ *
+ * where `phi` and `rhs` are nodal, and `sigma` is cell-centered.
+ * Note that `sigma` is currently only implemented as a diagonal
+ * rank-2 tensor field.
+ *
+ * Inherits from MLNodeLinOp
+ */
 class MLNodeLaplacian
     : public MLNodeLinOp
 {
