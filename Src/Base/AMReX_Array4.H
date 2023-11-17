@@ -173,6 +173,8 @@ namespace amrex {
 #endif
         }
 
+        // Why is there no const reference operator()?
+
         template <class U=T, typename std::enable_if<!std::is_void<U>::value,int>::type = 0>
         [[nodiscard]] AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
         U& operator() (IntVect const& iv, int n) const noexcept {

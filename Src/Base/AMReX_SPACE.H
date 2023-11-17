@@ -220,4 +220,10 @@ namespace amrex
 
 #endif
 
+#ifdef AMREX_USE_EB
+#define AMREX_EB_ONLY_ARGS(...) __VA_ARGS__
+#else
+#define AMREX_EB_ONLY_ARGS(...)
+#endif
+
 #endif /*AMREX_SPACE_H*/
