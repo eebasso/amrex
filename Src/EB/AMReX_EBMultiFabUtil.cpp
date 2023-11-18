@@ -32,7 +32,7 @@ EB_set_covered (MultiFab& mf, int icomp, int ncomp, int ngrow, Real val)
 
     AMREX_ALWAYS_ASSERT(mf.ixType().cellCentered() || mf.ixType().nodeCentered());
     bool is_cell_centered = mf.ixType().cellCentered();
-    int ng = std::min(mf.nGrow(),ngrow);
+    int ng = std::min(mf.nGrowVect().min(),ngrow);
 
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (Gpu::notInLaunchRegion())

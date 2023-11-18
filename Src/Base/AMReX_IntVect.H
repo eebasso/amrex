@@ -235,14 +235,14 @@ public:
 
     //! Returns true if all components are equal to the argument val.
     AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-    bool operator== (int val) const noexcept
+    constexpr bool operator== (int val) const noexcept
     {
         return AMREX_D_TERM(vect[0] == val, && vect[1] == val, && vect[2] == val);
     }
 
     //! Returns true if any component is not equal to the argument val.
     AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-    bool operator!= (int val) const noexcept
+    constexpr bool operator!= (int val) const noexcept
     {
         return AMREX_D_TERM(vect[0] != val, || vect[1] != val, || vect[2] != val);
     }
@@ -308,6 +308,8 @@ public:
     {
         return AMREX_D_TERM(vect[0] <= rhs[0], && vect[1] <= rhs[1], && vect[2] <= rhs[2]);
     }
+    [[nodiscard]] AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
+    constexpr bool allLE (int rhs) const noexcept { return allLE(IntVect(rhs)); }
     /**
     * \brief Returns true if this is greater than argument for all components.
     * NOTE: This is NOT a strict weak ordering usable by STL sorting algorithms.
@@ -317,6 +319,8 @@ public:
     {
         return AMREX_D_TERM(vect[0] > rhs[0], && vect[1] > rhs[1], && vect[2] > rhs[2]);
     }
+    [[nodiscard]] AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
+    bool allGT (int rhs) const noexcept { return allGT(IntVect(rhs)); }
     /**
     * \brief Returns true if this is greater than or equal to argument for all components.
     * NOTE: This is NOT a strict weak ordering usable by STL sorting algorithms.
@@ -326,6 +330,8 @@ public:
     {
         return AMREX_D_TERM(vect[0] >= rhs[0], && vect[1] >= rhs[1], && vect[2] >= rhs[2]);
     }
+    [[nodiscard]] AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
+    bool allGE (int rhs) const noexcept { return allGE(IntVect(rhs)); }
     //! Unary plus -- for completeness.
     AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
     IntVect operator+ () const noexcept { return *this; }
