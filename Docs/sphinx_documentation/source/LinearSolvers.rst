@@ -75,15 +75,14 @@ The :cpp:`setScalars` function sets the scalar constants :math:`A` and :math:`B`
     void setScalars (Real a, Real b) noexcept;
 
 
-For the general case where
-:math:`\alpha` and :math:`\beta` are scalar fields, we use
+For the general case where :math:`\alpha` and :math:`\beta` are coefficient fields, we use
 
   .. code-block::
 
       void setACoeffs (int amrlev, const MultiFab& alpha);
       void setBCoeffs (int amrlev, const Array<MultiFab const*,AMREX_SPACEDIM>& beta);
 
-For the case where :math:`\alpha` and/or :math:`\beta` are scalar constants,
+For the case where :math:`\alpha` and/or :math:`\beta` are constant coefficients,
 there is the option to use
 
   .. code-block::

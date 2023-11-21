@@ -87,13 +87,13 @@ public:
     void setACoeffs (int amrlev, const AMF& alpha);
 
     /**
-     * Sets alpha as a single scalar constant value across
+     * Sets alpha as a single constant coefficient value across
      * the mutlifab.
      *
      * \param [in] amrlev The level of the multifab for the solver, with
      *                    \p amrlev = 0 always being the lowest level in the
      *                    AMR hierarchy represented in the solve.
-     * \param [in] alpha  Single scalar value to populate across mutlifab.
+     * \param [in] alpha  Single constant coefficient value to populate across mutlifab.
      */
     template <typename T,
               std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,
@@ -101,13 +101,13 @@ public:
     void setACoeffs (int amrlev, T alpha);
 
     /**
-     * Sets beta as a scalar field to be the values defined
+     * Sets beta as a coefficient field to be the values defined
      * in the supplied multifabs (one for each space dimension).
      *
      * \param [in] amrlev The level of the multifab for the solver, with
      *                    \p amrlev = 0 always being the lowest level in the
      *                    AMR hierarchy represented in the solve.
-     * \param [in] beta   Array of Multifabs of beta values.
+     * \param [in] beta   Array of Multifabs of beta coefficient values.
      */
     template <typename AMF,
               std::enable_if_t<IsFabArray<AMF>::value &&
@@ -117,13 +117,13 @@ public:
     void setBCoeffs (int amrlev, const Array<AMF const*,AMREX_SPACEDIM>& beta);
 
     /**
-     * Sets beta as a single scalar constant value across
+     * Sets beta as a single constant coefficient value across
      * the mutlifabs (one for each dimension).
      *
      * \param [in] amrlev The level of the multifab for the solver, with
      *                    \p amrlev = 0 always being the lowest level in the
      *                    AMR hierarchy represented in the solve.
-     * \param [in] beta   Single scalar value to populate across mutlifabs.
+     * \param [in] beta   Single constant coefficient value to populate across mutlifabs.
      */
     template <typename T,
               std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,
@@ -131,13 +131,13 @@ public:
     void setBCoeffs (int amrlev, T beta);
 
     /**
-     * Set each beta component to a single scalar constant value corresponding to the
+     * Set each beta component to a constant coefficient value corresponding to the
      * respective component of the supplied vector.
      *
      * \param [in] amrlev The level of the multifab for the solver, with
      *                    \p amrlev = 0 always being the lowest level in the
      *                    AMR hierarchy represented in the solve.
-     * \param [in] beta   Vector of scalar constant values.
+     * \param [in] beta   Vector of constant coefficient values.
      */
     template <typename T,
               std::enable_if_t<std::is_convertible_v<T,typename MF::value_type>,

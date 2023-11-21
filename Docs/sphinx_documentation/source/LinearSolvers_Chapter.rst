@@ -22,7 +22,7 @@ that solve linear systems in the canonical form
   :label: eqn::abeclap
 
 where :math:`A` and :math:`B` are scalar constants,
-:math:`\alpha` and :math:`\beta` are scalar fields,
+:math:`\alpha` and :math:`\beta` are coefficient fields,
 :math:`\phi` is the unknown,
 and :math:`f` is the right-hand side of the equation.  Note
 that Poisson's equation :math:`\nabla^2 \phi = f` is a special case
