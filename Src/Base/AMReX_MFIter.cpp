@@ -419,12 +419,13 @@ MFIter::tilebox (const IntVect& nodal, const IntVect& ngrow) const noexcept
     Box bx = tilebox(nodal);
     const Box& vccbx = amrex::enclosedCells(validbox());
     for (int d=0; d<AMREX_SPACEDIM; ++d) {
-        if (bx.smallEnd(d) == vccbx.smallEnd(d)) {
-            bx.growLo(d, ngrow[d]);
-        }
-        if (bx.bigEnd(d) >= vccbx.bigEnd(d)) {
-            bx.growHi(d, ngrow[d]);
-        }
+        ValidGrow(bx, d, ngrow, vccbx);
+        // if (bx.smallEnd(d) == vccbx.smallEnd(d)) {
+        //     bx.growLo(d, ngrow[d]);
+        // }
+        // if (bx.bigEnd(d) >= vccbx.bigEnd(d)) {
+        //     bx.growHi(d, ngrow[d]);
+        // }
     }
     return bx;
 }
@@ -460,19 +461,22 @@ MFIter::nodaltilebox (int dir) const noexcept
 Box
 MFIter::growntilebox (int a_ng) const noexcept
 {
-    Box bx = tilebox();
     IntVect ngv{a_ng};
     if (a_ng < -100) { ngv = fabArray.nGrowVect(); }
-    const Box& vbx = validbox();
-    for (int d=0; d<AMREX_SPACEDIM; ++d) {
-        if (bx.smallEnd(d) == vbx.smallEnd(d)) {
-            bx.growLo(d, ngv[d]);
-        }
-        if (bx.bigEnd(d) == vbx.bigEnd(d)) {
-            bx.growHi(d, ngv[d]);
-        }
-    }
-    return bx;
+    return growntilebox(ngv);
+    // Box bx = tilebox();
+    // IntVect ngv{a_ng};
+    // if (a_ng < -100) { ngv = fabArray.nGrowVect(); }
+    // const Box& vbx = validbox();
+    // for (int d=0; d<AMREX_SPACEDIM; ++d) {
+    //     if (bx.smallEnd(d) == vbx.smallEnd(d)) {
+    //         bx.growLo(d, ngv[d]);
+    //     }
+    //     if (bx.bigEnd(d) == vbx.bigEnd(d)) {
+    //         bx.growHi(d, ngv[d]);
+    //     }
+    // }
+    // return bx;
 }
 
 Box
@@ -481,12 +485,13 @@ MFIter::growntilebox (const IntVect& ng) const noexcept
     Box bx = tilebox();
     const Box& vbx = validbox();
     for (int d=0; d<AMREX_SPACEDIM; ++d) {
-        if (bx.smallEnd(d) == vbx.smallEnd(d)) {
-            bx.growLo(d, ng[d]);
-        }
-        if (bx.bigEnd(d) == vbx.bigEnd(d)) {
-            bx.growHi(d, ng[d]);
-        }
+        ValidGrow(bx, d, ng, vbx);
+        // if (bx.smallEnd(d) == vbx.smallEnd(d)) {
+        //     bx.growLo(d, ng[d]);
+        // }
+        // if (bx.bigEnd(d) == vbx.bigEnd(d)) {
+        //     bx.growHi(d, ng[d]);
+        // }
     }
     return bx;
 }
@@ -505,6 +510,23 @@ MFIter::grownnodaltilebox (int dir, IntVect const& a_ng) const noexcept
     BL_ASSERT(dir < AMREX_SPACEDIM);
     if (dir < 0) { return tilebox(IntVect::TheNodeVector(), a_ng); }
     return tilebox(IntVect::TheDimensionVector(dir), a_ng);
+}
+
+inline void
+MFIter::ValidGrow (Box& bx, int d, const IntVect& ngrow, const Box& valid_cc_box)
+{
+    if (bx.smallEnd(d) == valid_cc_box.smallEnd(d)) {
+        bx.growLo(d, ngrow[d]);
+    }
+    if (bx.bigEnd(d) >= valid_cc_box.bigEnd(d)) {
+        bx.growHi(d, ngrow[d]);
+    }
+}
+
+inline void
+MFIter::ValidConvert (Box& bx, IndexType nodal, const Box& valid_cc_box) const noexcept
+{
+
 }
 
 void

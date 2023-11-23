@@ -129,7 +129,12 @@ public:
     [[nodiscard]] Box grownnodaltilebox (int dir, const IntVect& ng) const noexcept;
 
     //! Return the valid Box in which the current tile resides.
-    [[nodiscard]] Box validbox () const noexcept { return fabArray.box((*index_map)[currentIndex]); }
+    [[nodiscard]] Box validbox () const noexcept
+    {
+        Box box = fabArray.box((*index_map)[currentIndex]);
+        AMREX_ASSERT(box.cellCentered());
+        return box;
+    }
 
     //! Return the Box of the FAB at which we currently point.
     [[nodiscard]] Box fabbox () const noexcept { return fabArray.fabbox((*index_map)[currentIndex]); }
