@@ -14,14 +14,32 @@
 
 namespace amrex
 {
+    using DMF = MultiFab; //! debug variable
+    using SMF = iMultiFab; //! debug variable
+
+    /********** Begin average-to-different-IndexType methods **********/
+    /**
+     * \brief Average source FabArray to destintation FabArray of a different IndexType
+     */
+    // template <typename DMF, typename SMF,
+    //           std::enable_if_t<IsFabArray_v<SMF> && IsFabArray_v<DMF>, int> = 0>
+    void average_to_different_ixtype (DMF& destMF, const SMF& srceMF,
+                                      int dcomp = 0, int scomp = 0, int ncomp = 1,
+                                      const IntVect& ngrow = IntVect{0},
+                                      const Geometry* geom = nullptr,
+                                      bool use_harmonic_averaging = false);
+
     //! Average nodal-based MultiFab onto cell-centered MultiFab.
     void average_node_to_cellcenter (MultiFab& cc, int dcomp,
                                      const MultiFab& nd, int scomp,
                                      int ncomp, int ngrow = 0);
 
-    //! Average edge-based MultiFab onto cell-centered MultiFab. This fills in
-    //! ngrow ghost cells in the cell-centered MultiFab. Both cell centered and
-    //! edge centered MultiFabs need to have ngrow ghost values
+    /**
+     * \brief Average edge-based MultiFab onto cell-centered MultiFab.
+     *
+     * This fills in \p ngrow ghost cells in the cell-centered MultiFab. Both cell centered and
+     * edge centered MultiFabs need to have \p ngrow ghost values.
+     */
     void average_edge_to_cellcenter (MultiFab& cc, int dcomp,
                                      const Vector<const MultiFab*>& edge,
                                      int ngrow = 0);
@@ -30,31 +48,33 @@ namespace amrex
     void average_face_to_cellcenter (MultiFab& cc, int dcomp,
                                      const Vector<const MultiFab*>& fc,
                                      int ngrow = 0);
-
+    //! Average face-based FabArray onto cell-centered FabArray.
     template <typename CMF, typename FMF,
               std::enable_if_t<IsFabArray_v<CMF> && IsFabArray_v<FMF>, int> = 0>
     void average_face_to_cellcenter (CMF& cc, int dcomp,
                                      const Array<const FMF*,AMREX_SPACEDIM>& fc,
                                      int ngrow = 0);
-
+    //! Average face-based MultiFab onto cell-centered MultiFab with geometric weighting.
     void average_face_to_cellcenter (MultiFab& cc,
                                      const Vector<const MultiFab*>& fc,
                                      const Geometry& geom);
+    //! Average face-based MultiFab onto cell-centered MultiFab with geometric weighting.
     void average_face_to_cellcenter (MultiFab& cc,
                                      const Array<const MultiFab*,AMREX_SPACEDIM>& fc,
                                      const Geometry& geom);
-
-    //! Average cell-centered MultiFab onto face-based MultiFab.
+    //! Average cell-centered MultiFab onto face-based MultiFab with geometric weighting.
     void average_cellcenter_to_face (const Vector<MultiFab*>& fc,
                                      const MultiFab& cc,
                                      const Geometry& geom,
                                      int ncomp = 1,
                                      bool use_harmonic_averaging = false);
+    //! Average cell-centered MultiFab onto face-based MultiFab with geometric weighting.
     void average_cellcenter_to_face (const Array<MultiFab*,AMREX_SPACEDIM>& fc,
                                      const MultiFab& cc,
                                      const Geometry& geom,
                                      int ncomp = 1,
                                      bool use_harmonic_averaging = false);
+    /********** End average-to-different-IndexType methods **********/
 
     //! Average fine face-based MultiFab onto crse face-based MultiFab.
     template <typename MF, std::enable_if_t<IsFabArray<MF>::value,int> = 0>
@@ -444,6 +464,211 @@ makeFineMask (const FabArray<FAB>& cmf, const FabArray<FAB>& fmf,
 
     return mask;
 }
+
+/********** Begin average-to-different-IndexType methods **********/
+// template <typename DMF, typename SMF, std::enable_if_t<IsFabArray_v<SMF> && IsFabArray_v<DMF>, int> FOO>
+void average_to_different_ixtype (DMF& destMF, const SMF& srceMF,
+                                    int dcomp, int scomp, int ncomp,
+                                    const IntVect& ngrow,
+                                    const Geometry* geom,
+                                    bool use_harmonic_averging)
+{
+    using DFAB = typename DMF::fab_type;
+
+    AMREX_ASSERT(destMF.nComp() >= dcomp + ncomp);
+    AMREX_ASSERT(srceMF.nComp() >= scomp + ncomp);
+    IndexType dType = destMF.ixType();
+    IndexType sType = srceMF.ixType();
+
+    Dim3 minRange, maxRange;
+    int denom;
+    index_ranges_for_average_to_different_ixtype(minRange,maxRange,denom,dType,sType);
+
+    BoxArray sBxArr_dType = amrex::convert(srceMF.boxArray(), destMF.ixType());
+
+    if (destMF.boxArray() == sBxArr_dType && destMF.DistributionMap() == srceMF.DistributionMap()){
+        amrex_avg_to_diff_ixtype(destMF,srceMF,dcomp,scomp,ncomp,ngrow,minRange,maxRange,denom,geom,use_harmonic_averging);
+    }
+    else {
+        DMF destTmpMF(sBxArr_dType, srceMF.DistributionMap(), ncomp, ngrow);
+        amrex_avg_to_diff_ixtype(destTmpMF,srceMF,dcomp,scomp,ncomp,ngrow,minRange,maxRange,denom,geom,use_harmonic_averging);
+        destMF.ParallelCopy(destTmpMF,0,scomp,ncomp);
+    }
+}
+
+void amrex_avg_to_diff_ixtype (DMF& dest, const SMF& srce, int dcomp, int scomp, int ncomp, const IntVect& ngrow,
+                                 const Dim3& min, const Dim3& max, int denom, const Geometry* geom, bool use_harmonic_averging)
+{
+    if (!geom) {
+        amrex_avg_to_diff_ixtype_Cartesian(dest,srce,dcomp,scomp,ncomp,ngrow,min,max,denom,use_harmonic_averging);
+    } else if (geom->IsCartesian()) {
+        amrex_avg_to_diff_ixtype_Cartesian(dest,srce,dcomp,scomp,ncomp,ngrow,min,max,denom,use_harmonic_averging);
+    } else if(geom->IsRZ()) {
+        amrex_avg_to_diff_ixtype_rz(dest,srce,dcomp,scomp,ncomp,ngrow,min,max,*geom,use_harmonic_averging);
+    } else if (geom->IsSPHERICAL()) {
+        amrex_avg_to_diff_ixtype_spherical(dest,srce,dcomp,scomp,ncomp,ngrow,min,max,*geom,use_harmonic_averging);
+    } else {
+        amrex::Abort("amrex_avg_to_diff_ixtype: unknown coordinate system");
+    }
+}
+
+// template <typename DMF, typename SMF, std::enable_if_t<IsFabArray_v<SMF> && IsFabArray_v<DMF>, int> FOO>
+void amrex_avg_to_diff_ixtype_Cartesian (DMF& dest, const SMF& srce, int dcomp, int scomp, int ncomp, const IntVect& ngrow,
+                                           const Dim3& min, const Dim3& max, int denomInt, bool use_harmonic_averging)
+{
+    using DT = typename DMF::value_type;
+
+    const DT denom = DT(denomInt);
+
+#ifdef AMREX_USE_GPU
+    if (Gpu::inLaunchRegion() && dest.isFusingCandidate()) {
+        auto const& dArrays = dest.arrays();
+        auto const& sArrays = srce.const_arrays();
+        ParallelFor(dest, ngrow, ncomp,
+        [=] AMREX_GPU_DEVICE (int box_no, int i, int j, int k, int n) noexcept
+        {
+            amrex_avg_to_diff_ixtype_Cartesian(i,j,k,n,dArrays[box_no],sArrays[box_no],dcomp,scomp,min,max,denom,use_harmonic_averging);
+        });
+        if (!Gpu::inNoSyncRegion()) {
+            Gpu::streamSynchronize();
+        }
+    } else
+#endif
+    {
+#ifdef AMREX_USE_OMP
+#pragma omp parallel if (Gpu::notInLaunchRegion())
+#endif
+        for (MFIter mfi(dest,TilingIfNotGPU()); mfi.isValid(); ++mfi)
+        {
+            //  NOTE: The tilebox is defined at the coarse level.
+            const Box& bx = mfi.growntilebox(ngrow);
+            const auto& destArr = dest.array(mfi);
+            const auto& srceArr = srce.const_array(mfi);
+            AMREX_HOST_DEVICE_PARALLEL_FOR_4D(bx, ncomp, i, j, k, n,
+            {
+                amrex_avg_to_diff_ixtype_Cartesian(i,j,k,n,destArr,srceArr,dcomp,scomp,min,max,denom,use_harmonic_averging);
+            });
+        }
+    }
+}
+
+template <typename DT, typename ST>
+void amrex_avg_to_diff_ixtype_Cartesian (int i, int j, int k, int n,
+                                           const Array4<DT> &dest, const Array4<const ST> &srce, int dcomp, int scomp,
+                                           const Dim3 &min, const Dim3 &max, DT denom, bool use_harmonic_averging)
+{
+    ST tmp;
+    ST sum = ST(0.0);
+
+    if (use_harmonic_averging) {
+        for (        int kk = k + min.z; kk <= k + max.z; ++kk) {
+            for (    int jj = j + min.y; jj <= j + max.y; ++jj) {
+                for (int ii = i + min.x; ii <= i + max.x; ++ii) {
+                    tmp = srce(ii,jj,kk,n+scomp);
+                    if (tmp == ST(0.0)) {
+                        dest(i,j,k,n+dcomp) = DT(0.0);
+                        return;
+                    }
+                    sum += ST(1.0)/tmp;
+                }
+            }
+        }
+        dest(i,j,k,n+dcomp) = denom/DT(sum);
+    } else {
+        for (        int kk = k + min.z; kk <= k + max.z; ++kk) {
+            for (    int jj = j + min.y; jj <= j + max.y; ++jj) {
+                for (int ii = i + min.x; ii <= i + max.x; ++ii) {
+                    sum += srce(ii,jj,kk,n+scomp);
+                }
+            }
+        }
+        dest(i,j,k,n+dcomp) = DT(sum)/denom;
+    }
+}
+
+// template <typename DMF, typename SMF, std::enable_if_t<IsFabArray_v<SMF> && IsFabArray_v<DMF>, int> FOO>
+void amrex_avg_to_diff_ixtype_rz (DMF& dest, const SMF& srce, int dcomp, int scomp, int ncomp, const IntVect& ngrow,
+                                    const Dim3& min, const Dim3& max, const Geometry& geom, bool use_harmonic_averging)
+{
+#ifdef AMREX_USE_GPU
+    if (Gpu::inLaunchRegion() && dest.isFusingCandidate()) {
+        auto const& dArrays = dest.arrays();
+        auto const& sArrays = srce.const_arrays();
+        ParallelFor(dest, ngrow, ncomp,
+        [=] AMREX_GPU_DEVICE (int box_no, int i, int j, int k, int n) noexcept
+        {
+            amrex_avg_to_diff_ixtype_rz(i,j,k,n,dArrays[box_no],sArrays[box_no],dcomp,scomp,min,max,geom,use_harmonic_averging);
+        });
+        if (!Gpu::inNoSyncRegion()) {
+            Gpu::streamSynchronize();
+        }
+    } else
+#endif
+    {
+#ifdef AMREX_USE_OMP
+#pragma omp parallel if (Gpu::notInLaunchRegion())
+#endif
+        for (MFIter mfi(dest,TilingIfNotGPU()); mfi.isValid(); ++mfi)
+        {
+            //  NOTE: The tilebox is defined at the coarse level.
+            const Box& bx = mfi.growntilebox(ngrow);
+            const auto& destArr = dest.array(mfi);
+            const auto& srceArr = srce.const_array(mfi);
+            AMREX_HOST_DEVICE_PARALLEL_FOR_4D(bx, ncomp, i, j, k, n,
+            {
+                amrex_avg_to_diff_ixtype_rz(i,j,k,n,destArr,srceArr,dcomp,scomp,min,max,geom,use_harmonic_averging);
+            });
+        }
+    }
+}
+
+template <typename DT, typename ST>
+void amrex_avg_to_diff_ixtype_rz (int i, int j, int k, int n,
+                                    const Array4<DT> &dest, const Array4<const ST> &srce, int dcomp, int scomp,
+                                    const Dim3 &min, const Dim3 &max, const Geometry& geom, bool use_harmonic_averging)
+{
+
+}
+
+// template <typename DMF, typename SMF, std::enable_if_t<IsFabArray_v<SMF> && IsFabArray_v<DMF>, int> FOO>
+void amrex_avg_to_diff_ixtype_spherical (DMF& dest, const SMF& srce, int dcomp, int scomp, int ncomp, const IntVect& ngrow,
+                                           const Dim3& min, const Dim3& max, const Geometry& geom, bool use_harmonic_averging)
+{}
+
+template <typename DT, typename ST>
+void amrex_avg_to_diff_ixtype_spherical (int i, int j, int k, int n,
+                                           const Array4<DT> &dest, const Array4<const ST> &srce, int dcomp, int scomp,
+                                           const Dim3 &min, const Dim3 &max, const Geometry& geom, bool use_harmonic_averging)
+{
+
+}
+
+void index_ranges_for_average_to_different_ixtype (Dim3& minRange, Dim3& maxRange, int& denom,
+                                                  const IndexType& destType, const IndexType& srceType)
+{
+    minRange = {0,0,0};
+    maxRange = {0,0,0};
+    denom = 1;
+    for (int dir = 0; dir < AMREX_SPACEDIM; ++dir) {
+        if (srceType.nodeCentered(dir)) {
+            if (destType.cellCentered(dir)) {
+                if      (dir == 0) { maxRange.x = 1; }
+                else if (dir == 1) { maxRange.y = 1; }
+                else               { maxRange.z = 1; }
+                denom *= 2;
+            }
+        } else {
+            if (destType.nodeCentered(dir)) {
+                if      (dir == 0) { minRange.x = -1; }
+                else if (dir == 1) { minRange.y = -1; }
+                else               { minRange.z = -1; }
+                denom *= 2;
+            }
+        }
+    }
+}
+
+/********** End average-to-different-IndexType methods **********/
 
 //! Average fine node-based MultiFab onto crse node-based MultiFab.
 //! This routine assumes that the crse BoxArray is a coarsened version of the fine BoxArray.

@@ -50,18 +50,19 @@ void amrex_avg_fc_to_cc (int i, int, int,
         const Real dx = gd.CellSize(0);
         Real rlo = problo + i*dx;
         Real rhi = problo + (i+1)*dx;
-        Real rcen = Real(0.5)*(rlo+rhi);
-        cc(i,0,0,cccomp) = CT(Real(0.5) * ( rlo*fx(i,0,0) + rhi*fx(i+1,0,0) ) / rcen);
+        Real rcen = ;
+        cc(i,0,0,cccomp) = CT( ( rlo*fx(i,0,0) + rhi*fx(i+1,0,0) ) / (rlo+rhi) );
         break;
     }
     case 2:
     {
         const Real problo = gd.ProbLo(0);
         const Real dx = gd.CellSize(0);
-        Real rlo = problo + i*dx;
-        Real rhi = problo + (i+1)*dx;
-        Real rcen = Real(0.5)*(rlo+rhi);
-        cc(i,0,0,cccomp) = CT(Real(0.5) * ( rlo*rlo*fx(i,0,0) + rhi*rhi*fx(i+1,0,0) ) / (rcen*rcen));
+        Real rlo2 = problo + i*dx;
+        Real rhi2 = rlo2 + dx;
+        rlo2 = rlo2*rlo2;
+        rhi2 = rhi2*rhi2;
+        cc(i,0,0,cccomp) = CT( ( rlo2*fx(i,0,0) + rhi2*fx(i+1,0,0) ) / (rlo2 + rhi2));
         break;
     }
     default:
