@@ -55,41 +55,33 @@ namespace amrex
                                      const Geometry& geom,
                                      int ncomp = 1,
                                      bool use_harmonic_averaging = false);
-    /********** End average-to-different-IndexType methods **********/
 
     /********** Begin average-down methods **********/
     /**
-     * \brief Geometric weighed average of fine FabArray onto coarse FabArray of same IndexType.
+     * \brief Volume-weighed average of fine cell-based MultiFab onto coarse cell-based MultiFab.
      *
-     * Works for any IndexType shared by both \p crse and \p fine. This routine DOES NOT assume that
-     * the \p crse BoxArray is a coarsened version of the \p fine BoxArray.
+     * Both MultiFabs are assumed to be cell-centered. This routine DOES NOT assume that
+     * the BoxArray of \p S_crse is a coarsened version of the BoxArray of \p S_fine.
      */
-    template <typename MF, std::enable_if_t<IsFabArray_v<MF>,int> = 0>
-    void average_down (const MF& S_fine, MF& S_crse,
-                       const Geometry& fgeom, const Geometry& cgeom,
-                       int scomp, int ncomp, const IntVect& ratio,
-                       const IntVect& ngcrse = IntVect(0));
-    //! Geometric weighed average of fine FabArray onto coarse FabArray of same IndexType.
-    template <typename MF, std::enable_if_t<IsFabArray_v<MF>,int> = 0>
-    void average_down (const MF& S_fine, MF& S_crse,
-                       const Geometry& fgeom, const Geometry& cgeom,
-                       int scomp, int ncomp, int rr,
-                       const IntVect& ngcrse = IntVect(0));
+    void average_down_cells (const MultiFab& S_fine, MultiFab& S_crse,
+                             const Geometry& fgeom, const Geometry& cgeom,
+                             int scomp, int ncomp, const IntVect& ratio);
+    void average_down_cells (const MultiFab& S_fine, MultiFab& S_crse,
+                             const Geometry& fgeom, const Geometry& cgeom,
+                             int scomp, int ncomp, int rr);
+
     /**
-     * \brief Average fine FabArray onto coarse FabArray of same IndexType without geometric weighting.
+     * \brief Average fine cell-based FabArray onto coarse cell-based FabArray without volume weighting.
      *
-     * Works for any IndexType shared by both \p crse and \p fine. This routine DOES NOT assume that
+     * Work for both cell-centered and nodal MultiFabs. This routine DOES NOT assume that
      * the \p crse BoxArray is a coarsened version of the \p fine BoxArray.
      */
-    template <typename MF, std::enable_if_t<IsFabArray_v<MF>,int> = 0>
-    void average_down (const MF& S_fine, MF& S_crse,
-                       int scomp, int ncomp, const IntVect& ratio,
-                       const IntVect& ngcrse = IntVect(0));
-    //! Average fine FabArray onto coarse FabArray of same IndexType without geometric weighting.
-    template <typename MF, std::enable_if_t<IsFabArray_v<MF>,int> = 0>
-    void average_down (const MF& S_fine, MF& S_crse,
-                       int scomp, int ncomp, int rr,
-                       const IntVect& ngcrse = IntVect(0));
+    template<typename FAB>
+    void average_down_cells (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
+                             int scomp, int ncomp, const IntVect& ratio);
+    template<typename FAB>
+    void average_down_cells (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
+                             int scomp, int ncomp, int rr);
 
     //! Average fine face-based MultiFab onto crse face-based MultiFab.
     template <typename MF, std::enable_if_t<IsFabArray<MF>::value,int> = 0>
@@ -164,34 +156,39 @@ namespace amrex
                              bool mfiter_is_definitely_safe=false);
 
     /**
-     * \brief Volume-weighed average of fine cell-based MultiFab onto coarse cell-based MultiFab.
+     * \brief Geometric weighed average of fine FabArray onto coarse FabArray of same IndexType.
      *
-     * Both MultiFabs are assumed to be cell-centered. This routine DOES NOT assume that
-     * the BoxArray of \p S_crse is a coarsened version of the BoxArray of \p S_fine.
+     * Works for any IndexType shared by both \p crse and \p fine. This routine DOES NOT assume that
+     * the \p crse BoxArray is a coarsened version of the \p fine BoxArray.
      */
-    void average_down_cells (const MultiFab& S_fine, MultiFab& S_crse,
-                             const Geometry& fgeom, const Geometry& cgeom,
-                             int scomp, int ncomp, const IntVect& ratio);
-    void average_down_cells (const MultiFab& S_fine, MultiFab& S_crse,
-                             const Geometry& fgeom, const Geometry& cgeom,
-                             int scomp, int ncomp, int rr);
-
+    void average_down (const MultiFab& S_fine, MultiFab& S_crse,
+                       const Geometry& fgeom, const Geometry& cgeom,
+                       int scomp, int ncomp, const IntVect& ratio,
+                       const IntVect& ngcrse = IntVect(0));
+    //! Geometric weighed average of fine FabArray onto coarse FabArray of same IndexType.
+    void average_down (const MultiFab& S_fine, MultiFab& S_crse,
+                       const Geometry& fgeom, const Geometry& cgeom,
+                       int scomp, int ncomp, int rr,
+                       const IntVect& ngcrse = IntVect(0));
     /**
-     * \brief Average fine cell-based FabArray onto coarse cell-based FabArray without volume weighting.
+     * \brief Average fine FabArray onto coarse FabArray of same IndexType without geometric weighting.
      *
-     * Work for both cell-centered and nodal MultiFabs. This routine DOES NOT assume that
+     * Works for any IndexType shared by both \p crse and \p fine. This routine DOES NOT assume that
      * the \p crse BoxArray is a coarsened version of the \p fine BoxArray.
      */
     template<typename FAB>
-    void average_down_cells (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
-                             int scomp, int ncomp, const IntVect& ratio);
+    void average_down (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
+                       int scomp, int ncomp, const IntVect& ratio,
+                       const IntVect& ngcrse = IntVect(0));
+    //! Average fine FabArray onto coarse FabArray of same IndexType without geometric weighting.
     template<typename FAB>
-    void average_down_cells (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
-                             int scomp, int ncomp, int rr);
-    /* End average-down methods */
+    void average_down (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
+                       int scomp, int ncomp, int rr,
+                       const IntVect& ngcrse = IntVect(0));
+    /********** End average-down methods **********/
 
-    //! Add a coarsened version of the data contained in the \p S_fine MultiFab to
-    //! \p S_crse, including ghost cells.
+    //! Add a coarsened version of the data contained in the S_fine MultiFab to
+    //! S_crse, including ghost cells.
     void sum_fine_to_coarse (const MultiFab& S_Fine, MultiFab& S_crse,
                              int scomp, int ncomp,
                              const IntVect& ratio,
@@ -499,128 +496,6 @@ makeFineMask (const FabArray<FAB>& cmf, const FabArray<FAB>& fmf,
 }
 
 /********** Begin average-down methods **********/
-template <typename MF, std::enable_if_t<IsFabArray<MF>::value,int> FOO>
-void average_down (const MF& S_fine, MF& S_crse,
-                   int scomp, int ncomp, const IntVect& ratio,
-                   const IntVect& ngcrse)
-{
-    BL_PROFILE("amrex::average_down");
-    AMREX_ASSERT(S_crse.nComp() == S_fine.nComp());
-    AMREX_ASSERT(S_crse.ixType() == S_fine.ixType());
-
-    // Coarsen() the fine stuff on processors owning the fine data.
-    BoxArray crse_S_fine_BA = S_fine.boxArray();
-    if (ngcrse != IntVect{0}) {
-        crse_S_fine_BA.grow(ngcrse);
-    }
-    crse_S_fine_BA.coarsen(ratio);
-
-    if (crse_S_fine_BA == S_crse.boxArray() && S_fine.DistributionMap() == S_crse.DistributionMap())
-    {
-        average_down_matching(S_crse, S_fine, scomp, scomp, ncomp, ratio, ngcrse);
-    }
-    else
-    {
-        MF crse_S_fine(crse_S_fine_BA, S_fine.DistributionMap(),
-                       ncomp, ngcrse, MFInfo(), DefaultFabFactory<FAB>());
-        average_down_matching(S_fine, crse_S_fine, 0, scomp, ncomp, ratio, ngcrse);
-        S_crse.ParallelCopy(crse_S_fine,0,scomp,ncomp);
-    }
-}
-
-template <typename MF, std::enable_if_t<IsFabArray<MF>::value,int> FOO>
-void average_down (const MF& S_fine, MF& S_crse,
-                   int scomp, int ncomp, int rr,
-                   const IntVect& ngcrse)
-{
-    average_down(S_fine,S_crse,scomp,ncomp,rr*IntVect::TheUnitVector(),ngcrse);
-}
-
-template <typename MF, std::enable_if_t<IsFabArray<MF>::value,int> FOO>
-void average_down_matching (const MF& S_fine, MF& S_crse,
-                            int fcomp, int ccomp, int ncomp, const IntVect& ratio,
-                            const IntVect& ngcrse)
-{
-    using VT = typename MF::value_type;
-    IndexType ixType = S_fine.ixType();
-
-    Dim3 ratioDim3, range;
-    range_for_average_down_matching(ratioDim3, range, ratio, ixType);
-
-    const VT denom = VT(range.x * range.y * range.z);
-
-#ifdef AMREX_USE_GPU
-    if (Gpu::inLaunchRegion() && S_crse.isFusingCandidate()) {
-        auto const& crsema = S_crse.arrays();
-        auto const& finema = S_fine.const_arrays();
-        ParallelFor(S_crse, ngcrse, ncomp,
-        [=] AMREX_GPU_DEVICE (int box_no, int i, int j, int k, int n) noexcept
-        {
-            amrex_avgdown(i,j,k,n,crsema[box_no],finema[box_no],ccomp,fcomp,ratioDim3,range,denom);
-        });
-        if (!Gpu::inNoSyncRegion()) {
-            Gpu::streamSynchronize();
-        }
-    } else
-#endif
-    {
-#ifdef AMREX_USE_OMP
-#pragma omp parallel if (Gpu::notInLaunchRegion())
-#endif
-        for (MFIter mfi(S_crse,TilingIfNotGPU()); mfi.isValid(); ++mfi)
-        {
-            //  NOTE: The tilebox is defined at the coarse level.
-            const Box& bx = mfi.growntilebox(ngcrse);
-            Array4<VT> const& crsearr = S_crse.array(mfi);
-            Array4<VT const> const& finearr = S_fine.const_array(mfi);
-            AMREX_HOST_DEVICE_PARALLEL_FOR_4D(bx, ncomp, i, j, k, n,
-            {
-                amrex_avgdown(i,j,k,n,crsearr,finearr,ccomp,fcomp,ratioDim3,range,denom);
-            });
-        }
-    }
-}
-
-void range_for_average_down_matching (Dim3& ratioDim3, Dim3& range, const IntVect& ratio, const IndexType ixType)
-{
-    ratioDim3 = Dim3{0,0,0};
-    range = Dim3{1,1,1};
-
-    ratioDim3.x = ratio[0];
-    if (ixType.cellCentered(0)) {
-        range.x = ratio[0];
-    }
-#if AMREX_SPACEDIM >= 2
-    ratioDim3.y = ratio[1];
-    if (ixType.cellCentered(1)) {
-        range.y = ratio[1];
-    }
-#endif
-#if AMREX_SPACEDIM >= 3
-    ratioDim3.z = ratio[2];
-    if (ixType.cellCentered(2)) {
-        range.z = ratio[2];
-    }
-#endif
-}
-
-template <typename T>
-AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-void amrex_avgdown (int i, int j, int k, int n,
-                    const Array4<T> &crse, const Array4<const T> &fine, int ccomp, int fcomp,
-                    const Dim3 &ratio, const Dim3 &range, const T &denom) noexcept
-{
-    T c = T(0.0);
-    for (        int kk = k*ratio.z; kk < k*ratio.z + range.z; ++kk) {
-        for (    int jj = j*ratio.y; jj < j*ratio.y + range.y; ++jj) {
-            for (int ii = i*ratio.x; ii < i*ratio.x + range.x; ++ii) {
-                c += fine(ii,jj,kk,n+fcomp);
-            }
-        }
-    }
-    crse(i,j,k,n+ccomp) = c / denom;
-}
-
 template <typename FAB>
 void average_down_nodal (const FabArray<FAB>& fine, FabArray<FAB>& crse,
                          const IntVect& ratio, int ngcrse, bool mfiter_is_definitely_safe)
@@ -666,7 +541,7 @@ void average_down_cells (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse, int
 
 template<typename FAB>
 void average_down_cells (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
-                   int scomp, int ncomp, const IntVect& ratio)
+                         int scomp, int ncomp, const IntVect& ratio)
 {
     BL_PROFILE("amrex::average_down_cells");
     AMREX_ASSERT(S_crse.nComp() == S_fine.nComp());
@@ -790,6 +665,125 @@ void average_down_cells (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
     }
 }
 
+template <typename FAB>
+void average_down (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
+                   int scomp, int ncomp, int rr,
+                   const IntVect& ngcrse)
+{
+    average_down(S_fine,S_crse,scomp,ncomp,rr*IntVect::TheUnitVector(),ngcrse);
+}
+
+template <typename FAB>
+void average_down (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
+                   int scomp, int ncomp, const IntVect& ratio,
+                   const IntVect& ngcrse)
+{
+    BL_PROFILE("amrex::average_down");
+    AMREX_ASSERT(S_crse.nComp() == S_fine.nComp());
+    AMREX_ASSERT(S_crse.ixType() == S_fine.ixType());
+
+    // Coarsen() the fine stuff on processors owning the fine data.
+    BoxArray crse_S_fine_BA = S_fine.boxArray();
+    if (ngcrse != IntVect{0}) {
+        crse_S_fine_BA.grow(ngcrse);
+    }
+    crse_S_fine_BA.coarsen(ratio);
+
+    if (crse_S_fine_BA == S_crse.boxArray() && S_fine.DistributionMap() == S_crse.DistributionMap())
+    {
+        average_down_matching(S_crse, S_fine, scomp, scomp, ncomp, ratio, ngcrse);
+    }
+    else
+    {
+        FabArray<FAB> crse_S_fine(crse_S_fine_BA, S_fine.DistributionMap(),
+                                  ncomp, ngcrse, MFInfo(), DefaultFabFactory<FAB>());
+        average_down_matching(S_fine, crse_S_fine, 0, scomp, ncomp, ratio, ngcrse);
+        S_crse.ParallelCopy(crse_S_fine,0,scomp,ncomp);
+    }
+}
+
+template <typename FAB>
+void average_down_matching (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
+                            int fcomp, int ccomp, int ncomp, const IntVect& ratio,
+                            const IntVect& ngcrse)
+{
+    using VT = typename MF::value_type;
+    IndexType ixType = S_fine.ixType();
+
+    Dim3 ratioDim3, range;
+    range_for_average_down_matching(ratioDim3, range, ratio, ixType);
+
+    const VT denom = VT(range.x * range.y * range.z);
+
+#ifdef AMREX_USE_GPU
+    if (Gpu::inLaunchRegion() && S_crse.isFusingCandidate()) {
+        auto const& crsema = S_crse.arrays();
+        auto const& finema = S_fine.const_arrays();
+        ParallelFor(S_crse, ngcrse, ncomp,
+        [=] AMREX_GPU_DEVICE (int box_no, int i, int j, int k, int n) noexcept
+        {
+            amrex_avgdown(i,j,k,n,crsema[box_no],finema[box_no],ccomp,fcomp,ratioDim3,range,denom);
+        });
+        if (!Gpu::inNoSyncRegion()) {
+            Gpu::streamSynchronize();
+        }
+    } else
+#endif
+    {
+#ifdef AMREX_USE_OMP
+#pragma omp parallel if (Gpu::notInLaunchRegion())
+#endif
+        for (MFIter mfi(S_crse,TilingIfNotGPU()); mfi.isValid(); ++mfi)
+        {
+            //  NOTE: The tilebox is defined at the coarse level.
+            const Box& bx = mfi.growntilebox(ngcrse);
+            Array4<VT> const& crsearr = S_crse.array(mfi);
+            Array4<VT const> const& finearr = S_fine.const_array(mfi);
+            AMREX_HOST_DEVICE_PARALLEL_FOR_4D(bx, ncomp, i, j, k, n,
+            {
+                amrex_avgdown(i,j,k,n,crsearr,finearr,ccomp,fcomp,ratioDim3,range,denom);
+            });
+        }
+    }
+}
+
+void range_for_average_down_matching (Dim3& ratioDim3, Dim3& range,
+                                      const IntVect& ratio, const IndexType ixType)
+{
+    ratioDim3 = Dim3{0,0,0};
+    range = Dim3{1,1,1};
+
+    AMREX_D_TERM(
+    ratioDim3.x = ratio[0];
+    if (ixType.cellCentered(0)) {
+        range.x = ratio[0];
+    },
+    ratioDim3.y = ratio[1];
+    if (ixType.cellCentered(1)) {
+        range.y = ratio[1];
+    },
+    ratioDim3.z = ratio[2];
+    if (ixType.cellCentered(2)) {
+        range.z = ratio[2];
+    });
+}
+
+template <typename T>
+AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
+void amrex_avgdown (int i, int j, int k, int n,
+                    const Array4<T> &crse, const Array4<const T> &fine, int ccomp, int fcomp,
+                    const Dim3 &ratio, const Dim3 &range, const T &denom) noexcept
+{
+    T c = T(0.0);
+    for (        int kk = k*ratio.z; kk < k*ratio.z + range.z; ++kk) {
+        for (    int jj = j*ratio.y; jj < j*ratio.y + range.y; ++jj) {
+            for (int ii = i*ratio.x; ii < i*ratio.x + range.x; ++ii) {
+                c += fine(ii,jj,kk,n+fcomp);
+            }
+        }
+    }
+    crse(i,j,k,n+ccomp) = c/denom;
+}
 
 
 
