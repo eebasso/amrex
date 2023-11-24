@@ -53,7 +53,7 @@ public:
         static constexpr unsigned shift1 = sizeof(size_t)>=8 ? 20 : 10;
         static constexpr unsigned shift2 = sizeof(size_t)>=8 ? 40 : 20;
     public:
-        std::size_t operator() (const IntVect& vec) const noexcept
+        std::size_t operator()(const IntVect& vec) const noexcept
         {
             AMREX_D_DECL(std::size_t ret0 = vec[0], ret1 = vec[1], ret2 = vec[2]);
 #if AMREX_SPACEDIM == 1
@@ -245,18 +245,6 @@ public:
     bool operator!= (int val) const noexcept
     {
         return AMREX_D_TERM(vect[0] != val, || vect[1] != val, || vect[2] != val);
-    }
-
-    AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-    bool operator== (const Dim3& rhs) const noexcept
-    {
-        return AMREX_D_TERM(vect[0] == rhs.x, && vect[1] == rhs.y, && vect[2] == rhs.z);
-    }
-
-    AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-    bool operator!= (const Dim3& rhs) const noexcept
-    {
-        return AMREX_D_TERM(vect[0] != rhs.x, || vect[1] != rhs.y, && vect[2] != rhs.z);
     }
 
     //! Returns true if this is equivalent to rhs.

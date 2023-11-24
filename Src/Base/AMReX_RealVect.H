@@ -279,7 +279,7 @@ public:
      Returns the result of the scalar product with another RealVect
   */
   [[nodiscard]] AMREX_GPU_HOST_DEVICE inline
-  Real dotProduct (const RealVect& a_rhs) const noexcept;
+  Real dotProduct(const RealVect& a_rhs) const noexcept;
 
 #if (AMREX_SPACEDIM == 3)
   ///
@@ -287,7 +287,7 @@ public:
      Returns the result of the cross product with another RealVect
   */
   [[nodiscard]] AMREX_GPU_HOST_DEVICE inline
-  RealVect crossProduct (const RealVect& a_rhs) const noexcept;
+  RealVect crossProduct(const RealVect& a_rhs) const noexcept;
 #endif
 
   ///

@@ -74,7 +74,7 @@ void eb_set_covered_nodes (int i, int j, int k, int n, int icomp, Array4<Real> c
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-void eb_avgdown_cells_with_vol (int i, int j, int k,
+void eb_avgdown_with_vol (int i, int j, int k,
                           Array4<Real const> const& fine, int fcomp,
                           Array4<Real> const& crse, int ccomp,
                           Array4<Real const> const& fv, Array4<Real const> const& vfrc,
@@ -99,7 +99,7 @@ void eb_avgdown_cells_with_vol (int i, int j, int k,
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-void eb_avgdown_cells (int i, int j, int k,
+void eb_avgdown (int i, int j, int k,
                  Array4<Real const> const& fine, int fcomp,
                  Array4<Real> const& crse, int ccomp,
                  Array4<Real const> const& vfrc,
