@@ -17,18 +17,17 @@ namespace amrex
     using DMF = MultiFab; //! debug variable
     using SMF = iMultiFab; //! debug variable
 
-
     /********** Begin average-to-different-IndexType methods **********/
     /**
      * \brief Average source FabArray to destintation FabArray of a different IndexType
      */
     // template <typename DMF, typename SMF,
     //           std::enable_if_t<IsFabArray_v<SMF> && IsFabArray_v<DMF>, int> = 0>
-    void average_from_different_ixtype (DMF& destMF, const SMF& srceMF,
-                                        int dcomp = 0, int scomp = 0, int ncomp = 1,
-                                        const IntVect& ngrow = IntVect{0},
-                                        const Geometry* geom = nullptr,
-                                        bool use_harmonic_averaging = false);
+    void average_to_different_ixtype (DMF& destMF, const SMF& srceMF,
+                                      int dcomp = 0, int scomp = 0, int ncomp = 1,
+                                      const IntVect& ngrow = IntVect{0},
+                                      const Geometry* geom = nullptr,
+                                      bool use_harmonic_averaging = false);
 
     //! Average nodal-based MultiFab onto cell-centered MultiFab.
     void average_node_to_cellcenter (MultiFab& cc, int dcomp,
@@ -87,25 +86,29 @@ namespace amrex
     template <typename MF, std::enable_if_t<IsFabArray_v<MF>,int> = 0>
     void average_down (const MF& S_fine, MF& S_crse,
                        const Geometry& fgeom, const Geometry& cgeom,
-                       int scomp, int ncomp, const IntVect& ratio);
+                       int scomp, int ncomp, const IntVect& ratio,
+                       const IntVect& ngcrse = IntVect(0));
     //! Geometric weighed average of fine FabArray onto coarse FabArray of same IndexType.
     template <typename MF, std::enable_if_t<IsFabArray_v<MF>,int> = 0>
     void average_down (const MF& S_fine, MF& S_crse,
                        const Geometry& fgeom, const Geometry& cgeom,
-                       int scomp, int ncomp, int rr);
+                       int scomp, int ncomp, int rr,
+                       const IntVect& ngcrse = IntVect(0));
     /**
      * \brief Average fine FabArray onto coarse FabArray of same IndexType without geometric weighting.
      *
      * Works for any IndexType shared by both \p crse and \p fine. This routine DOES NOT assume that
      * the \p crse BoxArray is a coarsened version of the \p fine BoxArray.
      */
-    template<typename FAB>
-    void average_down (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
-                       int scomp, int ncomp, const IntVect& ratio, const IntVect& ngcrse = IntVect(0));
+    template <typename MF, std::enable_if_t<IsFabArray_v<MF>,int> = 0>
+    void average_down (const MF& S_fine, MF& S_crse,
+                       int scomp, int ncomp, const IntVect& ratio,
+                       const IntVect& ngcrse = IntVect(0));
     //! Average fine FabArray onto coarse FabArray of same IndexType without geometric weighting.
-    template<typename FAB>
+    template <typename MF, std::enable_if_t<IsFabArray_v<MF>,int> = 0>
     void average_down (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
-                       int scomp, int ncomp, int rr);
+                       int scomp, int ncomp, int rr,
+                       const IntVect& ngcrse = IntVect(0));
 
     //! Average fine face-based MultiFab onto crse face-based MultiFab.
     template <typename MF, std::enable_if_t<IsFabArray_v<MF>,int> = 0>
@@ -529,7 +532,7 @@ makeFineMask (const FabArray<FAB>& cmf, const FabArray<FAB>& fmf,
 
 /********** Begin average-to-different-IndexType methods **********/
 // template <typename DMF, typename SMF, std::enable_if_t<IsFabArray_v<SMF> && IsFabArray_v<DMF>, int> FOO>
-void average_from_different_ixtype (DMF& destMF, const SMF& srceMF,
+void average_to_different_ixtype (DMF& destMF, const SMF& srceMF,
                                     int dcomp, int scomp, int ncomp,
                                     const IntVect& ngrow,
                                     const Geometry* geom,
@@ -796,9 +799,10 @@ void average_face_to_cellcenter (CMF& cc, int dcomp,
 /********** End average-to-different-IndexType methods **********/
 
 /********** Begin average-down methods **********/
-template<typename FAB>
-void average_down (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
-                   int scomp, int ncomp, const IntVect& ratio, const IntVect& ngcrse)
+template <typename MF, std::enable_if_t<IsFabArray<MF>::value,int> FOO>
+void average_down (const MF& S_fine, MF& S_crse,
+                   int scomp, int ncomp, const IntVect& ratio,
+                   const IntVect& ngcrse)
 {
     BL_PROFILE("amrex::average_down");
     AMREX_ASSERT(S_crse.nComp() == S_fine.nComp());
@@ -817,18 +821,27 @@ void average_down (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
     }
     else
     {
-        FabArray<FAB> crse_S_fine(crse_S_fine_BA, S_fine.DistributionMap(),
-                                  ncomp, ngcrse, MFInfo(), DefaultFabFactory<FAB>());
+        MF crse_S_fine(crse_S_fine_BA, S_fine.DistributionMap(),
+                       ncomp, ngcrse, MFInfo(), DefaultFabFactory<FAB>());
         average_down_matching(S_fine, crse_S_fine, 0, scomp, ncomp, ratio, ngcrse);
         S_crse.ParallelCopy(crse_S_fine,0,scomp,ncomp);
     }
 }
 
-template<typename FAB>
-void average_down_matching (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
-                            int fcomp, int ccomp, int ncomp, const IntVect& ratio, const IntVect& ngcrse)
+template <typename MF, std::enable_if_t<IsFabArray<MF>::value,int> FOO>
+void average_down (const MF& S_fine, MF& S_crse,
+                   int scomp, int ncomp, int rr,
+                   const IntVect& ngcrse)
 {
-    using VT = typename FAB::value_type;
+    average_down(S_fine,S_crse,scomp,ncomp,rr*IntVect::TheUnitVector(),ngcrse);
+}
+
+template <typename MF, std::enable_if_t<IsFabArray<MF>::value,int> FOO>
+void average_down_matching (const MF& S_fine, MF& S_crse,
+                            int fcomp, int ccomp, int ncomp, const IntVect& ratio,
+                            const IntVect& ngcrse)
+{
+    using VT = typename MF::value_type;
     IndexType ixType = S_fine.ixType();
 
     Dim3 ratioDim3, range;
@@ -953,7 +966,7 @@ template<typename FAB>
 void average_down_cells (const FabArray<FAB>& S_fine, FabArray<FAB>& S_crse,
                    int scomp, int ncomp, const IntVect& ratio)
 {
-    BL_PROFILE("amrex::average_down");
+    BL_PROFILE("amrex::average_down_cells");
     AMREX_ASSERT(S_crse.nComp() == S_fine.nComp());
     AMREX_ASSERT((S_crse.is_cell_centered() && S_fine.is_cell_centered()) ||
                  (S_crse.is_nodal()         && S_fine.is_nodal()));
