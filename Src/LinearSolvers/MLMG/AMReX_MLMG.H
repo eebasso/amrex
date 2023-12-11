@@ -1530,7 +1530,14 @@ MLMGT<MF>::bottomSolveWithCG (MF& x, const MF& b, typename MLCGSolverT<MF>::Type
 
     int ret = cg_solver.solve(x, b, bottom_reltol, bottom_abstol);
     if (ret != 0 && verbose > 1) {
-        amrex::Print() << "MLMG: Bottom solve failed.\n";
+        std::string typename = "Unknown CG type";
+        if (       type == MLCGSolverT<MF>::Type::BiCGStab) {
+            typename = "BiCGStab";
+        } else if (type == MLCGSolverT<MF>::Type::CG) {
+            typename = "CG";
+        }
+        amrex::Print() << "MLMG: Bottom solve with " << typename << " failed,"
+                       << "return value = " << ret << "\n";
     }
     m_niters_cg.push_back(cg_solver.getNumIters());
     return ret;

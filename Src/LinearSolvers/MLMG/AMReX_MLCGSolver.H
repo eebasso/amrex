@@ -52,6 +52,13 @@ public:
 
     [[nodiscard]] int getNumIters () const noexcept { return iter; }
 
+    std::string solverName () const
+    {
+        
+    }
+
+    std::string returnValueExplanation () { return m_return_value_explanation; }
+
 private:
 
     MLLinOpT<MF>& Lp;
@@ -62,6 +69,7 @@ private:
     int maxiter   = 100;
     IntVect nghost = IntVect(0);
     int iter = -1;
+    std::string m_return_value_explanation = "Unknown return value";
 };
 
 template <typename MF>
@@ -129,6 +137,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
                            << ", rnorm = " << rnorm
                            << ", eps_abs = " << eps_abs << std::endl;
         }
+        m_return_value_explanation = "Converged at Iteration 0 since rnorm0 " + (rnorm == RT(0.0) ? "== 0" : "< eps_abs");
         return ret;
     }
 
@@ -137,6 +146,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         const RT rho = dotxy(rh,r);
         if ( rho == 0 )
         {
+            m_return_value_explanation = "Failed to converge due to rho == 0";
             ret = 1; break;
         }
         if ( iter == 1 )
@@ -159,6 +169,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         }
         else
         {
+            m_return_value_explanation = "Failed to converge due to rhTV == 0";
             ret = 2; break;
         }
         MF::Saxpy(sol, alpha, p, 0, 0, ncomp, nghost); // sol += alpha * p
@@ -175,7 +186,11 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
                            << rnorm/(rnorm0) << '\n';
         }
 
-        if ( rnorm < eps_rel*rnorm0 || rnorm < eps_abs ) { break; }
+        if ( rnorm < eps_rel*rnorm0 || rnorm < eps_abs )
+        {
+            m_return_value_explanation = "Converged at Half Iter " + std::string(iter);
+            ret = 0; break;
+        }
 
         Lp.apply(amrlev, mglev, t, r, MLLinOpT<MF>::BCMode::Homogeneous, MLLinOpT<MF>::StateMode::Correction);
         Lp.normalize(amrlev, mglev, t);
@@ -196,6 +211,7 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         }
         else
         {
+            m_return_value_explanation = "Failed to converge due to dot(t,t) == 0";
             ret = 3; break;
         }
         MF::Saxpy(sol, omega, r, 0, 0, ncomp, nghost); // sol += omega * r
@@ -211,10 +227,15 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
                            << rnorm/(rnorm0) << '\n';
         }
 
-        if ( rnorm < eps_rel*rnorm0 || rnorm < eps_abs ) { break; }
+        if ( rnorm < eps_rel*rnorm0 || rnorm < eps_abs )
+        {
+            m_return_value_explanation = "Converged at Iteration " + std::string(iter);
+            ret = 0; break;
+        }
 
         if ( omega == 0 )
         {
+            m_return_value_explanation = "Failed to converge due to omega == 0";
             ret = 4; break;
         }
         rho_1 = rho;
@@ -233,6 +254,11 @@ MLCGSolverT<MF>::solve_bicgstab (MF& sol, const MF& rhs, RT eps_rel, RT eps_abs)
         if ( verbose > 0 && ParallelDescriptor::IOProcessor() ) {
             amrex::Warning("MLCGSolver_BiCGStab:: failed to converge!");
         }
+        if (iter != maxiter)
+        {
+            amrex::Warning("MLCGSolver_BiCGStab:: iter expected be the same as maxiter here!");
+        }
+        m_return_value_explanation = "Failed to converge under tolerances after max iterations = " + std::string(maxiter);
         ret = 8;
     }
 
@@ -398,6 +424,8 @@ MLCGSolverT<MF>::norm_inf (const MF& res, bool local) -> RT
     }
     return result;
 }
+
+
 
 using MLCGSolver = MLCGSolverT<MultiFab>;
 
