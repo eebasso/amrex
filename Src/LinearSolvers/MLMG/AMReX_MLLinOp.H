@@ -85,10 +85,20 @@ struct LinOpEnumType
     enum struct Location { FaceCenter, FaceCentroid, CellCenter, CellCentroid };
 };
 
+template <typename T, class Enable = void> struct LinOpData {};
+//
+template <typename T>
+struct LinOpData <T, std::enable_if_t<IsMultiFabLike_v<T> > >
+{
+    using   fab_type = typename T::fab_type;
+    using value_type = typename T::value_type;
+};
+
 template <typename T> class MLMGT;
 template <typename T> class MLCGSolverT;
 template <typename T> class MLPoissonT;
 template <typename T> class MLABecLaplacianT;
+template <typename T> class GMRESMLMGT;
 
 template <typename MF>
 class MLLinOpT
@@ -99,9 +109,11 @@ public:
     template <typename T> friend class MLCGSolverT;
     template <typename T> friend class MLPoissonT;
     template <typename T> friend class MLABecLaplacianT;
+    template <typename T> friend class GMRESMLMGT;
 
-    using FAB = typename MF::fab_type;
-    using RT  = typename MF::value_type;
+    using MFType = MF;
+    using FAB = typename LinOpData<MF>::fab_type;
+    using RT  = typename LinOpData<MF>::value_type;
 
     using BCType = LinOpBCType;
     using BCMode    = LinOpEnumType::BCMode;
@@ -287,7 +299,7 @@ public:
      * \param famrlev fine AMR level
      * \param fine    fine level data
      * \param crse    coarse level data
-     * \parame nghost number of ghost cells
+     * \param nghost number of ghost cells
      */
     virtual void interpolationAmr (int famrlev, MF& fine, const MF& crse,
                                    IntVect const& nghost) const = 0;
@@ -488,6 +500,22 @@ public:
 
     [[nodiscard]] bool isMFIterSafe (int amrlev, int mglev1, int mglev2) const;
 
+    //! Return the number of AMR levels
+    [[nodiscard]] int NAMRLevels () const noexcept { return m_num_amr_levels; }
+
+    //! Return the number of MG levels at given AMR level
+    [[nodiscard]] int NMGLevels (int amrlev) const noexcept { return m_num_mg_levels[amrlev]; }
+
+    [[nodiscard]] const Geometry& Geom (int amr_lev, int mglev=0) const noexcept { return m_geom[amr_lev][mglev]; }
+
+    // BC
+    Vector<Array<BCType, AMREX_SPACEDIM> > m_lobc;
+    Vector<Array<BCType, AMREX_SPACEDIM> > m_hibc;
+    // Need to save the original copy because we change the BC type to
+    // Neumann for inhomogeneous Neumann and Robin.
+    Vector<Array<BCType, AMREX_SPACEDIM> > m_lobc_orig;
+    Vector<Array<BCType, AMREX_SPACEDIM> > m_hibc_orig;
+
 protected:
 
     static constexpr int mg_coarsen_ratio = 2;
@@ -544,14 +572,6 @@ protected:
     };
     std::unique_ptr<CommContainer> m_raii_comm;
 
-    // BC
-    Vector<Array<BCType, AMREX_SPACEDIM> > m_lobc;
-    Vector<Array<BCType, AMREX_SPACEDIM> > m_hibc;
-    // Need to save the original copy because we change the BC type to
-    // Neumann for inhomogeneous Neumann and Robin.
-    Vector<Array<BCType, AMREX_SPACEDIM> > m_lobc_orig;
-    Vector<Array<BCType, AMREX_SPACEDIM> > m_hibc_orig;
-
     Array<Real, AMREX_SPACEDIM> m_domain_bloc_lo {{AMREX_D_DECL(0._rt,0._rt,0._rt)}};
     Array<Real, AMREX_SPACEDIM> m_domain_bloc_hi {{AMREX_D_DECL(0._rt,0._rt,0._rt)}};
 
@@ -561,19 +581,11 @@ protected:
     const MF* m_coarse_data_for_bc = nullptr;
     MF m_coarse_data_for_bc_raii;
 
-    //! Return the number of AMR levels
-    [[nodiscard]] int NAMRLevels () const noexcept { return m_num_amr_levels; }
-
-    //! Return the number of MG levels at given AMR level
-    [[nodiscard]] int NMGLevels (int amrlev) const noexcept { return m_num_mg_levels[amrlev]; }
-
     //! Return AMR refinement ratios
     [[nodiscard]] const Vector<int>& AMRRefRatio () const noexcept { return m_amr_ref_ratio; }
 
     //! Return AMR refinement ratio at given AMR level
     [[nodiscard]] int AMRRefRatio (int amr_lev) const noexcept { return m_amr_ref_ratio[amr_lev]; }
-
-    [[nodiscard]] const Geometry& Geom (int amr_lev, int mglev=0) const noexcept { return m_geom[amr_lev][mglev]; }
 
     [[nodiscard]] FabFactory<FAB> const* Factory (int amr_lev, int mglev=0) const noexcept {
         return m_factory[amr_lev][mglev].get();
@@ -1375,13 +1387,18 @@ template <typename MF>
 void
 MLLinOpT<MF>::make (Vector<Vector<MF> >& mf, IntVect const& ng) const
 {
-    mf.clear();
-    mf.resize(m_num_amr_levels);
-    for (int alev = 0; alev < m_num_amr_levels; ++alev) {
-        mf[alev].resize(m_num_mg_levels[alev]);
-        for (int mlev = 0; mlev < m_num_mg_levels[alev]; ++mlev) {
-            mf[alev][mlev] = make(alev, mlev, ng);
+    if constexpr (IsMultiFabLike_v<MF>) {
+        mf.clear();
+        mf.resize(m_num_amr_levels);
+        for (int alev = 0; alev < m_num_amr_levels; ++alev) {
+            mf[alev].resize(m_num_mg_levels[alev]);
+            for (int mlev = 0; mlev < m_num_mg_levels[alev]; ++mlev) {
+                mf[alev][mlev] = make(alev, mlev, ng);
+            }
         }
+    } else {
+        amrex::ignore_unused(mf, ng);
+        amrex::Abort("MLLinOpT::make: how did we get here?");
     }
 }
 
@@ -1389,39 +1406,62 @@ template <typename MF>
 MF
 MLLinOpT<MF>::make (int amrlev, int mglev, IntVect const& ng) const
 {
-    return MF(amrex::convert(m_grids[amrlev][mglev], m_ixtype),
-              m_dmap[amrlev][mglev], getNComp(), ng, MFInfo(),
-              *m_factory[amrlev][mglev]);
+    if constexpr (IsMultiFabLike_v<MF>) {
+        return MF(amrex::convert(m_grids[amrlev][mglev], m_ixtype),
+                  m_dmap[amrlev][mglev], getNComp(), ng, MFInfo(),
+                  *m_factory[amrlev][mglev]);
+    } else {
+        amrex::ignore_unused(amrlev, mglev, ng);
+        amrex::Abort("MLLinOpT::make: how did we get here?");
+        return {};
+    }
 }
 
 template <typename MF>
 MF
 MLLinOpT<MF>::makeAlias (MF const& mf) const
 {
-    return MF(mf, amrex::make_alias, 0, mf.nComp());
+    if constexpr (IsMultiFabLike_v<MF>) {
+        return MF(mf, amrex::make_alias, 0, mf.nComp());
+    } else {
+        amrex::ignore_unused(mf);
+        amrex::Abort("MLLinOpT::makeAlias: how did we get here?");
+        return {};
+    }
 }
 
 template <typename MF>
 MF
 MLLinOpT<MF>::makeCoarseMG (int amrlev, int mglev, IntVect const& ng) const
 {
-    BoxArray cba = m_grids[amrlev][mglev];
-    IntVect ratio = (amrlev > 0) ? IntVect(2) : mg_coarsen_ratio_vec[mglev];
-    cba.coarsen(ratio);
-    cba.convert(m_ixtype);
-    return MF(cba, m_dmap[amrlev][mglev], getNComp(), ng);
-
+    if constexpr (IsMultiFabLike_v<MF>) {
+        BoxArray cba = m_grids[amrlev][mglev];
+        IntVect ratio = (amrlev > 0) ? IntVect(2) : mg_coarsen_ratio_vec[mglev];
+        cba.coarsen(ratio);
+        cba.convert(m_ixtype);
+        return MF(cba, m_dmap[amrlev][mglev], getNComp(), ng);
+    } else {
+        amrex::ignore_unused(amrlev, mglev, ng);
+        amrex::Abort("MLLinOpT::makeCoarseMG: how did we get here?");
+        return {};
+    }
 }
 
 template <typename MF>
 MF
 MLLinOpT<MF>::makeCoarseAmr (int famrlev, IntVect const& ng) const
 {
-    BoxArray cba = m_grids[famrlev][0];
-    IntVect ratio(AMRRefRatio(famrlev-1));
-    cba.coarsen(ratio);
-    cba.convert(m_ixtype);
-    return MF(cba, m_dmap[famrlev][0], getNComp(), ng);
+    if constexpr (IsMultiFabLike_v<MF>) {
+        BoxArray cba = m_grids[famrlev][0];
+        IntVect ratio(AMRRefRatio(famrlev-1));
+        cba.coarsen(ratio);
+        cba.convert(m_ixtype);
+        return MF(cba, m_dmap[famrlev][0], getNComp(), ng);
+    } else {
+        amrex::ignore_unused(famrlev, ng);
+        amrex::Abort("MLLinOpT::makeCoarseAmr: how did we get here?");
+        return {};
+    }
 }
 
 template <typename MF>

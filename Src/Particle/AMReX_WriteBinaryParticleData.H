@@ -157,8 +157,8 @@ void packParticleIDs (I* idata, const P& p, bool is_checkpoint) noexcept
         std::uint32_t xu, yu;
         xu = (std::uint32_t)((p.m_idcpu & 0xFFFFFFFF00000000LL) >> 32);
         yu = (std::uint32_t)( p.m_idcpu & 0xFFFFFFFFLL);
-        std::memcpy(&xi, &xu, sizeof(xu));
-        std::memcpy(&yi, &yu, sizeof(yu));
+        amrex::Gpu::memcpy(&xi, &xu, sizeof(xu));
+        amrex::Gpu::memcpy(&yi, &yu, sizeof(yu));
         idata[0] = xi;
         idata[1] = yi;
     } else {
@@ -338,9 +338,10 @@ packIOData (Vector<int>& idata, Vector<ParticleReal>& rdata, const PC& pc, int l
                 else {
                     amrex::ignore_unused(is_checkpoint);
                     // Int: id, cpu
-                    *iptr = soa.GetIntData(0)[pindex];
+                    uint64_t idcpu = soa.GetIdCPUData()[pindex];
+                    *iptr = (int) ParticleIDWrapper(idcpu);
                     iptr += 1;
-                    *iptr = soa.GetIntData(1)[pindex];
+                    *iptr = (int) ParticleCPUWrapper(idcpu);
                     iptr += 1;
 
                     // Real: position
@@ -348,8 +349,8 @@ packIOData (Vector<int>& idata, Vector<ParticleReal>& rdata, const PC& pc, int l
                     rptr += AMREX_SPACEDIM;
                 }
 
-                // extra SoA int data
-                const int int_start_offset = PC::ParticleType::is_soa_particle ? 2 : 0; // pure SoA: skip id, cpu
+                // SoA int data
+                const int int_start_offset = 0;
                 for (int j = int_start_offset; j < pc.NumIntComps(); j++) {
                     if (write_int_comp[PC::NStructInt+j]) {
                         *iptr = soa.GetIntData(j)[pindex];
@@ -1021,14 +1022,15 @@ void WriteBinaryParticleDataAsync (PC const& pc,
                         }
                         else {
                             // Ints: id, cpu
-                            *iptr = soa.GetIntData(0)[pindex];
+                            uint64_t idcpu = soa.GetIdCPUData()[pindex];
+                            *iptr = (int) ParticleIDWrapper(idcpu);
                             iptr += 1;
-                            *iptr = soa.GetIntData(1)[pindex];
+                            *iptr = (int) ParticleCPUWrapper(idcpu);
                             iptr += 1;
                         }
 
                         // extra SoA Ints
-                        const int int_start_offset = PC::ParticleType::is_soa_particle ? 2 : 0; // pure SoA: skip id, cpu
+                        const int int_start_offset = 0;
                         for (int j = int_start_offset; j < nic; j++)
                         {
                             if (write_int_comp[NStructInt+j])
