@@ -4,7 +4,43 @@
 #include <AMReX_Config.H>
 #include <AMReX_MLLinOp.H>
 
-
+/**
+ * Possible permutations of solver:
+ *
+ * - Zero, constant, or varying alpha
+ * - Constant or varying beta
+ * - Face-centered beta vs cell-centered beta
+ * - With or without EBs
+ * - With or without a Lagrange multiplier
+ *
+ * Solutions:
+ * - Always convert non-zero constant alpha into varying edge-centered alpha
+ * - Always convert cell-centered beta into varying face-centered beta
+ * - Combine EB and non-EB classes together, similar to MLEBNodeFDLaplacian
+ * - Obtain non-zero alpha from zero alpha functions?
+ * - Only use multiplier for zero alpha cases?
+ * - Multiplier classes can borrow a lot from non-multiplier classes
+ *
+ * Possible combos:
+ *
+ * Magnetostatic in vacuum:
+ * - Zero alpha, constant beta, w or w/o EBs, no multiplier
+ * - Zero alpha, constant beta, w or w/o EBs, with multiplier
+ *
+ * Magnetostatic in macroscopic medium:
+ * - Zero alpha, varying beta, w or w/o EBs, no multiplier
+ * - Zero alpha, varying beta, w or w/o EBs, with multiplier
+ *
+ * Implicit time evolution in vacuum:
+ * - Varying alpha, constant beta, w or w/o EBs, no multiplier
+ * - Varying alpha, constant beta, w or w/o EBs, with multiplier
+ *
+ * Implicit time evolution in macroscopic medium:
+ * - Varying alpha, varying beta, w or w/o EBs, no multiplier
+ * - Varying alpha, varying beta, w or w/o EBs, with multiplier
+ *
+ *
+ */
 
 
 namespace amrex {
