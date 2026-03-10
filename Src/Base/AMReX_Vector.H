@@ -12,6 +12,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace amrex {
@@ -32,13 +33,15 @@ public:
 
     [[nodiscard]] T& operator[] (size_type i) noexcept
     {
-        BL_ASSERT( i < (this->std::vector<T, Allocator>::size()) );
+        AMREX_ASSERT_WITH_MESSAGE(i < (this->std::vector<T, Allocator>::size()),
+                                  "Out of bound error, index: " + std::to_string(i) + " size: " + std::to_string(size()));
         return this->std::vector<T, Allocator>::operator[](i);
     }
 
     [[nodiscard]] const T& operator[] (size_type i) const noexcept
     {
-        BL_ASSERT( i < (this->std::vector<T, Allocator>::size()) );
+        AMREX_ASSERT_WITH_MESSAGE(i < (this->std::vector<T, Allocator>::size()),
+                                  "Out of bound error, index: " + std::to_string(i) + " size: " + std::to_string(size()));
         return this->std::vector<T, Allocator>::operator[](i);
     }
 
@@ -66,6 +69,15 @@ namespace amrex
         return r;
     }
 
+    template <class T, std::size_t N, typename = typename T::FABType>
+    [[nodiscard]] Vector<Array<T,N>*> GetVecOfPtrs (Vector<Array<T,N>>& a)
+    {
+        Vector<Array<T,N>*> r;
+        r.reserve(a.size());
+        for (auto& x : a) { r.push_back(&x); }
+        return r;
+    }
+
     template <class T>
     [[nodiscard]] Vector<T*> GetVecOfPtrs (const Vector<std::unique_ptr<T> >& a)
     {
@@ -83,6 +95,15 @@ namespace amrex
         Vector<const T*> r;
         r.reserve(a.size());
         for (const auto& x : a) { r.push_back(&x); }
+        return r;
+    }
+
+    template <class T, std::size_t N, typename = typename T::FABType>
+    [[nodiscard]] Vector<Array<T,N> const*> GetVecOfConstPtrs (Vector<Array<T,N>> const& a)
+    {
+        Vector<Array<T,N> const*> r;
+        r.reserve(a.size());
+        for (auto& x : a) { r.push_back(&x); }
         return r;
     }
 
@@ -145,9 +166,9 @@ namespace amrex
         return r;
     }
 
-    template <class T, typename std::enable_if<IsFabArray<T>::value ||
+    template <class T, std::enable_if_t<IsFabArray<T>::value ||
                                                IsBaseFab<T>::value,
-                                               int>::type = 0 >
+                                               int> = 0 >
     [[nodiscard]] Vector<std::array<T const*,AMREX_SPACEDIM> >
     GetVecOfArrOfConstPtrs (const Vector<std::array<T,AMREX_SPACEDIM> >& a)
     {
@@ -157,9 +178,9 @@ namespace amrex
         return r;
     }
 
-    template <class T, typename std::enable_if<IsFabArray<T>::value ||
+    template <class T, std::enable_if_t<IsFabArray<T>::value ||
                                                IsBaseFab<T>::value,
-                                               int>::type = 0 >
+                                               int> = 0 >
     [[nodiscard]] Vector<std::array<T*, AMREX_SPACEDIM> >
     GetVecOfArrOfPtrs(Vector<std::array<T, AMREX_SPACEDIM> >& a)
     {
@@ -193,6 +214,7 @@ namespace amrex
         vec.erase(it, vec.end());
     }
 
+    /// \cond DOXYGEN_IGNORE
     namespace detail {
         template <class T, class H>
         std::size_t removeDupDoit (Vector<T>& vec, std::size_t start, std::size_t stop)
@@ -275,6 +297,7 @@ namespace amrex
             return detail::removeDupDoit<T,H>(vec, start+swapPos, start+sentinelPos+1);
         }
     }
+    /// \endcond
 
     template <class T, class H>
     void RemoveDuplicates (Vector<T>& vec) {

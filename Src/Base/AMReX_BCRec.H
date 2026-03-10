@@ -1,4 +1,5 @@
 
+
 #ifndef AMREX_BCREC_H_
 #define AMREX_BCREC_H_
 #include <AMReX_Config.H>
@@ -43,7 +44,7 @@ public:
         {}
     /*
     * \brief Yet another constructor.  Inherits bndry types from bc_domain
-    * when bx lies on edge of domain otherwise gets interior Dirchlet.
+    * when bx lies on edge of domain otherwise gets interior Dirichlet.
     */
     AMREX_GPU_HOST_DEVICE
     BCRec (const Box&   bx,

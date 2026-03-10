@@ -1,4 +1,5 @@
 
+
 #ifndef BL_BOXDOMAIN_H
 #define BL_BOXDOMAIN_H
 #include <AMReX_Config.H>
@@ -92,7 +93,7 @@ public:
 
     /**
     * Returns True if this BoxDomain is valid.  Checks for
-    * disjointness. Returns true if the BoxDomain is empty.
+    * disjointedness. Returns true if the BoxDomain is empty.
     */
     [[nodiscard]] bool ok () const;
 

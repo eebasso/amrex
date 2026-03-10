@@ -1,4 +1,5 @@
 
+
 #ifndef BL_IMULTIFAB_H
 #define BL_IMULTIFAB_H
 #include <AMReX_Config.H>
@@ -117,7 +118,7 @@ public:
     * \brief Identical to the previous min() function, but confines its
     * search to intersection of Box b and the iMultiFab.
     *
-    * \param b
+    * \param region
     * \param comp
     * \param nghost
     * \param local
@@ -145,7 +146,7 @@ public:
     * \brief Identical to the previous max() function, but confines its
     * search to intersection of Box b and the iMultiFab.
     *
-    * \param b
+    * \param region
     * \param comp
     * \param nghost
     * \param local
@@ -163,6 +164,11 @@ public:
     * \param local
     */
     [[nodiscard]] Long sum (int comp, int nghost = 0, bool local = false) const;
+
+    /**
+    * \brief Returns the sum of component "comp" in the given "region". -- no ghost cells are included.
+    */
+    [[nodiscard]] Long sum (Box const& region, int comp = 0, bool local = false) const;
 
     /**
     * \brief Adds the scalar value val to the value of each cell in the
@@ -418,10 +424,17 @@ public:
     */
     static void Add (iMultiFab&       dst,
                      const iMultiFab& src,
-                     int             srccomp,
-                     int             dstcomp,
-                     int             numcomp,
-                     int             nghost);
+                     int              srccomp,
+                     int              dstcomp,
+                     int              numcomp,
+                     int              nghost);
+
+    static void Add (iMultiFab&       dst,
+                     const iMultiFab& src,
+                     int              srccomp,
+                     int              dstcomp,
+                     int              numcomp,
+                     const IntVect&   nghost);
 
     /**
     * \brief Copy from src to dst including nghost ghost cells.
@@ -449,6 +462,25 @@ public:
                       const IntVect&  nghost);
 
     /**
+    * \brief Swap from src to dst including nghost ghost cells.
+    * The two iMultiFabs MUST have the same underlying BoxArray.
+    * The swap is local.
+    */
+    static void Swap (iMultiFab&      dst,
+                      iMultiFab&      src,
+                      int             srccomp,
+                      int             dstcomp,
+                      int             numcomp,
+                      int             nghost);
+
+    static void Swap (iMultiFab&      dst,
+                      iMultiFab&      src,
+                      int             srccomp,
+                      int             dstcomp,
+                      int             numcomp,
+                      const IntVect&  nghost);
+
+    /**
     * \brief Subtract src from dst including nghost ghost cells.
     * The two iMultiFabs MUST have the same underlying BoxArray.
     *
@@ -461,10 +493,17 @@ public:
     */
     static void Subtract (iMultiFab&       dst,
                           const iMultiFab& src,
-                          int             srccomp,
-                          int             dstcomp,
-                          int             numcomp,
-                          int             nghost);
+                          int              srccomp,
+                          int              dstcomp,
+                          int              numcomp,
+                          int              nghost);
+
+    static void Subtract (iMultiFab&       dst,
+                          const iMultiFab& src,
+                          int              srccomp,
+                          int              dstcomp,
+                          int              numcomp,
+                          const IntVect&   nghost);
 
     /**
     * \brief Multiply dst by src including nghost ghost cells.
@@ -479,10 +518,17 @@ public:
     */
     static void Multiply (iMultiFab&       dst,
                           const iMultiFab& src,
-                          int             srccomp,
-                          int             dstcomp,
-                          int             numcomp,
-                          int             nghost);
+                          int              srccomp,
+                          int              dstcomp,
+                          int              numcomp,
+                          int              nghost);
+
+    static void Multiply (iMultiFab&       dst,
+                          const iMultiFab& src,
+                          int              srccomp,
+                          int              dstcomp,
+                          int              numcomp,
+                          const IntVect&   nghost);
 
     /**
     * \brief Divide dst by src including nghost ghost cells.
@@ -497,10 +543,17 @@ public:
     */
     static void Divide (iMultiFab&       dst,
                         const iMultiFab& src,
-                        int             srccomp,
-                        int             dstcomp,
-                        int             numcomp,
-                        int             nghost);
+                        int              srccomp,
+                        int              dstcomp,
+                        int              numcomp,
+                        int              nghost);
+
+    static void Divide (iMultiFab&       dst,
+                        const iMultiFab& src,
+                        int              srccomp,
+                        int              dstcomp,
+                        int              numcomp,
+                        const IntVect&   nghost);
 
     void define (const BoxArray&            bxs,
                  const DistributionMapping& dm,

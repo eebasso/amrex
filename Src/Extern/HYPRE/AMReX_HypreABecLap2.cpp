@@ -50,7 +50,7 @@ HypreABecLap2::solve (MultiFab& soln, const MultiFab& rhs, Real reltol, Real abs
         m_factory = &(rhs.Factory());
     }
 
-    // We have to do this repeatedly to avoid memory leak due to Hypre bug
+    // We have to do this repeatedly to avoid memory leak due to HYPRE bug
     HYPRE_SStructVectorCreate(comm, hgrid, &b);
     HYPRE_SStructVectorSetObjectType(b, HYPRE_PARCSR);
     HYPRE_SStructVectorInitialize(b);
@@ -103,12 +103,12 @@ HypreABecLap2::solve (MultiFab& soln, const MultiFab& rhs, Real reltol, Real abs
 
         amrex::Print() << "\n" << num_iterations
                        << " Hypre SS BoomerAMG Iterations, Relative Residual "
-                       << res << std::endl;
+                       << res << '\n';
     }
 
     getSolution(soln);
 
-    // We have to do this repeatedly to avoid memory leak due to Hypre bug
+    // We have to do this repeatedly to avoid memory leak due to HYPRE bug
     HYPRE_SStructVectorDestroy(b);
     b = nullptr;
     HYPRE_SStructVectorDestroy(x);
@@ -137,7 +137,7 @@ HypreABecLap2::getSolution (MultiFab& a_soln)
         HYPRE_SStructVectorGetBoxValues(x, part, reglo.data(), reghi.data(),
                                         0, (*soln)[mfi].dataPtr());
     }
-    Gpu::synchronize();
+    Gpu::hypreSynchronize();
 
     if (a_soln.nGrowVect() != 0) {
         MultiFab::Copy(a_soln, tmp, 0, 0, 1, 0);
@@ -255,6 +255,7 @@ HypreABecLap2::prepareSolver ()
         });
 
         Real* mat = (Real*) rfab.dataPtr();
+        // Sync required: mat is passed to HYPRE host API below
         Gpu::streamSynchronize();
 
         auto reglo = Hypre::loV(reg);
@@ -262,7 +263,7 @@ HypreABecLap2::prepareSolver ()
         HYPRE_SStructMatrixSetBoxValues(A, part, reglo.data(), reghi.data(),
                                         0, regular_stencil_size, stencil_indices.data(),
                                         mat);
-        Gpu::synchronize();
+        Gpu::hypreSynchronize();
     }
     HYPRE_SStructMatrixAssemble(A);
 
@@ -304,6 +305,7 @@ HypreABecLap2::loadVectors (MultiFab& soln, const MultiFab& rhs)
         {
             rhs_diag_ma[box_no](i,j,k) = rhs_ma[box_no](i,j,k) * diaginv_ma[box_no](i,j,k);
         });
+        // Sync required: rhs_diag is passed to HYPRE host API in loadVectors
         Gpu::streamSynchronize();
     } else
 #endif
@@ -335,7 +337,7 @@ HypreABecLap2::loadVectors (MultiFab& soln, const MultiFab& rhs)
         HYPRE_SStructVectorSetBoxValues(b, part, reglo.data(), reghi.data(),
                                         0, rhs_diag[mfi].dataPtr());
     }
-    Gpu::synchronize();
+    Gpu::hypreSynchronize();
 }
 
 }

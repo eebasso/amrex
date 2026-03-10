@@ -635,325 +635,385 @@ public:
   friend std::istream& operator>> (std::istream& is, RealVect& iv);
 
 protected:
-
-  /**
-     The individual components of this RealVect.
-   */
-  Real vect[SpaceDim] = {AMREX_D_DECL(Real(0.),Real(0.),Real(0.))};
-
+    /**
+        The individual components of this RealVectND.
+    */
+    Real vect[dim] = {};
 };
 
-AMREX_GPU_HOST_DEVICE
-inline
-RealVect&
-RealVect::operator-= (Real s) noexcept
-{
-  AMREX_D_EXPR(vect[0] -= s, vect[1] -= s, vect[2] -= s);
-  return *this;
-}
+// Template deduction guide for RealVectND
+template <class...Args,
+    std::enable_if_t<
+        IsConvertible_v<Real, Args...>,
+    int> = 0>
+AMREX_GPU_HOST_DEVICE // __device__ for HIP
+RealVectND(Real, Real, Args...) -> RealVectND<sizeof...(Args)+2>;
 
-AMREX_GPU_HOST_DEVICE
-inline
-RealVect&
-RealVect::operator*= (Real s) noexcept
-{
-  AMREX_D_EXPR(vect[0] *= s, vect[1] *= s, vect[2] *= s);
-  return *this;
-}
+// Template deduction guide for RealVectND
+template<int dim>
+AMREX_GPU_HOST_DEVICE // __device__ for HIP
+RealVectND(const IntVectND<dim>&) -> RealVectND<dim>;
 
-AMREX_GPU_HOST_DEVICE
-inline
-RealVect&
-RealVect::operator-= (const RealVect& p) noexcept
-{
-  AMREX_D_EXPR(vect[0] -= p[0], vect[1] -= p[1], vect[2] -= p[2]);
+// Template deduction guide for RealVectND
+template<int dim>
+AMREX_GPU_HOST_DEVICE // __device__ for HIP
+RealVectND(const GpuArray<Real, dim>&) -> RealVectND<dim>;
 
-  return *this;
-}
+template <int dim>
+inline constexpr const RealVectND<dim> RealVectND<dim>::Zero{Real(0)};
 
-AMREX_GPU_HOST_DEVICE
-inline
-RealVect
-RealVect::operator+ () const noexcept
-{
-  return RealVect(*this);
-}
+template <int dim>
+inline constexpr const RealVectND<dim> RealVectND<dim>::Unit{Real(1)};
 
-AMREX_GPU_HOST_DEVICE
-inline
-RealVect
-RealVect::operator- () const noexcept
-{
-  return RealVect(AMREX_D_DECL(-vect[0], -vect[1], -vect[2]));
-}
+using RealVect = RealVectND<AMREX_SPACEDIM>;
 
-AMREX_GPU_HOST_DEVICE
-inline
-RealVect&
-RealVect::scale (Real s) noexcept
-{
-  AMREX_D_EXPR(vect[0] *= s, vect[1] *= s, vect[2] *= s);
-  return *this;
-}
-
-AMREX_GPU_HOST_DEVICE
-inline
-IntVect
-RealVect::floor () const noexcept
-{
-  return IntVect(AMREX_D_DECL(static_cast<int>(std::floor(vect[0])),
-                              static_cast<int>(std::floor(vect[1])),
-                              static_cast<int>(std::floor(vect[2]))));
-}
-
-AMREX_GPU_HOST_DEVICE
-inline
-IntVect
-RealVect::ceil () const noexcept
-{
-  return IntVect(AMREX_D_DECL(static_cast<int>(std::ceil(vect[0])),
-                              static_cast<int>(std::ceil(vect[1])),
-                              static_cast<int>(std::ceil(vect[2]))));
-}
-
-AMREX_GPU_HOST_DEVICE
-inline
-IntVect
-RealVect::round () const noexcept
-{
-  return IntVect(AMREX_D_DECL(static_cast<int>(std::round(vect[0])),
-                              static_cast<int>(std::round(vect[1])),
-                              static_cast<int>(std::round(vect[2]))));
-}
-
-AMREX_GPU_HOST_DEVICE
-inline
-Real
-RealVect::sum () const noexcept
-{
-  return AMREX_D_TERM(vect[0], + vect[1], + vect[2]);
-}
-
-AMREX_GPU_HOST_DEVICE
-inline
-Real
-RealVect::vectorLength () const noexcept
-{
-  Real len = this->radSquared();
-  len = std::sqrt(len);
-  return len;
-}
-
-AMREX_GPU_HOST_DEVICE
-inline
-Real
-RealVect::radSquared() const noexcept
-{
-    return AMREX_D_TERM(vect[0]*vect[0],
-                      + vect[1]*vect[1],
-                      + vect[2]*vect[2]);
-}
-
-AMREX_GPU_HOST_DEVICE
-inline
-Real
-RealVect::product () const noexcept
-{
-  return AMREX_D_TERM(vect[0], * vect[1], * vect[2]);
-}
-
-AMREX_GPU_HOST_DEVICE
-inline
-RealVect
-scale (const RealVect& p,
-       Real            s) noexcept
-{
-  return RealVect(AMREX_D_DECL(s * p[0], s * p[1], s * p[2]));
-}
-
-AMREX_GPU_HOST_DEVICE
-inline
-bool
-RealVect::operator< (const RealVect& p) const noexcept
-{
-  return AMREX_D_TERM(vect[0] < p[0], && vect[1] < p[1], && vect[2] < p[2]);
-}
-
-AMREX_GPU_HOST_DEVICE
-inline
-bool
-RealVect::operator<= (const RealVect& p) const noexcept
-{
-  return AMREX_D_TERM(vect[0] <= p[0], && vect[1] <= p[1], && vect[2] <= p[2]);
-}
-
-AMREX_GPU_HOST_DEVICE
-inline
-bool
-RealVect::operator> (const RealVect& p) const noexcept
-{
-  return AMREX_D_TERM(vect[0] > p[0], && vect[1] > p[1], && vect[2] > p[2]);
-}
-
-AMREX_GPU_HOST_DEVICE
-inline
-bool
-RealVect::operator>= (const RealVect& p) const noexcept
-{
-  return AMREX_D_TERM(vect[0] >= p[0], && vect[1] >= p[1], && vect[2] >= p[2]);
-}
-
-AMREX_GPU_HOST_DEVICE
-inline
-RealVect&
-RealVect::min (const RealVect& p) noexcept
-{
-    AMREX_D_EXPR(vect[0] = amrex::min(vect[0], p.vect[0]),
-                 vect[1] = amrex::min(vect[1], p.vect[1]),
-                 vect[2] = amrex::min(vect[2], p.vect[2]));
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+RealVectND<dim>&
+RealVectND<dim>::operator-= (Real s) noexcept {
+    for (int i=0; i<dim; ++i) {
+        vect[i] -= s;
+    }
     return *this;
 }
 
-AMREX_GPU_HOST_DEVICE
-inline
-RealVect&
-RealVect::max (const RealVect& p) noexcept
-{
-    AMREX_D_EXPR(vect[0] = amrex::max(vect[0], p.vect[0]),
-                 vect[1] = amrex::max(vect[1], p.vect[1]),
-                 vect[2] = amrex::max(vect[2], p.vect[2]));
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+RealVectND<dim>&
+RealVectND<dim>::operator*= (Real s) noexcept {
+    for (int i=0; i<dim; ++i) {
+        vect[i] *= s;
+    }
     return *this;
 }
 
-AMREX_GPU_HOST_DEVICE
-inline
-RealVect
-min (const RealVect& p1,
-     const RealVect& p2) noexcept
-{
-  RealVect p(p1);
-  return p.min(p2);
-}
-
-AMREX_GPU_HOST_DEVICE
-inline
-RealVect
-max (const RealVect& p1,
-     const RealVect& p2) noexcept
-{
-  RealVect p(p1);
-  return p.max(p2);
-}
-
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-Real RealVect::dotProduct(const RealVect& a_rhs) const noexcept
-{
-    return AMREX_D_TERM(vect[0]*a_rhs.vect[0], +
-                        vect[1]*a_rhs.vect[1], +
-                        vect[2]*a_rhs.vect[2]);
+RealVectND<dim>&
+RealVectND<dim>::operator-= (const RealVectND<dim>& p) noexcept {
+    for (int i=0; i<dim; ++i) {
+        vect[i] -= p[i];
+    }
+    return *this;
 }
 
-#if (AMREX_SPACEDIM == 3)
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-  RealVect RealVect::crossProduct(const RealVect& a_rhs) const noexcept
-  {
-    RealVect tmp(vect[1]*a_rhs[2] - vect[2]*a_rhs[1],
-                 vect[2]*a_rhs[0] - vect[0]*a_rhs[2],
-                 vect[0]*a_rhs[1] - vect[1]*a_rhs[0]);
+RealVectND<dim>
+RealVectND<dim>::operator+ () const noexcept {
+    return RealVectND<dim>(*this);
+}
+
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+RealVectND<dim>
+RealVectND<dim>::operator- () const noexcept {
+    RealVectND<dim> retval;
+    for (int i=0; i<dim; ++i) {
+        retval[i] = -vect[i];
+    }
+    return retval;
+}
+
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+RealVectND<dim>&
+RealVectND<dim>::scale (Real s) noexcept {
+    for (int i=0; i<dim; ++i) {
+        vect[i] *= s;
+    }
+    return *this;
+}
+
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+IntVectND<dim>
+RealVectND<dim>::floor () const noexcept {
+    IntVectND<dim> retval;
+    for (int i=0; i<dim; ++i) {
+        retval[i] = static_cast<int>(std::floor(vect[i]));
+    }
+    return retval;
+}
+
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+IntVectND<dim>
+RealVectND<dim>::ceil () const noexcept {
+    IntVectND<dim> retval;
+    for (int i=0; i<dim; ++i) {
+        retval[i] = static_cast<int>(std::ceil(vect[i]));
+    }
+    return retval;
+}
+
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+IntVectND<dim>
+RealVectND<dim>::round () const noexcept {
+    IntVectND<dim> retval;
+    for (int i=0; i<dim; ++i) {
+        retval[i] = static_cast<int>(std::round(vect[i]));
+    }
+    return retval;
+}
+
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+Real
+RealVectND<dim>::sum () const noexcept {
+    Real retval = vect[0];
+    for (int i=1; i<dim; ++i) {
+        retval += vect[i];
+    }
+    return retval;
+}
+
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+Real
+RealVectND<dim>::vectorLength () const noexcept {
+    Real len = this->radSquared();
+    len = std::sqrt(len);
+    return len;
+}
+
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+Real
+RealVectND<dim>::radSquared () const noexcept {
+    Real retval = vect[0] * vect[0];
+    for (int i=1; i<dim; ++i) {
+        retval += vect[i] * vect[i];
+    }
+    return retval;
+}
+
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+Real
+RealVectND<dim>::product () const noexcept {
+    Real retval = vect[0];
+    for (int i=1; i<dim; ++i) {
+        retval *= vect[i];
+    }
+    return retval;
+}
+
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+bool
+RealVectND<dim>::operator< (const RealVectND<dim>& p) const noexcept {
+    bool retval = vect[0] < p[0];
+    for (int i=1; i<dim; ++i) {
+        retval = retval && vect[i] < p[i];
+    }
+    return retval;
+}
+
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+bool
+RealVectND<dim>::operator<= (const RealVectND<dim>& p) const noexcept {
+    bool retval = vect[0] <= p[0];
+    for (int i=1; i<dim; ++i) {
+        retval = retval && vect[i] <= p[i];
+    }
+    return retval;
+}
+
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+bool
+RealVectND<dim>::operator> (const RealVectND<dim>& p) const noexcept {
+    bool retval = vect[0] > p[0];
+    for (int i=1; i<dim; ++i) {
+        retval = retval && vect[i] > p[i];
+    }
+    return retval;
+}
+
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+bool
+RealVectND<dim>::operator>= (const RealVectND<dim>& p) const noexcept {
+    bool retval = vect[0] >= p[0];
+    for (int i=1; i<dim; ++i) {
+        retval = retval && vect[i] >= p[i];
+    }
+    return retval;
+}
+
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+RealVectND<dim>&
+RealVectND<dim>::min (const RealVectND<dim>& p) noexcept {
+    for (int i=0; i<dim; ++i) {
+        vect[i] = amrex::min(vect[i], p.vect[i]);
+    }
+    return *this;
+}
+
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+RealVectND<dim>&
+RealVectND<dim>::max (const RealVectND<dim>& p) noexcept {
+    for (int i=0; i<dim; ++i) {
+        vect[i] = amrex::max(vect[i], p.vect[i]);
+    }
+    return *this;
+}
+
+/**
+    Returns the RealVectND that is the component-wise minimum of two
+    argument RealVectNDs.
+*/
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+RealVectND<dim> min (const RealVectND<dim>& p1, const RealVectND<dim>& p2) noexcept {
+    RealVectND<dim> p(p1);
+    return p.min(p2);
+}
+
+/**
+    Returns the RealVectND that is the component-wise maximum of two
+    argument RealVectNDs.
+*/
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+RealVectND<dim> max (const RealVectND<dim>& p1, const RealVectND<dim>& p2) noexcept {
+    RealVectND<dim> p(p1);
+    return p.max(p2);
+}
+
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+Real
+RealVectND<dim>::dotProduct (const RealVectND<dim>& a_rhs) const noexcept {
+    Real retval  = vect[0] * a_rhs.vect[0];
+    for (int i=1; i<dim; ++i) {
+        retval += vect[i] * a_rhs.vect[i];
+    }
+    return retval;
+}
+
+template <int dim>
+template <int N, std::enable_if_t<( N==3 ), int>>
+AMREX_GPU_HOST_DEVICE inline
+RealVectND<dim>
+RealVectND<dim>::crossProduct (const RealVectND<dim>& a_rhs) const noexcept {
+    RealVectND<dim> tmp(vect[1] * a_rhs[2] - vect[2] * a_rhs[1],
+                        vect[2] * a_rhs[0] - vect[0] * a_rhs[2],
+                        vect[0] * a_rhs[1] - vect[1] * a_rhs[0]);
     return tmp;
-  }
-#endif
+}
 
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-RealVect&
-RealVect::operator+= (Real s) noexcept
-{
-    AMREX_D_EXPR(vect[0] += s, vect[1] += s, vect[2] += s);
+RealVectND<dim>&
+RealVectND<dim>::operator+= (Real s) noexcept {
+    for (int i=0; i<dim; ++i) {
+        vect[i] += s;
+    }
     return *this;
 }
 
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-RealVect&
-RealVect::operator+= (const RealVect& p) noexcept
-{
-    AMREX_D_EXPR(vect[0] += p[0], vect[1] += p[1], vect[2] += p[2]);
+RealVectND<dim>&
+RealVectND<dim>::operator+= (const RealVectND<dim>& p) noexcept {
+    for (int i=0; i<dim; ++i) {
+        vect[i] += p[i];
+    }
     return *this;
 }
 
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-RealVect&
-RealVect::operator*= (const RealVect &p) noexcept
-{
-    AMREX_D_EXPR(vect[0] *= p[0], vect[1] *= p[1], vect[2] *= p[2]);
+RealVectND<dim>&
+RealVectND<dim>::operator*= (const RealVectND<dim>& p) noexcept {
+    for (int i=0; i<dim; ++i) {
+        vect[i] *= p[i];
+    }
     return *this;
 }
 
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-RealVect
-RealVect::operator* (Real s) const noexcept
-{
-    RealVect v(AMREX_D_DECL(vect[0]*s, vect[1]*s, vect[2]*s));
-    return v;
+RealVectND<dim>
+RealVectND<dim>::operator* (Real s) const noexcept {
+    RealVectND<dim> retval;
+    for (int i=0; i<dim; ++i) {
+        retval[i] = vect[i] * s;
+    }
+    return retval;
 }
 
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-RealVect
-RealVect::operator- (Real s) const noexcept
-{
-    RealVect v(AMREX_D_DECL(vect[0]-s, vect[1]-s, vect[2]-s));
-    return v;
+RealVectND<dim>
+RealVectND<dim>::operator- (Real s) const noexcept {
+    RealVectND<dim> retval;
+    for (int i=0; i<dim; ++i) {
+        retval[i] = vect[i] - s;
+    }
+    return retval;
 }
 
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-RealVect
-RealVect::operator+ (Real s) const noexcept
-{
-    RealVect v(AMREX_D_DECL(vect[0]+s, vect[1]+s, vect[2]+s));
-    return v;
+RealVectND<dim>
+RealVectND<dim>::operator+ (Real s) const noexcept {
+    RealVectND<dim> retval;
+    for (int i=0; i<dim; ++i) {
+        retval[i] = vect[i] + s;
+    }
+    return retval;
 }
 
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-RealVect&
-RealVect::operator/= (Real s) noexcept
-{
-    AMREX_D_EXPR(vect[0] /= s, vect[1] /= s, vect[2] /= s);
+RealVectND<dim>&
+RealVectND<dim>::operator/= (Real s) noexcept {
+    for (int i=0; i<dim; ++i) {
+        vect[i] /= s;
+    }
     return *this;
 }
 
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-RealVect&
-RealVect::operator/= (const RealVect& p) noexcept
-{
-    AMREX_D_EXPR(vect[0] /= p[0], vect[1] /= p[1], vect[2] /= p[2]);
+RealVectND<dim>&
+RealVectND<dim>::operator/= (const RealVectND<dim>& p) noexcept {
+    for (int i=0; i<dim; ++i) {
+        vect[i] /= p[i];
+    }
     return *this;
 }
 
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-RealVect
-RealVect::operator/ (Real s) const noexcept
-{
-    RealVect result( AMREX_D_DECL( vect[0] / s, vect[1] / s, vect[2] / s));
-    return result ;
+RealVectND<dim>
+RealVectND<dim>::operator/ (Real s) const noexcept {
+    RealVectND<dim> retval;
+    for (int i=0; i<dim; ++i) {
+        retval[i] = vect[i] / s;
+    }
+    return retval;
 }
 
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
 int
-RealVect::minDir(const bool& a_doAbs) const noexcept
-{
+RealVectND<dim>::minDir (const bool& a_doAbs) const noexcept {
     int mDir = 0;
-    for (int idir=0; idir<SpaceDim; idir++)
-    {
-        if (a_doAbs)
-        {
-            if (std::abs(vect[idir]) < std::abs(vect[mDir]))
-            {
+    for (int idir = 0; idir < dim; idir++) {
+        if (a_doAbs) {
+            if (std::abs(vect[idir]) < std::abs(vect[mDir])) {
                 mDir = idir;
             }
-        }
-        else
-        {
-            if (vect[idir] < vect[mDir])
-            {
+        } else {
+            if (vect[idir] < vect[mDir]) {
                 mDir = idir;
             }
         }
@@ -961,24 +1021,18 @@ RealVect::minDir(const bool& a_doAbs) const noexcept
     return mDir;
 }
 
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
 int
-RealVect::maxDir(const bool& a_doAbs) const noexcept
-{
+RealVectND<dim>::maxDir (const bool& a_doAbs) const noexcept {
     int mDir = 0;
-    for (int idir=0; idir<SpaceDim; idir++)
-    {
-        if (a_doAbs)
-        {
-            if (std::abs(vect[idir]) > std::abs(vect[mDir]))
-            {
+    for (int idir = 0; idir < dim; idir++) {
+        if (a_doAbs) {
+            if (std::abs(vect[idir]) > std::abs(vect[mDir])) {
                 mDir = idir;
             }
-        }
-        else
-        {
-            if (vect[idir] > vect[mDir])
-            {
+        } else {
+            if (vect[idir] > vect[mDir]) {
                 mDir = idir;
             }
         }
@@ -986,80 +1040,279 @@ RealVect::maxDir(const bool& a_doAbs) const noexcept
     return mDir;
 }
 
+/**
+    Returns a basis vector in the given coordinate direction.<br>
+    In 2-D:<br>
+    BASISREALV(0) == (1.,0.);
+    BASISREALV(1) == (0.,1.).<br>
+    In 3-D:<br>
+    BASISREALV(0) == (1.,0.,0.);
+    BASISREALV(1) == (0.,1.,0.);
+    BASISREALV(2) == (0.,0.,1.).<br>
+    Note that the coordinate directions are based at zero.
+*/
+template <int dim=AMREX_SPACEDIM>
 AMREX_GPU_HOST_DEVICE inline
-RealVect
-BASISREALV (int dir) noexcept
-{
-    AMREX_ASSERT(dir >= 0 && dir < SpaceDim);
-    RealVect tmp(AMREX_D_DECL(0.,0.,0.));
-    tmp.vect[dir] = 1;
+RealVectND<dim> BASISREALV (int dir) noexcept {
+    AMREX_ASSERT(dir >= 0 && dir < dim);
+    RealVectND<dim> tmp{0.};
+    tmp[dir] = 1;
     return tmp;
 }
 
+/**
+    \name Arithmetic functions
+*/
+/*@{*/
+
+/**
+     Returns a RealVectND that is a RealVectND <i>p</i> with each component
+    divided by a scalar <i>s</i>.
+*/
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-RealVect
-operator/ (Real            s,
-           const RealVect& p) noexcept
-{
-    return RealVect(AMREX_D_DECL(s/p[0], s/p[1], s/p[2]));
+RealVectND<dim> operator/ (Real s, const RealVectND<dim>& p) noexcept {
+    RealVectND<dim> retval;
+    for (int i=0; i<dim; ++i) {
+        retval[i] = s / p[i];
+    }
+    return retval;
 }
 
+/**
+    Returns a RealVectND that is a RealVectND <i>p</i> with
+    a scalar <i>s</i> added to each component.
+*/
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-RealVect
-operator+ (Real            s,
-           const RealVect& p) noexcept
-{
-    return RealVect(AMREX_D_DECL(p[0] + s, p[1] + s, p[2] + s));
+RealVectND<dim> operator+ (Real s, const RealVectND<dim>& p) noexcept {
+    RealVectND<dim> retval;
+    for (int i=0; i<dim; ++i) {
+        retval[i] = p[i] + s;
+    }
+    return retval;
 }
 
+/**
+     Returns <i>s - p</i>.
+*/
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-RealVect
-operator- (Real            s,
-           const RealVect& p) noexcept
-{
-    return RealVect(AMREX_D_DECL(s - p[0], s - p[1], s - p[2]));
+RealVectND<dim> operator- (Real s, const RealVectND<dim>& p) noexcept {
+    RealVectND<dim> retval;
+    for (int i=0; i<dim; ++i) {
+        retval[i] = s - p[i];
+    }
+    return retval;
 }
 
+/**
+     Returns a RealVectND that is a RealVectND <i>p</i> with each component
+    multiplied by a scalar <i>s</i>.
+*/
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-RealVect
-operator* (Real            s,
-           const RealVect& p) noexcept
-{
-    return RealVect(AMREX_D_DECL(s * p[0], s * p[1], s * p[2]));
+RealVectND<dim> operator* (Real s, const RealVectND<dim>& p) noexcept {
+    RealVectND<dim> retval;
+    for (int i=0; i<dim; ++i) {
+        retval[i] = s * p[i];
+    }
+    return retval;
 }
 
+/**
+     Returns component-wise quotient <i>p / s</i>.
+*/
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-RealVect
-operator/ (const RealVect& s,
-           const RealVect& p) noexcept
-{
-    return RealVect(AMREX_D_DECL(s[0] / p[0], s[1] /p[1], s[2] / p[2]));
+RealVectND<dim> operator/ (const RealVectND<dim>& s, const RealVectND<dim>& p) noexcept {
+    RealVectND<dim> retval;
+    for (int i=0; i<dim; ++i) {
+        retval[i] = s[i] / p[i];
+    }
+    return retval;
 }
 
+/**
+     Returns component-wise sum of RealVectNDs <i>s</i> and <i>p</i>.
+*/
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-RealVect
-operator+ (const RealVect& s,
-           const RealVect& p) noexcept
-{
-    return RealVect(AMREX_D_DECL(p[0] + s[0], p[1] +s[1], p[2] + s[2]));
+RealVectND<dim> operator+ (const RealVectND<dim>& s, const RealVectND<dim>& p) noexcept {
+    RealVectND<dim> retval;
+    for (int i=0; i<dim; ++i) {
+        retval[i] = p[i] + s[i];
+    }
+    return retval;
 }
 
+/**
+     Returns <i>s - p</i>.
+*/
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-RealVect
-operator- (const RealVect& s,
-           const RealVect& p) noexcept
-{
-    return RealVect(AMREX_D_DECL(s[0] - p[0], s[1] - p[1], s[2] - p[2]));
+RealVectND<dim> operator- (const RealVectND<dim>& s, const RealVectND<dim>& p) noexcept {
+    RealVectND<dim> retval;
+    for (int i=0; i<dim; ++i) {
+        retval[i] = s[i] - p[i];
+    }
+    return retval;
 }
 
+/**
+     Returns component-wise product of <i>s</i> and <i>p</i>.
+*/
+template <int dim>
 AMREX_GPU_HOST_DEVICE inline
-RealVect
-operator* (const RealVect& s,
-           const RealVect& p) noexcept
-{
-    return RealVect(AMREX_D_DECL(p[0] * s[0], p[1] *s[1], p[2] * s[2]));
+RealVectND<dim> operator* (const RealVectND<dim>& s, const RealVectND<dim>& p) noexcept {
+    RealVectND<dim> retval;
+    for (int i=0; i<dim; ++i) {
+        retval[i] = p[i] * s[i];
+    }
+    return retval;
 }
 
+/**
+    Returns a RealVectND obtained by multiplying each of the components
+    of the given RealVectND by a scalar.
+*/
+template <int dim>
+AMREX_GPU_HOST_DEVICE inline
+RealVectND<dim> scale (const RealVectND<dim>& p, Real s) noexcept {
+    RealVectND<dim> retval;
+    for (int i=0; i<dim; ++i) {
+        retval[i] = s * p[i];
+    }
+    return retval;
 }
+
+/// \cond DOXYGEN_IGNORE
+namespace detail {
+    std::ostream& real_vector_write (std::ostream& os, const Real* p, int dim);
+    std::istream& real_vector_read (std::istream& is, Real* p, int dim);
+
+    template<int dim>
+    AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE constexpr
+    void RealVectCat_imp (Real*& dst, const RealVectND<dim>& src) noexcept {
+        for (int i=0; i<dim; ++i) {
+            dst[i] = src[i];
+        }
+        dst += dim;
+    }
+
+    template<int dim>
+    AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE constexpr
+    void RealVectSplit_imp2 (RealVectND<dim>& dst, const Real*& src) noexcept {
+        for (int i=0; i<dim; ++i) {
+            dst[i] = src[i];
+        }
+        src += dim;
+    }
+
+    template<class T, std::size_t...Ns>
+    AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE constexpr
+    T RealVectSplit_imp (T& retval, std::index_sequence<Ns...>, const Real * src) noexcept {
+        (RealVectSplit_imp2(amrex::get<Ns>(retval), src), ...);
+        return retval;
+    }
+}
+/// \endcond
+
+template<int dim>
+std::ostream&
+operator<< (std::ostream& os, const RealVectND<dim>& p)
+{
+    return detail::real_vector_write(os, p.begin(), dim);
+}
+
+template<int dim>
+std::istream&
+operator>> (std::istream& is, RealVectND<dim>& p)
+{
+    return detail::real_vector_read(is, p.begin(), dim);
+}
+
+/**
+* \brief Returns a RealVectND obtained by concatenating the input RealVectNDs.
+* The dimension of the return value equals the sum of the dimensions of the inputted RealVectNDs.
+*/
+template<int d, int...dims>
+AMREX_GPU_HOST_DEVICE
+AMREX_FORCE_INLINE
+constexpr RealVectND<detail::get_sum<d, dims...>()>
+RealVectCat (const RealVectND<d>& v, const RealVectND<dims>&...vects) noexcept {
+    RealVectND<detail::get_sum<d, dims...>()> retval {0.};
+    Real* dst = retval.begin();
+    detail::RealVectCat_imp(dst, v);
+    (detail::RealVectCat_imp(dst, vects), ...);
+    return retval;
+}
+
+/**
+* \brief Returns a tuple of RealVectND obtained by splitting the input RealVectND
+* according to the dimensions specified by the template arguments.
+*/
+template<int d, int...dims>
+AMREX_GPU_HOST_DEVICE
+AMREX_FORCE_INLINE
+constexpr GpuTuple<RealVectND<d>, RealVectND<dims>...>
+RealVectSplit (const RealVectND<detail::get_sum<d, dims...>()>& v) noexcept {
+    GpuTuple<RealVectND<d>, RealVectND<dims>...> retval;
+    return detail::RealVectSplit_imp(retval,
+                                    std::make_index_sequence<1 + sizeof...(dims)>(),
+                                    v.begin());
+}
+
+/**
+* \brief Returns a new RealVectND of size new_dim and
+* assigns the first new_dim values of iv to it.
+*/
+template<int new_dim, int old_dim>
+AMREX_GPU_HOST_DEVICE
+AMREX_FORCE_INLINE
+constexpr RealVectND<new_dim>
+RealVectShrink (const RealVectND<old_dim>& iv) noexcept {
+    return iv.template shrink<new_dim>();
+}
+
+/**
+* \brief Returns a new RealVectND of size new_dim and
+* assigns all values of iv to it and fill_extra to the remaining elements.
+*/
+template<int new_dim, int old_dim>
+AMREX_GPU_HOST_DEVICE
+AMREX_FORCE_INLINE
+constexpr RealVectND<new_dim>
+RealVectExpand (const RealVectND<old_dim>& iv, Real fill_extra=0) noexcept {
+    return iv.template expand<new_dim>(fill_extra);
+}
+
+/**
+* \brief Returns a new RealVectND of size new_dim
+* by either shrinking or expanding iv.
+*/
+template<int new_dim, int old_dim>
+AMREX_GPU_HOST_DEVICE
+AMREX_FORCE_INLINE
+constexpr RealVectND<new_dim>
+RealVectResize (const RealVectND<old_dim>& iv, Real fill_extra=0) noexcept {
+    return iv.template resize<new_dim>(fill_extra);
+}
+
+/*@}*/
+
+}  // namespace amrex
+
+// Spcialize std::tuple_size for RealVectND. Used by structured bindings.
+template<int dim>
+struct std::tuple_size<amrex::RealVectND<dim>> {
+    static constexpr std::size_t value = dim;
+};
+
+// Spcialize std::tuple_element for RealVectND. Used by structured bindings.
+template<std::size_t s, int dim>
+struct std::tuple_element<s, amrex::RealVectND<dim>> {
+    using type = amrex::Real;
+};
 
 #endif

@@ -4,15 +4,12 @@
 #include <AMReX_Config.H>
 
 #include <AMReX_BLassert.H>
+#include <AMReX_BaseFab.H>
 #include <AMReX_FArrayBox.H>
 #include <AMReX_FabArray.H>
 #include <AMReX_FabArrayUtility.H>
 #include <AMReX_Periodicity.H>
 #include <AMReX_NonLocalBC.H>
-
-#ifdef AMREX_USE_EB
-#include <AMReX_EBMultiFabUtil.H>
-#endif
 
 #include <cstdint>
 
@@ -183,11 +180,13 @@ public:
      * component comp of the MultiFab.
      */
     [[nodiscard]] Real norm0 (int comp = 0, int nghost = 0, bool local = false, bool ignore_covered = false ) const;
+    /// \ingroup amrex_fabarray_communication
     [[nodiscard]] Real norminf (int comp = 0, int nghost = 0, bool local = false, bool ignore_covered = false ) const {
         return norm0(comp,nghost,local,ignore_covered);
     }
 
     [[nodiscard]] Real norm0 (const iMultiFab& mask, int comp = 0, int nghost = 0, bool local = false) const;
+    /// \ingroup amrex_fabarray_communication
     [[nodiscard]] Real norminf (const iMultiFab& mask, int comp = 0, int nghost = 0, bool local = false) const {
         return norm0(mask,comp,nghost,local);
     }
@@ -202,6 +201,7 @@ public:
      * each component of \p comps of the MultiFab. \p nghost ghost cells are used.
      */
     [[nodiscard]] Vector<Real> norm0 (const Vector<int>& comps, int nghost = 0, bool local = false, bool ignore_covered = false ) const;
+    /// \ingroup amrex_fabarray_communication
     [[nodiscard]] Vector<Real> norminf (const Vector<int>& comps, int nghost = 0, bool local = false, bool ignore_covered = false) const {
         return norm0(comps,nghost,local,ignore_covered);
     }
@@ -240,6 +240,11 @@ public:
      * \brief Returns the sum of component \p comp over the MultiFab -- no ghost cells are included.
      */
     [[nodiscard]] Real sum (int comp = 0, bool local = false) const;
+    /**
+    * \ingroup amrex_fabarray_communication
+    * \brief Returns the sum of component "comp" in the given "region". -- no ghost cells are included.
+    */
+    [[nodiscard]] Real sum (Box const& region, int comp = 0, bool local = false) const;
 
     using FabArray<FArrayBox>::sum;
 
@@ -409,9 +414,11 @@ public:
     void negate (const Box& region,
                  int        nghost = 0);
 
+    /// \ingroup amrex_fabarray_communication
     [[nodiscard]] IntVect minIndex (int comp,
                       int nghost = 0) const;
 
+    /// \ingroup amrex_fabarray_communication
     [[nodiscard]] IntVect maxIndex (int comp,
                       int nghost = 0) const;
     /**
@@ -455,6 +462,7 @@ public:
                  int             num_comp,
                  int             nghost);
     /**
+    * \ingroup amrex_fabarray_communication
     * \brief Returns the dot product of two MultiFabs.
     */
     static Real Dot (const MultiFab& x, int xcomp,
@@ -462,11 +470,13 @@ public:
                      int numcomp, int nghost, bool local = false);
 
     /**
+    * \ingroup amrex_fabarray_communication
     * \brief Returns the dot product of a MultiFab with itself.
     */
     static Real Dot (const MultiFab& x, int xcomp,
                      int numcomp, int nghost, bool local = false);
 
+    /// \ingroup amrex_fabarray_communication
     static Real Dot (const iMultiFab& mask,
                      const MultiFab& x, int xcomp,
                      const MultiFab& y, int ycomp,
@@ -488,6 +498,14 @@ public:
                      int             dstcomp,
                      int             numcomp,
                      const IntVect&  nghost);
+
+    /** Create a deep copy of this MultiFab and its data.
+     *
+     * This uses the same arena and factory in the copy and copies
+     * all data.
+     */
+    [[nodiscard]] MultiFab deepCopy () const;
+
     /**
     * \brief Copy from src to dst including nghost ghost cells.
     * The two MultiFabs MUST have the same underlying BoxArray.
@@ -643,6 +661,17 @@ public:
                             const IntVect&  nghost);
 
     /**
+    * \brief Are the numbers in the MF finite (i.e., neither nan nor inf)?
+    * This may return true, even if the MF contains NaNs or Infs, if the
+    * machine doesn't support the appropriate NaN and Inf testing functions.
+    *
+    * This version checks all components and grow cells.
+    */
+    [[nodiscard]] bool is_finite (bool local=false) const;
+    [[nodiscard]] bool is_finite (int scomp, int ncomp, int ngrow = 0, bool local=false) const;
+    [[nodiscard]] bool is_finite (int scomp, int ncomp, const IntVect& ngrow, bool local=false) const;
+
+    /**
     * \brief Are there any NaNs in the MF?
     * This may return false, even if the MF contains NaNs, if the machine
     * doesn't support the appropriate NaN testing functions.
@@ -673,7 +702,23 @@ public:
     void AverageSync (const Periodicity& period = Periodicity::NonPeriodic());
     //! Sync up nodal data with weights
     void WeightedSync (const MultiFab& wgt, const Periodicity& period = Periodicity::NonPeriodic());
-    //! Sync up nodal data with owners overriding non-owners
+    /**
+     * \brief Synchronize nodal data.  The synchronization will override
+     * valid regions by the intersecting valid regions with a higher
+     * precedence, according to the owner mask provided as input.
+     *
+     * Example: Suppose there is a valid point that is shared by 4 boxes.
+     * Some operation assigns values a, b, c, and d to the 4 points in the 4 boxes.
+     * We then call SumBoundary to add the 4 values and store the result in the 4 boxes.
+     * The value in box 0 might be the result of a+b+c+d, the value in box 1 might be
+     * the result of b+c+d+a, etc. The resulting data could be out of sync across
+     * boxes due to roundoff errors.
+     * OverrideSync synchronizes the data by overriding all values with one value
+     * (e.g., the value from box 0).
+     *
+     * \param msk    owner mask
+     * \param period periodic length if it's non-zero
+     */
     void OverrideSync (const iMultiFab& msk, const Periodicity& period = Periodicity::NonPeriodic());
 
     using FabArray<FArrayBox>::OverrideSync;
