@@ -573,6 +573,8 @@ void mlebabeclap_gsrb (Box const& box,
 
                         Real feb_gamma = -phig_gamma/dg * ba * beb(i,j,k,n);
                         gamma += vfrcinv*(-dh)*feb_gamma;
+
+                        gamma *= Real(0.0);
                     }
 
                     Real res = rhs(i,j,k,n) - (gamma*phi(i,j,k,n) - rho);
