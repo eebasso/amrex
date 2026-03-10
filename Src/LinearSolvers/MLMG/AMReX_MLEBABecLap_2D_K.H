@@ -368,6 +368,8 @@ void mlebabeclap_gsrb (Box const& box,
                        bool is_dirichlet, bool beta_on_centroid, bool phi_on_centroid,
                        Box const& vbox, int redblack, int ncomp) noexcept
 {
+    amrex::ignore_unused(dx);
+
     const auto vlo = amrex::lbound(vbox);
     const auto vhi = amrex::ubound(vbox);
 
@@ -756,8 +758,7 @@ void mlebabeclap_normalize (Box const& box, Array4<Real> const& phi,
                             Array4<Real const> const& beb,
                             bool is_dirichlet, bool beta_on_centroid, int ncomp) noexcept
 {
-    amrex::ignore_unused(dh);
-    amrex::ignore_unused(ba);
+    amrex::ignore_unused(dh, ba, dx);
 
     amrex::Loop(box, ncomp, [=] (int i, int j, int k, int n) noexcept
     {
