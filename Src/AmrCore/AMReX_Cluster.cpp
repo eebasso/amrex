@@ -148,7 +148,8 @@ Cluster::minBox () noexcept
 // Finds best cut location in histogram.
 //
 
-static
+namespace {
+
 int
 FindCut (const int* hist,
          int        lo,
@@ -236,7 +237,6 @@ FindCut (const int* hist,
     return lo + cutpoint;
 }
 
-namespace {
 //
 // Predicate in call to std::partition() in Cluster::chop().
 //
@@ -289,10 +289,7 @@ Cluster::chop ()
     for (int n = 0; n < AMREX_SPACEDIM; n++)
     {
         cut[n] = FindCut(hist[n].data(), lo[n], hi[n], status[n]);
-        if (status[n] < mincut)
-        {
-            mincut = status[n];
-        }
+        mincut = std::min(status[n], mincut);
     }
     BL_ASSERT(mincut != InvalidCut);
     //
@@ -371,10 +368,7 @@ Cluster::new_chop ()
            if (n != invalid_dir)
            {
               cut[n] = FindCut(hist[n].data(), lo[n], hi[n], status[n]);
-              if (status[n] < mincut)
-              {
-                  mincut = status[n];
-              }
+              mincut = std::min(status[n], mincut);
            }
        }
        BL_ASSERT(mincut != InvalidCut);

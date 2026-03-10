@@ -15,22 +15,18 @@
 namespace amrex {
 
 std::ostream&
-operator<< (std::ostream&   os,
-            const Geometry& g)
+operator<< (std::ostream& os, const Geometry& g)
 {
     os << (CoordSys&) g << g.ProbDomain() << g.Domain() << 'P' << IntVect(g.isPeriodic());
     return os;
 }
 
 std::istream&
-operator>> (std::istream& is,
-            Geometry&     g)
+operator>> (std::istream& is, Geometry& g)
 {
-    Box     bx;
-    RealBox rb;
-    is >> (CoordSys&) g >> rb >> bx;
-    g.Domain(bx);
-    g.ProbDomain(rb);
+    is >> (CoordSys&) g >> g.prob_domain >> g.domain;
+
+    g.computeRoundoffDomain();
 
     int ic = is.peek();
     if (ic == static_cast<int>('P')) {
@@ -74,11 +70,13 @@ void
 Geometry::define (const Box& dom, const RealBox* rb, int coord,
                   int const* is_per) noexcept
 {
+    AMREX_ASSERT(dom.cellCentered());
+
     Setup(rb,coord,is_per);
 
     Geometry* gg = AMReX::top()->getDefaultGeometry();
 
-    if (coord == -1) {
+    if (coord <= -1 || coord > 2) {
         c_sys = gg->Coord();
     } else {
         c_sys = static_cast<CoordType>(coord);
@@ -202,7 +200,7 @@ Geometry::ResetDefaultCoord (int coord) noexcept
 {
     AMREX_ASSERT(coord >= -1 && coord <= 2);
     Geometry* gg = AMReX::top()->getDefaultGeometry();
-    gg->SetCoord(static_cast<CoordType>(coord));
+    gg->SetCoord(static_cast<CoordType>(coord)); // NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange)
 }
 
 void
@@ -235,7 +233,9 @@ Geometry::GetVolume (MultiFab& vol) const
             {
                 amrex_setvol(makeSingleCellBox(i,j,k), ma[box_no], a_offset, a_dx, coord);
             });
-            Gpu::streamSynchronize();
+            if (!Gpu::inNoSyncRegion()) {
+                Gpu::streamSynchronize();
+            }
         } else
 #endif
         {
@@ -281,7 +281,9 @@ Geometry::GetDLogA (MultiFab&       dloga,
         {
             amrex_setdloga(makeSingleCellBox(i,j,k), ma[box_no], a_offset, a_dx, dir, coord);
         });
-        Gpu::streamSynchronize();
+        if (!Gpu::inNoSyncRegion()) {
+            Gpu::streamSynchronize();
+        }
     } else
 #endif
     {
@@ -341,7 +343,9 @@ Geometry::GetFaceArea (MultiFab&       area,
             {
                 amrex_setarea(makeSingleCellBox(i,j,k), ma[box_no], a_offset, a_dx, dir, coord);
             });
-            Gpu::streamSynchronize();
+            if (!Gpu::inNoSyncRegion()) {
+                Gpu::streamSynchronize();
+            }
         } else
 #endif
         {

@@ -13,6 +13,8 @@ namespace {
     constexpr char RPGM_MAGIC3 = '6';
 }
 
+// NOLINTBEGIN(clang-analyzer-unix.Stream)
+
 int loadPalette (const std::string& filename,
                  Array<unsigned char,NCOLOR>& r, Array<unsigned char,NCOLOR>& g,
                  Array<unsigned char,NCOLOR>& b, Array<unsigned char,NCOLOR>& a)
@@ -20,6 +22,7 @@ int loadPalette (const std::string& filename,
     FILE* fp = std::fopen(filename.c_str(), "rb");
     if (!fp) {
         amrex::Abort("loadPalette: cannot open "+filename);
+        return 0;
     }
 
     std::fseek(fp, 0, SEEK_END);
@@ -94,5 +97,7 @@ void storePPM (const std::string& filename,
     std::free(image);
     std::fclose(fp);
 }
+
+// NOLINTEND(clang-analyzer-unix.Stream)
 
 }
