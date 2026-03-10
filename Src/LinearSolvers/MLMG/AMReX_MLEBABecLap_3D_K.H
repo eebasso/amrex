@@ -881,9 +881,9 @@ void mlebabeclap_gsrb (Box const& box,
 
                         Real dphidn    = (    -phig)/dg;
                         Real feb_gamma = -phig_gamma/dg * beb(i,j,k,n);
-                        gamma += vfrcinv * feb_gamma;
+                        gamma += -vfrcinv * feb_gamma;
                         Real feb = dphidn * beb(i,j,k,n);
-                        rho += -vfrcinv * feb;
+                        rho += vfrcinv * feb;
                     }
 
                     Real res = rhs(i,j,k,n) - (gamma*phi(i,j,k,n) - rho);
@@ -1355,7 +1355,7 @@ void mlebabeclap_normalize (Box const& box, Array4<Real> const& phi,
                 Real gxyz = gx*gy*gz;
                 Real phig_gamma = (Real(1.0)+gx+gy+gz+gxy+gxz+gyz+gxyz);
                 Real feb_gamma = -phig_gamma/dg * beb(i,j,k,n);
-                gamma += vfrcinv*feb_gamma;
+                gamma += -vfrcinv * feb_gamma;
             }
 
             phi(i,j,k,n) /= gamma;
