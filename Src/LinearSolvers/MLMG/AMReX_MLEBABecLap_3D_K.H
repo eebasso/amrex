@@ -209,6 +209,8 @@ void mlebabeclap_adotx_centroid (Box const& box, Array4<Real> const& y,
                  dhy*(apym*fym - apyp*fyp) +
                  dhz*(apzm*fzm - apzp*fzp) - dhx*feb);
         }
+
+        y(i,j,k,n) = Real(-10.0);
     });
 }
 
@@ -460,6 +462,8 @@ void mlebabeclap_adotx (Box const& box, Array4<Real> const& y,
                  dhy*(apym*fym - apyp*fyp) +
                  dhz*(apzm*fzm - apzp*fzp) - dhx*feb);
         }
+
+        y(i,j,k,n) = Real(15.0);
     });
 }
 
@@ -540,6 +544,8 @@ void mlebabeclap_ebflux (int i, int j, int k, int n,
         Real dphidn = dhx*(phib-phig)/dg;
         feb(i,j,k,n) = -beb(i,j,k,n) * dphidn;
     }
+
+    feb(i,j,k,n) = Real(123.0);
 }
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
