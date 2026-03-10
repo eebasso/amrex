@@ -580,7 +580,7 @@ void mlebabeclap_gsrb (Box const& box,
                 }
             }
 
-            phi(i,j,k,n) = Real(502.0)
+            phi(i,j,k,n) = Real(502.0);
         }
     });
 }
