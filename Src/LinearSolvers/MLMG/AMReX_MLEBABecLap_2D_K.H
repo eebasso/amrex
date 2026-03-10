@@ -579,8 +579,6 @@ void mlebabeclap_gsrb (Box const& box,
                     phi(i,j,k,n) += res/(gamma-delta);
                 }
             }
-
-            phi(i,j,k,n) = Real(502.0);
         }
     });
 }
