@@ -877,8 +877,6 @@ void mlebabeclap_gsrb (Box const& box,
                             + (gxy + gxyz) * phi(ii,jj,k,n)
                             + (-gxyz) * phi(ii,jj,kk,n);
 
-                        Real ba = ebdata.get<EBData_t::bndryarea>(i,j,k);
-
                         Real dphidn    = (    -phig)/dg;
                         Real feb_gamma = -phig_gamma/dg * beb(i,j,k,n);
                         gamma += -vfrcinv * feb_gamma;
