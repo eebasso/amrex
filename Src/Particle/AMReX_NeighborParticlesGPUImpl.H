@@ -2,6 +2,9 @@
 #define AMREX_NEIGHBORPARTICLESGPUIMPL_H_
 #include <AMReX_Config.H>
 
+namespace amrex {
+
+/// \cond DOXYGEN_IGNORE
 namespace detail
 {
     inline Vector<Box> getBoundaryBoxes(const Box& box, int ncells)
@@ -44,6 +47,7 @@ namespace detail
         return bl;
     }
 }
+/// \endcond
 
 template <int NStructReal, int NStructInt, int NArrayReal, int NArrayInt>
 void
@@ -59,9 +63,9 @@ buildNeighborMask ()
 
     if (ba.size() == 1 && (! geom.isAnyPeriodic()) ) { return; }
 
-    if (m_neighbor_mask_ptr == nullptr ||
-        ! BoxArray::SameRefs(m_neighbor_mask_ptr->boxArray(), ba) ||
-        ! DistributionMapping::SameRefs(m_neighbor_mask_ptr->DistributionMap(), dmap))
+    if (!m_neighbor_mask_initialized ||
+        !BoxArray::SameRefs(m_cached_neighbor_ba, ba) ||
+        !DistributionMapping::SameRefs(m_cached_neighbor_dm, dmap))
     {
         const Periodicity& periodicity = geom.periodicity();
         const std::vector<IntVect>& pshifts = periodicity.shiftIntVect();
@@ -110,6 +114,9 @@ buildNeighborMask ()
             Gpu::streamSynchronize();
         }
 
+        m_cached_neighbor_ba = ba;
+        m_cached_neighbor_dm = dmap;
+        m_neighbor_mask_initialized = true;
         RemoveDuplicates(neighbor_procs);
     }
 }
@@ -255,6 +262,12 @@ updateNeighborsGPU (bool boundary_neighbors_only)
     }
 
     clearNeighbors();
+
+    if (this->use_comms_arena) {
+        snd_buffer.setArena(The_Comms_Arena());
+        rcv_buffer.setArena(The_Comms_Arena());
+    }
+
     packBuffer(*this, neighbor_copy_op, neighbor_copy_plan, snd_buffer);
     if (ParallelDescriptor::UseGpuAwareMpi())
     {
@@ -306,6 +319,8 @@ clearNeighborsGPU()
             ptile.setNumNeighbors(0);
         }
     }
+}
+
 }
 
 #endif

@@ -257,11 +257,16 @@ void mlebabeclap_adotx (Box const& box, Array4<Real> const& y,
                 Real bcty = bc(i,j,k,1);
                 Real dx_eb = get_dx_eb(kappa);
 
-                Real dg = dx_eb / std::max(std::abs(anrmx),std::abs(anrmy));
-                Real gx = bctx - dg*anrmx;
-                Real gy = bcty - dg*anrmy;
-                Real sx = std::copysign(Real(1.0),anrmx);
-                Real sy = std::copysign(Real(1.0),anrmy);
+                Real dg, gx, gy, sx, sy;
+                if (std::abs(anrmx) > std::abs(anrmy)) {
+                    dg = dx_eb / std::abs(anrmx);
+                } else {
+                    dg = dx_eb / std::abs(anrmy);
+                }
+                gx = (bctx - dg*anrmx);
+                gy = (bcty - dg*anrmy);
+                sx = std::copysign(Real(1.0),anrmx);
+                sy = std::copysign(Real(1.0),anrmy);
 
                 int ii = i - static_cast<int>(sx);
                 int jj = j - static_cast<int>(sy);
@@ -319,11 +324,16 @@ void mlebabeclap_ebflux (int i, int j, int k, int n,
         Real bcty = bc(i,j,k,1);
         Real dx_eb = get_dx_eb(kappa);
 
-        Real dg = dx_eb / std::max(std::abs(anrmx),std::abs(anrmy));
-        Real gx = bctx - dg*anrmx;
-        Real gy = bcty - dg*anrmy;
-        Real sx = std::copysign(Real(1.0),anrmx);
-        Real sy = std::copysign(Real(1.0),anrmy);
+        Real dg, gx, gy, sx, sy;
+        if (std::abs(anrmx) > std::abs(anrmy)) {
+            dg = dx_eb / std::abs(anrmx);
+        } else {
+            dg = dx_eb / std::abs(anrmy);
+        }
+        gx = bctx - dg*anrmx;
+        gy = bcty - dg*anrmy;
+        sx = std::copysign(Real(1.0),anrmx);
+        sy = std::copysign(Real(1.0),anrmy);
 
         int ii = i - static_cast<int>(sx);
         int jj = j - static_cast<int>(sy);
@@ -349,12 +359,8 @@ void mlebabeclap_gsrb (Box const& box,
                        Array4<int const> const& m1, Array4<int const> const& m3,
                        Array4<Real const> const& f0, Array4<Real const> const& f2,
                        Array4<Real const> const& f1, Array4<Real const> const& f3,
-                       Array4<const int> const& ccm, Array4<EBCellFlag const> const& flag,
-                       Array4<Real const> const& vfrc,
-                       Array4<Real const> const& apx, Array4<Real const> const& apy,
-                       Array4<Real const> const& fcx, Array4<Real const> const& fcy,
-                       Array4<Real const> const& ba, Array4<Real const> const& bc,
-                       Array4<Real const> const& beb,
+                       Array4<const int> const& ccm, Array4<Real const> const& beb,
+                       EBData const& ebdata,
                        bool is_dirichlet, bool beta_on_centroid, bool phi_on_centroid,
                        Box const& vbox, int redblack, int ncomp) noexcept
 {
@@ -365,7 +371,8 @@ void mlebabeclap_gsrb (Box const& box,
     {
         if ((i+j+k+redblack) % 2 == 0)
         {
-            if (flag(i,j,k).isCovered())
+            auto const flag = ebdata.get<EBData_t::cellflag>(i,j,k);
+            if (flag.isCovered())
             {
                 phi(i,j,k,n) = Real(0.0);
             }
@@ -380,7 +387,7 @@ void mlebabeclap_gsrb (Box const& box,
                 Real cf3 = (j == vhi.y && m3(i,vhi.y+1,k) > 0)
                     ? f3(i,vhi.y,k,n) : Real(0.0);
 
-                if (flag(i,j,k).isRegular())
+                if (flag.isRegular())
                 {
                     Real gamma = alpha*a(i,j,k)
                         + dhx * (bX(i+1,j,k,n) + bX(i,j,k,n))
@@ -399,19 +406,19 @@ void mlebabeclap_gsrb (Box const& box,
                 }
                 else
                 {
-                    Real kappa = vfrc(i,j,k);
-                    Real apxm = apx(i,j,k);
-                    Real apxp = apx(i+1,j,k);
-                    Real apym = apy(i,j,k);
-                    Real apyp = apy(i,j+1,k);
+                    Real kappa = ebdata.get<EBData_t::volfrac>(i,j,k);
+                    Real apxm = ebdata.get<EBData_t::apx>(i  ,j  ,k);
+                    Real apxp = ebdata.get<EBData_t::apx>(i+1,j  ,k);
+                    Real apym = ebdata.get<EBData_t::apy>(i  ,j  ,k);
+                    Real apyp = ebdata.get<EBData_t::apy>(i  ,j+1,k);
 
                     Real fxm = -bX(i,j,k,n)*phi(i-1,j,k,n);
                     Real oxm = -bX(i,j,k,n)*cf0;
                     Real sxm =  bX(i,j,k,n);
                     if (apxm != Real(0.0) && apxm != Real(1.0)) {
-                        int jj = j + static_cast<int>(std::copysign(Real(1.0),fcx(i,j,k)));
-                        Real fracy = (ccm(i-1,jj,k) || ccm(i,jj,k))
-                            ? std::abs(fcx(i,j,k)) : Real(0.0);
+                        Real fcx = ebdata.get<EBData_t::fcx>(i,j,k);
+                        int jj = j + static_cast<int>(std::copysign(Real(1.0),fcx));
+                        Real fracy = (ccm(i-1,jj,k) || ccm(i,jj,k)) ? std::abs(fcx) : Real(0.0);
                         if (!beta_on_centroid && !phi_on_centroid)
                         {
                             fxm = (Real(1.0)-fracy)*fxm +
@@ -431,9 +438,9 @@ void mlebabeclap_gsrb (Box const& box,
                     Real oxp =  bX(i+1,j,k,n)*cf2;
                     Real sxp = -bX(i+1,j,k,n);
                     if (apxp != Real(0.0) && apxp != Real(1.0)) {
-                        int jj = j + static_cast<int>(std::copysign(Real(1.0),fcx(i+1,j,k)));
-                        Real fracy = (ccm(i,jj,k) || ccm(i+1,jj,k))
-                            ? std::abs(fcx(i+1,j,k)) : Real(0.0);
+                        Real fcx = ebdata.get<EBData_t::fcx>(i+1,j,k);
+                        int jj = j + static_cast<int>(std::copysign(Real(1.0),fcx));
+                        Real fracy = (ccm(i,jj,k) || ccm(i+1,jj,k)) ? std::abs(fcx) : Real(0.0);
                         if (!beta_on_centroid && !phi_on_centroid)
                         {
                             fxp = (Real(1.0)-fracy)*fxp +
@@ -453,9 +460,9 @@ void mlebabeclap_gsrb (Box const& box,
                     Real oym = -bY(i,j,k,n)*cf1;
                     Real sym =  bY(i,j,k,n);
                     if (apym != Real(0.0) && apym != Real(1.0)) {
-                        int ii = i + static_cast<int>(std::copysign(Real(1.0),fcy(i,j,k)));
-                        Real fracx = (ccm(ii,j-1,k) || ccm(ii,j,k))
-                            ? std::abs(fcy(i,j,k)) : Real(0.0);
+                        Real fcy = ebdata.get<EBData_t::fcy>(i,j,k);
+                        int ii = i + static_cast<int>(std::copysign(Real(1.0),fcy));
+                        Real fracx = (ccm(ii,j-1,k) || ccm(ii,j,k)) ? std::abs(fcy) : Real(0.0);
                         if (!beta_on_centroid && !phi_on_centroid)
                         {
                             fym = (Real(1.0)-fracx)*fym +
@@ -476,9 +483,9 @@ void mlebabeclap_gsrb (Box const& box,
                     Real oyp =  bY(i,j+1,k,n)*cf3;
                     Real syp = -bY(i,j+1,k,n);
                     if (apyp != Real(0.0) && apyp != Real(1.0)) {
-                        int ii = i + static_cast<int>(std::copysign(Real(1.0),fcy(i,j+1,k)));
-                        Real fracx = (ccm(ii,j,k) || ccm(ii,j+1,k))
-                            ? std::abs(fcy(i,j+1,k)) : Real(0.0);
+                        Real fcy = ebdata.get<EBData_t::fcy>(i,j+1,k);
+                        int ii = i + static_cast<int>(std::copysign(Real(1.0),fcy));
+                        Real fracx = (ccm(ii,j,k) || ccm(ii,j+1,k)) ? std::abs(fcy) : Real(0.0);
                         if (!beta_on_centroid && !phi_on_centroid)
                         {
                             fyp = (Real(1.0)-fracx)*fyp +
@@ -510,15 +517,20 @@ void mlebabeclap_gsrb (Box const& box,
                         Real anrmx = (apxm-apxp) * dhx;
                         Real anrmy = (apym-apyp) * dhy;
 
-                        Real bctx = bc(i,j,k,0);
-                        Real bcty = bc(i,j,k,1);
-                        Real dx_eb = get_dx_eb(vfrc(i,j,k));
+                        Real bctx = ebdata.get<EBData_t::bndrycent>(i,j,k,0);
+                        Real bcty = ebdata.get<EBData_t::bndrycent>(i,j,k,1);
+                        Real dx_eb = get_dx_eb(kappa);
 
-                        Real dg = dx_eb / std::max(std::abs(anrmx),std::abs(anrmy));
-                        Real gx = bctx - dg*anrmx;
-                        Real gy = bcty - dg*anrmy;
-                        Real sx = std::copysign(Real(1.0),anrmx);
-                        Real sy = std::copysign(Real(1.0),anrmy);
+                        Real dg, gx, gy, sx, sy;
+                        if (std::abs(anrmx) > std::abs(anrmy)) {
+                            dg = dx_eb / std::abs(anrmx);
+                        } else {
+                            dg = dx_eb / std::abs(anrmy);
+                        }
+                        gx = bctx - dg*anrmx;
+                        gy = bcty - dg*anrmy;
+                        sx = std::copysign(Real(1.0),anrmx);
+                        sy = std::copysign(Real(1.0),anrmy);
 
                         int ii = i - static_cast<int>(sx);
                         int jj = j - static_cast<int>(sy);
@@ -801,11 +813,16 @@ void mlebabeclap_normalize (Box const& box, Array4<Real> const& phi,
                 Real bcty = bc(i,j,k,1);
                 Real dx_eb = get_dx_eb(vfrc(i,j,k));
 
-                Real dg = dx_eb / std::max(std::abs(anrmx),std::abs(anrmy));
-                Real gx = bctx - dg*anrmx;
-                Real gy = bcty - dg*anrmy;
-                Real sx = std::copysign(Real(1.0),anrmx);
-                Real sy = std::copysign(Real(1.0),anrmy);
+                Real dg, gx, gy, sx, sy;
+                if (std::abs(anrmx) > std::abs(anrmy)) {
+                    dg = dx_eb / std::abs(anrmx);
+                } else {
+                    dg = dx_eb / std::abs(anrmy);
+                }
+                gx = bctx - dg*anrmx;
+                gy = bcty - dg*anrmy;
+                sx = std::copysign(Real(1.0),anrmx);
+                sy = std::copysign(Real(1.0),anrmy);
 
                 Real phig_gamma = (Real(1.0) + gx*sx + gy*sy + gx*gy*sx*sy);
                 Real feb_gamma = -phig_gamma/dg * beb(i,j,k,n);

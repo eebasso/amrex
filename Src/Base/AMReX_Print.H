@@ -39,42 +39,39 @@ namespace amrex
 
     /**
     * \brief Print on I/O Processor of the default communicator
-    * Example: Print() << " x = " << x << std::endl;
+    * Example: Print() << " x = " << x << '\n';
     */
         explicit Print (std::ostream& os_ = amrex::OutStream())
-            : rank(ParallelContext::IOProcessorNumberSub())
-            , comm(ParallelContext::CommunicatorSub())
+            : to_print(ParallelContext::IOProcessorSub())
             , os(os_)
             { ss.precision(os.precision()); }
 
     /**
-    * \brief Print on all processors of the default communicator
-    * Example: Print(Print::AllProcs) << " x = " << x << std::endl;
+    * \brief Print on given rank of the default communicator
+    * Example: Print(2) << " x = " << x << '\n'; // Print on rank 2
     */
         Print (int rank_, std::ostream& os_ = amrex::OutStream())
-            : rank(rank_)
-            , comm(ParallelContext::CommunicatorSub())
+            : to_print(rank_ == AllProcs || rank_ == ParallelContext::MyProcSub())
             , os(os_)
             { ss.precision(os.precision()); }
 
     /**
     * \brief Print on process rank_ of communicator comm_
-    * Example: Print(rank_, comm_) << " x = " << x << std::endl;
+    * Example: Print(rank_, comm_) << " x = " << x << '\n';
     */
         Print (int rank_, MPI_Comm comm_, std::ostream& os_ = amrex::OutStream())
-            : rank(rank_)
-            , comm(comm_)
+            : to_print((rank_ == AllProcs) || (
+#ifdef AMREX_USE_MPI
+                        comm_ != MPI_COMM_NULL &&
+#endif
+                        rank_ == ParallelDescriptor::MyProc(comm_)))
             , os(os_)
-            { ss.precision(os.precision()); }
+        {
+            ss.precision(os.precision());
+        }
 
         ~Print () {
-            if (rank == AllProcs || rank == ParallelContext::MyProcSub()) {
-                std::ostream * my_os = ParallelContext::OFSPtrSub();
-                if (my_os) {
-                    my_os->flush();
-                    (*my_os) << ss.str();
-                    my_os->flush();
-                }
+            if (to_print) {
                 os.flush();
                 os << ss.str();
                 os.flush();
@@ -105,8 +102,7 @@ namespace amrex
         }
 
     private:
-        int rank;
-        MPI_Comm comm;
+        bool to_print;
         std::ostream &os;
         std::ostringstream ss;
     };
@@ -116,7 +112,7 @@ namespace amrex
         : public Print
     {
     public:
-        //! Example: AllPrint() << " x = " << x << std::endl;
+        //! Example: AllPrint() << " x = " << x << '\n';
         explicit AllPrint (std::ostream& os_ = amrex::OutStream())
             : Print(Print::AllProcs, os_)
             {}
@@ -132,24 +128,25 @@ namespace amrex
 
         explicit PrintToFile (std::string file_name_)
             : file_name(std::move(file_name_))
-            , rank(ParallelContext::IOProcessorNumberSub())
-            , comm(ParallelContext::CommunicatorSub())
+            , to_print(ParallelContext::IOProcessorSub())
         { Initialize(); }
 
         PrintToFile (std::string file_name_, int rank_ )
             : file_name(std::move(file_name_))
-            , rank(rank_)
-            , comm(ParallelContext::CommunicatorSub())
+            , to_print(rank_ == AllProcs || rank_ == ParallelContext::MyProcSub())
         { Initialize(); }
 
         PrintToFile (std::string file_name_, int rank_, MPI_Comm comm_)
             : file_name(std::move(file_name_))
-            , rank(rank_)
-            , comm(comm_)
+            , to_print((rank_ == AllProcs) || (
+#ifdef AMREX_USE_MPI
+                        comm_ != MPI_COMM_NULL &&
+#endif
+                        rank_ == ParallelDescriptor::MyProc(comm_)))
         { Initialize(); }
 
         ~PrintToFile () {
-            if (rank == AllProcs || rank == ParallelContext::MyProcSub()) {
+            if (to_print) {
                 ofs.flush();
                 ofs << ss.str();
                 ofs.flush();
@@ -182,8 +179,7 @@ namespace amrex
     private:
 
         void Initialize() {
-            int my_proc = ParallelContext::MyProcSub();
-            if (rank == AllProcs || rank == my_proc) {
+            if (to_print) {
                 int my_proc_global = ParallelDescriptor::MyProc();
                 std::string proc_file_name = file_name + "." + std::to_string(my_proc_global);
 #ifdef AMREX_USE_OMP
@@ -198,8 +194,7 @@ namespace amrex
         }
 
         std::string file_name;
-        int rank;
-        MPI_Comm comm;
+        bool to_print;
         std::ofstream ofs;
         std::ostringstream ss;
     };
@@ -209,7 +204,7 @@ namespace amrex
         : public PrintToFile
     {
     public:
-        //! Example: AllPrint() << " x = " << x << std::endl;
+        //! Example: AllPrint() << " x = " << x << '\n';
         explicit AllPrintToFile (std::string file_name_)
             : PrintToFile(std::move(file_name_), Print::AllProcs)
             {}
