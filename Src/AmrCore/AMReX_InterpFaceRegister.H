@@ -30,7 +30,7 @@ public:
                         Geometry const& fgeom, IntVect const& ref_ratio);
 
     /**
-     * \brief Defines an InterpFaceRegister objecct.
+     * \brief Defines an InterpFaceRegister object.
      *
      * \param fba  The fine level BoxArray
      * \param fdm  The fine level DistributionMapping

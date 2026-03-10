@@ -25,15 +25,15 @@ public:
 
 // Note that angle is measured in radians
 #if (AMREX_SPACEDIM==2)
-    [[nodiscard]] inline Real operator() (const RealArray& p) const noexcept
+    [[nodiscard]] AMREX_FORCE_INLINE Real operator() (const RealArray& p) const noexcept
     {
         Real x =  p[0]*m_cos_angle + p[1]*m_sin_angle;
         Real y = -p[0]*m_sin_angle + p[1]*m_cos_angle;
         return m_f({x, y});
     }
 
-    template <class U=F, typename std::enable_if<IsGPUable<U>::value,int>::type = 0>
-    [[nodiscard]] AMREX_GPU_HOST_DEVICE inline
+    template <class U=F, std::enable_if_t<IsGPUable<U>::value,int> = 0>
+    [[nodiscard]] AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
     Real operator() (Real x, Real y) const noexcept
     {
         return m_f( x*m_cos_angle + y*m_sin_angle,
@@ -42,7 +42,7 @@ public:
 #endif
 
 #if (AMREX_SPACEDIM==3)
-    [[nodiscard]] inline Real operator() (const RealArray& p) const noexcept
+    [[nodiscard]] AMREX_FORCE_INLINE Real operator() (const RealArray& p) const noexcept
     {
         switch(m_dir) {
         case(0):
@@ -66,8 +66,8 @@ public:
         }
     }
 
-    template <class U=F, typename std::enable_if<IsGPUable<U>::value,int>::type = 0>
-    [[nodiscard]] AMREX_GPU_HOST_DEVICE inline
+    template <class U=F, std::enable_if_t<IsGPUable<U>::value,int> = 0>
+    [[nodiscard]] AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
     Real operator() (Real x, Real y, Real z) const noexcept
     {
         switch(m_dir) {
@@ -102,14 +102,14 @@ protected:
 };
 
 template <class F>
-struct IsGPUable<RotationIF<F>, typename std::enable_if<IsGPUable<F>::value>::type>
+struct IsGPUable<RotationIF<F>, std::enable_if_t<IsGPUable<F>::value>>
     : std::true_type {};
 
 template <class F>
-constexpr RotationIF<typename std::decay<F>::type>
+constexpr RotationIF<std::decay_t<F>>
 rotate (F&&f, const Real angle, const int dir)
 {
-    return RotationIF<typename std::decay<F>::type>(std::forward<F>(f),angle, dir);
+    return RotationIF<std::decay_t<F>>(std::forward<F>(f),angle, dir);
 }
 
 }

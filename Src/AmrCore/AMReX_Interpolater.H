@@ -38,6 +38,7 @@ public:
     * \param bcr
     * \param actual_comp
     * \param actual_state
+    * \param runon
     */
     virtual void interp (const FArrayBox& crse,
                          int              crse_comp,
@@ -55,21 +56,6 @@ public:
 
     /**
     * \brief Coarse to fine interpolation in space for face-based data.
-    *
-    * \param crse
-    * \param crse_comp
-    * \param fine
-    * \param fine_comp
-    * \param ncomp
-    * \param fine_region
-    * \param fine_values
-    * \param fine_known
-    * \param ratio
-    * \param crse_geom
-    * \param fine_geom
-    * \param bcr
-    * \param bccomp
-    * \param runon
     */
     virtual void interp_face (const FArrayBox& /*crse*/,
                               const int        /*crse_comp*/,
@@ -89,21 +75,6 @@ public:
     /**
     * \brief Coarse to fine interpolation in space.
     *        Takes an Array of FArrayBox*s
-    *
-    * \param crse
-    * \param crse_comp
-    * \param fine
-    * \param fine_comp
-    * \param ncomp
-    * \param fine_region
-    * \param fine_values
-    * \param fine_known
-    * \param ratio
-    * \param crse_geom
-    * \param fine_geom
-    * \param bcr
-    * \param actual_comp
-    * \param actual_state
     */
     virtual void interp_arr (Array<FArrayBox*, AMREX_SPACEDIM> const& /*crse*/,
                              const int         /*crse_comp*/,
@@ -124,19 +95,6 @@ public:
 
     /**
     * \brief Re-visit the interpolation to protect against under- or overshoots.
-    *
-    * \param crse
-    * \param crse_comp
-    * \param fine
-    * \param fine_comp
-    * \param fine_state
-    * \param state_comp
-    * \param ncomp
-    * \param fine_region
-    * \param ratio
-    * \param crse_geom
-    * \param fine_geom
-    * \param bcr
     */
     virtual void protect (const FArrayBox& /*crse*/,
                           int              /*crse_comp*/,
@@ -195,6 +153,7 @@ public:
     * \param bcr
     * \param actual_comp
     * \param actual_state
+    * \param runon
     */
     void interp (const FArrayBox& crse,
                  int              crse_comp,
@@ -253,6 +212,7 @@ public:
     * \param bcr
     * \param actual_comp
     * \param actual_state
+    * \param runon
     */
     void interp (const FArrayBox& crse,
                  int              crse_comp,
@@ -365,6 +325,7 @@ public:
     * \param crse_geom
     * \param fine_geom
     * \param bcr
+    * \param runon
     */
     void protect (const FArrayBox& crse,
                   int              crse_comp,
@@ -424,6 +385,7 @@ public:
     * \param bcr
     * \param actual_comp
     * \param actual_state
+    * \param runon
     */
     void interp (const FArrayBox& crse,
                  int              crse_comp,
@@ -612,6 +574,7 @@ public:
     * \param bcr
     * \param actual_comp
     * \param actual_state
+    * \param runon
     */
     void interp (const FArrayBox& crse,
                  int              crse_comp,
@@ -668,11 +631,8 @@ public:
     * \param ncomp
     * \param fine_region
     * \param ratio
-    * \param crse_geom
-    * \param fine_geom
-    * \param bcr
-    * \param actual_comp
-    * \param actual_state
+    * \param solve_mask
+    * \param runon
     */
     void interp_arr (Array<FArrayBox*, AMREX_SPACEDIM> const& crse,
                      int         crse_comp,
@@ -733,6 +693,7 @@ public:
     * \param bcr
     * \param actual_comp
     * \param actual_state
+    * \param runon
     */
     void interp (const FArrayBox& crse,
                  int              crse_comp,
@@ -754,6 +715,7 @@ extern AMREX_EXPORT PCInterp                  pc_interp;
 extern AMREX_EXPORT NodeBilinear              node_bilinear_interp;
 extern AMREX_EXPORT FaceDivFree               face_divfree_interp;
 extern AMREX_EXPORT FaceLinear                face_linear_interp;
+extern AMREX_EXPORT FaceConservativeLinear    face_cons_linear_interp;
 extern AMREX_EXPORT CellConservativeLinear    lincc_interp;
 extern AMREX_EXPORT CellConservativeLinear    cell_cons_interp;
 extern AMREX_EXPORT CellBilinear              cell_bilinear_interp;

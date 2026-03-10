@@ -26,7 +26,11 @@ struct AmrInfo {
     //! Blocking factor in grid generation (by level).
     Vector<IntVect> blocking_factor {{IntVect(8)}};
     //! Maximum allowable grid size (by level).
+#if defined(AMREX_USE_GPU)
+    Vector<IntVect> max_grid_size {{IntVect(AMREX_D_PICK(128,128,64))}};
+#else
     Vector<IntVect> max_grid_size {{IntVect(AMREX_D_PICK(128,128,32))}};
+#endif
     //! Buffer cells around each tagged cell.
     Vector<IntVect> n_error_buf {{IntVect(1)}};
     //! Grid efficiency.
@@ -51,8 +55,10 @@ struct AmrInfo {
     bool check_input = true;
     bool use_new_chop = false;
     bool iterate_on_new_grids = true;
+    int max_grid_iterations = 4;
 };
 
+/// \ingroup amrex_amrcore
 class AmrMesh
     : protected AmrInfo
 {
@@ -164,7 +170,8 @@ public:
         }
     }
     void SetBlockingFactor (const Vector<IntVect>& new_bf) noexcept {
-        blocking_factor.assign(new_bf.cbegin(), new_bf.cend()+max_level+1);
+        AMREX_ALWAYS_ASSERT(new_bf.size() >= (max_level+1));
+        blocking_factor.assign(new_bf.cbegin(), new_bf.cbegin()+max_level+1);
     }
 
     void SetGridEff (Real eff) noexcept { grid_eff = eff; }
@@ -178,7 +185,7 @@ public:
     void SetGeometry (int lev, const Geometry& geom_in) noexcept;
 
     //! Given domain box, return AMR level.  Return -1 if there is no match.
-    int GetLevel (Box const& domain) noexcept;
+    [[nodiscard]] int GetLevel (Box const& domain) const noexcept;
 
     void ClearDistributionMap (int lev) noexcept;
     void ClearBoxArray (int lev) noexcept;
@@ -201,7 +208,7 @@ public:
     //! Return the largest allowable grid.
     [[nodiscard]] const IntVect& maxGridSize (int lev) const noexcept { return max_grid_size[lev]; }
 
-    [[nodiscard]] bool LevelDefined (int lev) noexcept;
+    [[nodiscard]] bool LevelDefined (int lev) const noexcept;
 
     //! Should we keep the coarser grids fixed (and not regrid those levels) at all?
     [[nodiscard]] bool useFixedCoarseGrids () const noexcept { return use_fixed_coarse_grids; }
@@ -255,7 +262,7 @@ public:
 
     [[nodiscard]] virtual BoxArray GetAreaNotToTag (int /*lev*/) { return BoxArray(); }
 
-    [[nodiscard]] long CountCells (int lev) noexcept;
+    [[nodiscard]] Long CountCells (int lev) const noexcept;
 
     [[nodiscard]] virtual DistributionMapping MakeDistributionMap (int lev, BoxArray const& ba);
 

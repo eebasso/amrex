@@ -4,8 +4,6 @@
 
 #include <AMReX_FabArray.H>
 
-namespace amrex::RungeKutta {
-
 /**
  * \brief Functions for Runge-Kutta methods
  *
@@ -53,6 +51,7 @@ struct PostStageNoOp {
     std::enable_if_t<IsFabArray<MF>::value> operator() (int, MF&) const {}
 };
 
+/// \cond DOXYGEN_IGNORE
 namespace detail {
 //! Unew = Uold + dUdt * dt
 template <typename MF>
@@ -66,7 +65,9 @@ void rk_update (MF& Unew, MF const& Uold, MF const& dUdt, Real dt)
     {
             snew[bi](i,j,k,n) = sold[bi](i,j,k,n) + dt*sdot[bi](i,j,k,n);
     });
-    Gpu::streamSynchronize();
+    if (!Gpu::inNoSyncRegion()) {
+        Gpu::streamSynchronize();
+    }
 }
 
 //! Unew = Uold + (dUdt1 + dUdt2) * dt
@@ -83,7 +84,9 @@ void rk_update (MF& Unew, MF const& Uold, MF const& dUdt1, MF const& dUdt2, Real
             snew[bi](i,j,k,n) = sold[bi](i,j,k,n) + dt*(sdot1[bi](i,j,k,n) +
                                                         sdot2[bi](i,j,k,n));
     });
-    Gpu::streamSynchronize();
+    if (!Gpu::inNoSyncRegion()) {
+        Gpu::streamSynchronize();
+    }
 }
 
 //! Unew = (Uold+Unew)/2 + dUdt * dt/2
@@ -100,7 +103,9 @@ void rk2_update_2 (MF& Unew, MF const& Uold, MF const& dUdt, Real dt)
                                        sold[bi](i,j,k,n) +
                                        sdot[bi](i,j,k,n) * dt);
     });
-    Gpu::streamSynchronize();
+    if (!Gpu::inNoSyncRegion()) {
+        Gpu::streamSynchronize();
+    }
 }
 
 //! Unew = Uold + (k1 + k2 + 4*k3) * dt6, where dt6 = dt/6
@@ -119,7 +124,9 @@ void rk3_update_3 (MF& Unew, MF const& Uold, Array<MF,3> const& rkk, Real dt6)
             + dt6 * (k1[bi](i,j,k,n) + k2[bi](i,j,k,n)
                      +      Real(4.) * k3[bi](i,j,k,n));
     });
-    Gpu::streamSynchronize();
+    if (!Gpu::inNoSyncRegion()) {
+        Gpu::streamSynchronize();
+    }
 }
 
 //! Unew = Uold + (k1+k4+2*(k2+k3))*dt6, where dt6 = dt/6
@@ -139,9 +146,12 @@ void rk4_update_4 (MF& Unew, MF const& Uold, Array<MF,4> const& rkk, Real dt6)
             + dt6 * (            k1[bi](i,j,k,n) + k4[bi](i,j,k,n)
                      + Real(2.)*(k2[bi](i,j,k,n) + k3[bi](i,j,k,n)));
     });
-    Gpu::streamSynchronize();
+    if (!Gpu::inNoSyncRegion()) {
+        Gpu::streamSynchronize();
+    }
 }
 }
+/// \endcond
 
 /**
  * \brief Time stepping with RK2
@@ -155,13 +165,13 @@ void rk4_update_4 (MF& Unew, MF const& Uold, Array<MF,4> const& rkk, Real dt6)
  * \param post_stage post-processing stage results
  */
 template <typename MF, typename F, typename FB, typename P = PostStageNoOp>
-void RK2 (MF& Uold, MF& Unew, Real time, Real dt, F&& frhs, FB&& fillbndry,
-          P&& post_stage = PostStageNoOp())
+void RK2 (MF& Uold, MF& Unew, Real time, Real dt, F const& frhs, FB const& fillbndry,
+          P const& post_stage = PostStageNoOp())
 {
     BL_PROFILE("RungeKutta2");
 
     MF dUdt(Unew.boxArray(), Unew.DistributionMap(), Unew.nComp(), 0,
-            MFInfo(), Unew.Factory());
+            MFInfo().SetArena(The_Async_Arena()), Unew.Factory());
 
     // RK2 stage 1
     fillbndry(1, Uold, time);
@@ -193,15 +203,15 @@ void RK2 (MF& Uold, MF& Unew, Real time, Real dt, F&& frhs, FB&& fillbndry,
  */
 template <typename MF, typename F, typename FB, typename R,
           typename P = PostStageNoOp>
-void RK3 (MF& Uold, MF& Unew, Real time, Real dt, F&& frhs, FB&& fillbndry,
-          R&& store_crse_data, P&& post_stage = PostStageNoOp())
+void RK3 (MF& Uold, MF& Unew, Real time, Real dt, F const& frhs, FB const& fillbndry,
+          R const& store_crse_data, P const& post_stage = PostStageNoOp())
 {
     BL_PROFILE("RungeKutta3");
 
     Array<MF,3> rkk;
     for (auto& mf : rkk) {
         mf.define(Unew.boxArray(), Unew.DistributionMap(), Unew.nComp(), 0,
-                  MFInfo(), Unew.Factory());
+                  MFInfo().SetArena(The_Async_Arena()), Unew.Factory());
     }
 
     // RK3 stage 1
@@ -243,15 +253,15 @@ void RK3 (MF& Uold, MF& Unew, Real time, Real dt, F&& frhs, FB&& fillbndry,
  */
 template <typename MF, typename F, typename FB, typename R,
           typename P = PostStageNoOp>
-void RK4 (MF& Uold, MF& Unew, Real time, Real dt, F&& frhs, FB&& fillbndry,
-          R&& store_crse_data, P&& post_stage = PostStageNoOp())
+void RK4 (MF& Uold, MF& Unew, Real time, Real dt, F const& frhs, FB const& fillbndry,
+          R const& store_crse_data, P const& post_stage = PostStageNoOp())
 {
     BL_PROFILE("RungeKutta4");
 
     Array<MF,4> rkk;
     for (auto& mf : rkk) {
         mf.define(Unew.boxArray(), Unew.DistributionMap(), Unew.nComp(), 0,
-                  MFInfo(), Unew.Factory());
+                  MFInfo().SetArena(The_Async_Arena()), Unew.Factory());
     }
 
     // RK4 stage 1

@@ -28,19 +28,19 @@ def mmclt(argv):
     fout = open(args.output, "w")
 
     fout.write("CLANG_TIDY ?= clang-tidy\n")
-    fout.write("override CLANG_TIDY_ARGS += --extra-arg=-Wno-unknown-warning-option --extra-arg-before=--driver-mode=g++\n")
+    fout.write("override CLANG_TIDY_ARGS += --extra-arg=-Wno-unknown-warning-option --extra-arg=-Wno-ignored-optimization-argument --extra-arg-before=--driver-mode=g++\n")
     fout.write("\n")
 
     fout.write(".SECONDEXPANSION:\n")
     fout.write("clang-tidy: $$(all_targets)\n")
     fout.write("\t@echo SUCCESS\n\n")
 
-    exe_re = re.compile(r" Executing .*? (-.*{}.*) -c .* -o .* (\S*)".format(args.identifier))
+    exe_re = re.compile(r" Executing .*? (-.*{}.*) -c(?: \S+)* -o .* (\S*)".format(args.identifier))
 
     count = 0
     for line in fin.readlines():
         ret_exe_re = exe_re.search(line)
-        if (ret_exe_re):
+        if ret_exe_re:
             fout.write("target_{}: {}\n".format(count, ret_exe_re.group(2)))
             fout.write("\t$(CLANG_TIDY) $(CLANG_TIDY_ARGS) $< -- {}\n".format
                        (ret_exe_re.group(1)))

@@ -1,3 +1,4 @@
+#include <AMReX_BCRec.H>
 #include <AMReX_MultiFab.H>
 #include <AMReX_Geometry.H>
 #include <AMReX_MultiCutFab.H>
@@ -5,6 +6,7 @@
 #include <AMReX_EBFabFactory.H>
 #include <AMReX_EBFArrayBox.H>
 #include <AMReX_EB_Redistribution.H>
+#include <AMReX_EBMultiFabUtil.H>
 
 namespace amrex {
 
@@ -12,6 +14,7 @@ namespace amrex {
     //
     // Do small cell redistribution on one FAB
     //
+    namespace {
     void apply_eb_redistribution ( const Box& bx,
                                    MultiFab& div_mf,
                                    MultiFab& divc_mf,
@@ -52,6 +55,7 @@ namespace amrex {
 
         apply_flux_redistribution ( bx, div, divc, wt, icomp, ncomp, flags, vfrac, geom, use_wts_in_divnc);
     }
+    }
 
     //
     // Do small cell redistribution on a MultiFab -- with a weighting function
@@ -62,7 +66,7 @@ namespace amrex {
         Box domain(geom.Domain());
 
         int nghost = 2;
-        AMREX_ASSERT(div_tmp_in.nGrow() >= nghost);
+        AMREX_ASSERT(div_tmp_in.nGrowVect().allGE(nghost));
 
         EB_set_covered(div_tmp_in, 0, ncomp, div_tmp_in.nGrow(), eb_covered_val);
 

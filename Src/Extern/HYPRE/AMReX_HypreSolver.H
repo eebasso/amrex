@@ -1,8 +1,5 @@
 /**
  * \file AMReX_HypreSolver.H
- *
- * \addtogroup HYPRE
- *  @{
  */
 
 #ifndef AMREX_HYPRE_SOLVER_H_
@@ -26,7 +23,7 @@ namespace amrex
  * specified using the compressed sparse row (CSR) format.
  *
  * An example of using HypreSolver to solve Poisson's equation is located in
- * Tests/LinearSolvers/Hypre
+ * Tests/LinearSolvers/Hypre (which exercises the HYPRE backend)
  *
  */
 template <int MSS>
@@ -57,7 +54,7 @@ public:
  *                                          (int boxno, int i, int j, int k, int n, Array4<HYPRE_Int const> const* gid, HYPRE_Int& ncols, HYPRE_Int* cols, HYPRE_Real* mat)
  *                                      \endcode
  * \param [in]      a_verbose           HYPRE verbosity (default 0)
- * \param [in]      a_options_namespace namespace to use when parsing runtime input parameters (default "hypre")
+ * \param [in]      a_options_namespace namespace to use when parsing runtime input parameters (default literal "hypre" used for HYPRE options)
  *
  */
     template <class Marker, class Filler>
@@ -75,31 +72,38 @@ public:
                                          std::is_same_v<typename MF::value_type,
                                                         HYPRE_Real>, int> = 0>
 /**
- * Solve Ax=b
+ * \brief Solve Ax=b after the constructor assembled the IJ matrix.
  *
- * \param [out]      a_soln        the solution (i.e. x)
- * \param [in]       a_rhs         the right-hand side (i.e. b)
- * \param [in]       rel_tol       relative convergence tolerance
- * \param [in]       abs_tol       absolute convergence tolerance
- * \param [in]       max_iter      maximum number of iterations
- *
+ * \param [out]      a_soln        Solution vectors (updated in place).
+ * \param [in]       a_rhs         Right-hand-side vectors.
+ * \param [in]       rel_tol       Relative convergence tolerance.
+ * \param [in]       abs_tol       Absolute convergence tolerance.
+ * \param [in]       max_iter      Maximum iterations.
  */
     void solve (Vector<MF      *> const& a_soln,
                 Vector<MF const*> const& a_rhs,
                 HYPRE_Real rel_tol, HYPRE_Real abs_tol, int max_iter);
 
+    //! Number of iterations from the last solve().
     int getNumIters () const { return m_hypre_ij->getNumIters(); }
 
+    //! Final residual norm from the last solve().
     HYPRE_Real getFinalResidualNorm () const {
         return m_hypre_ij->getFinalResidualNorm();
     }
 
+    //! Access the assembled IJ matrix handle (non-owning).
     HYPRE_IJMatrix getA () const { return m_hypre_ij->A(); }
+    //! Access the assembled IJ RHS handle (non-owning).
     HYPRE_IJVector getb () const { return m_hypre_ij->b(); }
+    //! Access the IJ solution handle (non-owning).
     HYPRE_IJVector getx () const { return m_hypre_ij->x(); }
 
 // public: // for cuda
 
+    /**
+     * \brief Assign local ids to each owned DOF by invoking \p marker.
+     */
     template <class Marker>
 #ifdef AMREX_USE_CUDA
     std::enable_if_t<IsCallable<Marker,int,int,int,int,int>::value>
@@ -108,8 +112,18 @@ public:
 #endif
     fill_local_id (Marker const& marker);
 
+    //! Convert the local ids to globally unique ids visible to HYPRE.
+    template <typename AI>
     void fill_global_id ();
 
+    /**
+     * \brief Fill each CSR row using the supplied \p filler functor.
+     *
+     * \param filler Functor with signature
+     *        `(int boxno, int i, int j, int k, int n, Array4<HYPRE_Int const> const* gid,`
+     *        `HYPRE_Int& ncols, HYPRE_Int* cols, HYPRE_Real* mat)` that emits the nonzeros
+     *        for each DOF.
+     */
     template <class Filler,
               std::enable_if_t<IsCallable<Filler,int,int,int,int,int,
                                           Array4<HYPRE_Int const> const*,
@@ -117,12 +131,23 @@ public:
                                           HYPRE_Real*>::value,int> FOO = 0>
     void fill_matrix (Filler const& filler);
 
+    /**
+     * \brief Copy AMReX RHS/initial guess data into the IJ vectors.
+     *
+     * \param a_soln Solution MultiFabs (initial guess overwritten).
+     * \param a_rhs  RHS MultiFabs.
+     */
     template <class MF, std::enable_if_t<IsFabArray<MF>::value &&
                                          std::is_same_v<typename MF::value_type,
                                                         HYPRE_Real>, int> = 0>
     void load_vectors (Vector<MF      *> const& a_soln,
                        Vector<MF const*> const& a_rhs);
 
+    /**
+     * \brief Copy IJ solution entries back into AMReX storage.
+     *
+     * \param a_soln Solution MultiFabs populated in place.
+     */
     template <class MF, std::enable_if_t<IsFabArray<MF>::value &&
                                          std::is_same_v<typename MF::value_type,
                                                         HYPRE_Real>, int> = 0>
@@ -158,7 +183,7 @@ private:
 
     std::unique_ptr<HypreIJIface> m_hypre_ij;
 
-    // Non-owning references to Hypre matrix, rhs, and solution data
+    // Non-owning references to HYPRE matrix, rhs, and solution data
     HYPRE_IJMatrix m_A = nullptr;
     HYPRE_IJVector m_b = nullptr;
     HYPRE_IJVector m_x = nullptr;
@@ -217,7 +242,7 @@ HypreSolver<MSS>::HypreSolver (Vector<IndexType>   const& a_index_type,
     m_cell_offset.define(m_grids[0], m_dmap);
 #endif
 
-    fill_local_id(a_marker);
+    fill_local_id(std::forward<Marker>(a_marker));
 
     // At this point, m_local_id stores the ids local to each box.
     // m_nrows_grid stores the number of unique points in each box.
@@ -254,7 +279,14 @@ HypreSolver<MSS>::HypreSolver (Vector<IndexType>   const& a_index_type,
     }
     AMREX_ASSERT(proc_end == proc_begin + m_nrows_proc);
 
-    fill_global_id();
+    // To generate global ids for HYPRE, we need to remove duplicates on
+    // nodes shared by multiple Boxes with OverrideSync.  So we need to use
+    // a type that supports atomicAdd.  HYPRE_Int is either int or long
+    // long.  The latter (i.e., long long) does not have native atomicAdd
+    // support in CUDA/HIP, whereas unsigned long long has.
+    using AtomicInt = std::conditional_t<sizeof(HYPRE_Int) == 4,
+                                         HYPRE_Int, unsigned long long>;
+    fill_global_id<AtomicInt>();
 
     // Create and initialize A, b & x
     HYPRE_Int ilower = proc_begin;
@@ -267,7 +299,7 @@ HypreSolver<MSS>::HypreSolver (Vector<IndexType>   const& a_index_type,
     m_b = m_hypre_ij->b();
     m_x = m_hypre_ij->x();
 
-    fill_matrix(a_filler);
+    fill_matrix(std::forward<Filler>(a_filler));
 }
 
 template <int MSS>
@@ -366,27 +398,22 @@ HypreSolver<MSS>::fill_local_id (Marker const& marker)
 }
 
 template <int MSS>
+template <typename AI>
 void
 HypreSolver<MSS>::fill_global_id ()
 {
     BL_PROFILE("HypreSolver::fill_global_id()");
 
-    // To generate global ids for Hypre, we need to remove duplicates on
-    // nodes shared by multiple Boxes with OverrideSync.  So we need to use
-    // a type that supports atomicAdd.  HYPRE_Int is either int or long
-    // long.  The latter does not have native atomicAdd support in CUDA/HIP.
-    using AtomicInt = std::conditional_t<sizeof(HYPRE_Int) == 4,
-                                         HYPRE_Int, unsigned long long>;
+    Vector<FabArray<BaseFab<AI>>> global_id_raii;
+    Vector<FabArray<BaseFab<AI>>*> p_global_id;
 
-    Vector<FabArray<BaseFab<AtomicInt>>> global_id_raii;
-    Vector<FabArray<BaseFab<AtomicInt>>*> p_global_id;
-    if constexpr (std::is_same<HYPRE_Int, AtomicInt>()) {
+    if constexpr (std::is_same_v<HYPRE_Int,AI>) {
         for (int ivar = 0; ivar < m_nvars; ++ivar) {
             p_global_id.push_back(&(m_global_id[ivar]));
         }
     } else {
         for (int ivar = 0; ivar < m_nvars; ++ivar) {
-            global_id_raii[ivar].define(m_global_id[ivar].boxArray(),
+            global_id_raii.emplace_back(m_global_id[ivar].boxArray(),
                                         m_global_id[ivar].DistributionMap(),
                                         1, m_global_id[ivar].nGrowVect());
             p_global_id.push_back(&(global_id_raii[ivar]));
@@ -405,7 +432,7 @@ HypreSolver<MSS>::fill_global_id ()
             HYPRE_Int const os = m_id_offset[ivar][mfi];
             Box bx = mfi.validbox();
             bx.convert(m_index_type[ivar]).grow(m_nghost);
-            Array4<AtomicInt> const& gid = p_global_id[ivar]->array(mfi);
+            Array4<AI> const& gid = p_global_id[ivar]->array(mfi);
             auto const& lid = m_local_id[ivar].const_array(mfi);
             HYPRE_Int* rows = rows_vec.data() + nrows;
             nrows += m_nrows_grid[ivar][mfi];
@@ -414,9 +441,9 @@ HypreSolver<MSS>::fill_global_id ()
                 if (lid.contains(i,j,k) && lid(i,j,k) >= 0) {
                     const auto id = lid(i,j,k) + os;
                     rows[lid(i,j,k)] = id;
-                    gid(i,j,k) = static_cast<AtomicInt>(id);
+                    gid(i,j,k) = static_cast<AI>(id);
                 } else {
-                    gid(i,j,k) = static_cast<AtomicInt>
+                    gid(i,j,k) = static_cast<AI>
                         (std::numeric_limits<HYPRE_Int>::max());
                 }
             });
@@ -428,7 +455,7 @@ HypreSolver<MSS>::fill_global_id ()
                             m_geom.periodicity());
         p_global_id[ivar]->FillBoundary(m_geom.periodicity());
 
-        if constexpr (!std::is_same<HYPRE_Int, AtomicInt>()) {
+        if constexpr (!std::is_same<HYPRE_Int, AI>()) {
             auto const& dst = m_global_id[ivar].arrays();
             auto const& src = p_global_id[ivar]->const_arrays();
             amrex::ParallelFor(m_global_id[ivar], m_global_id[ivar].nGrowVect(),
@@ -441,6 +468,7 @@ HypreSolver<MSS>::fill_global_id ()
 }
 
 #ifdef AMREX_USE_GPU
+/// \cond DOXYGEN_IGNORE
 namespace detail {
 template <typename T>
 void pack_matrix_gpu (Gpu::DeviceVector<HYPRE_Int>& cols_tmp,
@@ -470,6 +498,7 @@ void pack_matrix_gpu (Gpu::DeviceVector<HYPRE_Int>& cols_tmp,
     std::swap(mat_tmp, mat);
 }
 }
+/// \endcond
 #endif
 
 template <int MSS>
@@ -569,7 +598,7 @@ HypreSolver<MSS>::fill_matrix (Filler const& filler)
             Gpu::streamSynchronize();
             HYPRE_IJMatrixSetValues(m_A, nrows, ncols_vec.data(), rows,
                                     cols_vec.data(), mat_vec.data());
-            Gpu::synchronize();
+            Gpu::hypreSynchronize();
         }
     }
     HYPRE_IJMatrixAssemble(m_A);
@@ -653,7 +682,7 @@ HypreSolver<MSS>::load_vectors (Vector<MF      *> const& a_soln,
             Gpu::streamSynchronize();
             HYPRE_IJVectorSetValues(m_x, nrows, rows, xp);
             HYPRE_IJVectorSetValues(m_b, nrows, rows, bp);
-            Gpu::synchronize();
+            Gpu::hypreSynchronize();
         }
     }
 }
@@ -683,7 +712,7 @@ HypreSolver<MSS>::get_solution (Vector<MF*> const& a_soln)
             HYPRE_Int const* rows = m_global_id_vec[mfi].data();
 
             HYPRE_IJVectorGetValues(m_x, nrows, rows, xp);
-            Gpu::synchronize();
+            Gpu::hypreSynchronize();
 
             HYPRE_Int offset = 0;
             for (int ivar = 0; ivar < m_nvars; ++ivar) {
@@ -714,4 +743,3 @@ HypreSolver<MSS>::get_solution (Vector<MF*> const& a_soln)
 }
 
 #endif
-/** @} */
