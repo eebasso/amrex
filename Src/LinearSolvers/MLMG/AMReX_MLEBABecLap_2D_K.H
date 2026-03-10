@@ -25,6 +25,8 @@ void mlebabeclap_adotx_centroid (Box const& box, Array4<Real> const& y,
                         GpuArray<Real,AMREX_SPACEDIM> const& dxinv,
                         Real alpha, Real beta, int ncomp) noexcept
 {
+    amrex::ignore_unused(ba);
+
     Real dhx = beta*dxinv[0]*dxinv[0];
     Real dhy = beta*dxinv[1]*dxinv[1];
 
@@ -170,6 +172,8 @@ void mlebabeclap_adotx (Box const& box, Array4<Real> const& y,
                         Real alpha, Real beta, int ncomp,
                         bool beta_on_centroid, bool phi_on_centroid) noexcept
 {
+    amrex::ignore_unused(ba);
+
     Real dhx = beta*dxinv[0]*dxinv[0];
     Real dhy = beta*dxinv[1]*dxinv[1];
 
@@ -753,6 +757,8 @@ void mlebabeclap_normalize (Box const& box, Array4<Real> const& phi,
                             bool is_dirichlet, bool beta_on_centroid, int ncomp) noexcept
 {
     amrex::ignore_unused(dh);
+    amrex::ignore_unused(ba);
+
     amrex::Loop(box, ncomp, [=] (int i, int j, int k, int n) noexcept
     {
         if (flag(i,j,k).isRegular())
