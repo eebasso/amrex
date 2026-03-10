@@ -317,12 +317,12 @@ MLALaplacianT<MF>::Fapply (int amrlev, int mglev, MF& out, const MF& in) const
 
 #if (AMREX_SPACEDIM != 3)
         if (this->m_has_metric_term) {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bx, tbx,
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( bx, tbx,
             {
                 mlalap_adotx_m(tbx, yfab, xfab, afab, dxinv, ascalar, bscalar, dx, probxlo, ncomp);
             });
         } else {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bx, tbx,
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( bx, tbx,
             {
                 mlalap_adotx(tbx, yfab, xfab, afab, dxinv, ascalar, bscalar, ncomp);
             });
@@ -333,12 +333,12 @@ MLALaplacianT<MF>::Fapply (int amrlev, int mglev, MF& out, const MF& in) const
             const auto& xfab2d = this->compactify(xfab);
             const auto& yfab2d = this->compactify(yfab);
             const auto& afab2d = this->compactify(afab);
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bx2d, tbx2d,
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( bx2d, tbx2d,
             {
                 TwoD::mlalap_adotx(tbx2d, yfab2d, xfab2d, afab2d, dhinv, ascalar, bscalar, ncomp);
             });
         } else {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bx, tbx,
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( bx, tbx,
             {
                 mlalap_adotx(tbx, yfab, xfab, afab, dxinv, ascalar, bscalar, ncomp);
             });
@@ -385,12 +385,12 @@ MLALaplacianT<MF>::normalize (int amrlev, int mglev, MF& mf) const
 
 #if (AMREX_SPACEDIM != 3)
         if (this->m_has_metric_term) {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bx, tbx,
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( bx, tbx,
             {
                 mlalap_normalize_m(tbx, fab, afab, dxinv, ascalar, bscalar, dx, probxlo, ncomp);
             });
         } else {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bx, tbx,
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( bx, tbx,
             {
                 mlalap_normalize(tbx, fab, afab, dxinv, ascalar, bscalar, ncomp);
             });
@@ -400,12 +400,12 @@ MLALaplacianT<MF>::normalize (int amrlev, int mglev, MF& mf) const
             Box const& bx2d = this->compactify(bx);
             const auto&  fab2d = this->compactify(fab);
             const auto& afab2d = this->compactify(afab);
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bx2d, tbx2d,
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( bx2d, tbx2d,
             {
                 TwoD::mlalap_normalize(tbx2d, fab2d, afab2d, dhinv, ascalar, bscalar, ncomp);
             });
         } else {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bx, tbx,
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( bx, tbx,
             {
                 mlalap_normalize(tbx, fab, afab, dxinv, ascalar, bscalar, ncomp);
             });
@@ -505,7 +505,7 @@ MLALaplacianT<MF>::Fsmooth (int amrlev, int mglev, MF& sol, const MF& rhs, int r
 
 #if (AMREX_SPACEDIM == 1)
         if (this->m_has_metric_term) {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( tbx, thread_box,
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( tbx, thread_box,
             {
                 mlalap_gsrb_m(thread_box, solnfab, rhsfab, alpha, dhx,
                               afab,
@@ -515,7 +515,7 @@ MLALaplacianT<MF>::Fsmooth (int amrlev, int mglev, MF& sol, const MF& rhs, int r
                               dx, probxlo, ncomp);
             });
         } else {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( tbx, thread_box,
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( tbx, thread_box,
             {
                 mlalap_gsrb(thread_box, solnfab, rhsfab, alpha, dhx,
                             afab,
@@ -529,7 +529,7 @@ MLALaplacianT<MF>::Fsmooth (int amrlev, int mglev, MF& sol, const MF& rhs, int r
 
 #if (AMREX_SPACEDIM == 2)
         if (this->m_has_metric_term) {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( tbx, thread_box,
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( tbx, thread_box,
             {
                 mlalap_gsrb_m(thread_box, solnfab, rhsfab, alpha, dhx, dhy,
                               afab,
@@ -541,7 +541,7 @@ MLALaplacianT<MF>::Fsmooth (int amrlev, int mglev, MF& sol, const MF& rhs, int r
                               dx, probxlo, ncomp);
             });
         } else {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( tbx, thread_box,
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( tbx, thread_box,
             {
                 mlalap_gsrb(thread_box, solnfab, rhsfab, alpha, dhx, dhy,
                             afab,
@@ -569,7 +569,7 @@ MLALaplacianT<MF>::Fsmooth (int amrlev, int mglev, MF& sol, const MF& rhs, int r
             const auto& m1_2d = this->compactify(this->get_d1(m0,m1,m2));
             const auto& m2_2d = this->compactify(this->get_d0(m3,m4,m5));
             const auto& m3_2d = this->compactify(this->get_d1(m3,m4,m5));
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( tbx_2d, thread_box,
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( tbx_2d, thread_box,
             {
                 TwoD::mlalap_gsrb(thread_box, solnfab_2d, rhsfab_2d, alpha, dh0, dh1,
                                   afab_2d,
@@ -580,7 +580,7 @@ MLALaplacianT<MF>::Fsmooth (int amrlev, int mglev, MF& sol, const MF& rhs, int r
                                   vbx_2d, redblack, ncomp);
             });
         } else {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( tbx, thread_box,
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( tbx, thread_box,
             {
                 mlalap_gsrb(thread_box, solnfab, rhsfab, alpha, dhx, dhy, dhz,
                             afab,
@@ -603,8 +603,6 @@ MLALaplacianT<MF>::FFlux (int amrlev, const MFIter& mfi,
                           const Array<FAB*,AMREX_SPACEDIM>& flux,
                           const FAB& sol, Location, int face_only) const
 {
-    AMREX_ASSERT(!this->hasHiddenDimension());
-
     BL_PROFILE("MLALaplacian::FFlux()");
 
     const int ncomp = this->getNComp();
@@ -624,103 +622,143 @@ MLALaplacianT<MF>::FFlux (int amrlev, const MFIter& mfi,
 
 #if (AMREX_SPACEDIM == 3)
     if (face_only) {
-        RT fac = m_b_scalar * RT(dxinv[0]);
-        Box blo = amrex::bdryLo(box, 0);
-        int blen = box.length(0);
-        AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( blo, tbox,
-        {
-            mlalap_flux_xface(tbox, fxarr, solarr, fac, blen, ncomp);
-        });
-        fac = m_b_scalar * RT(dxinv[1]);
-        blo = amrex::bdryLo(box, 1);
-        blen = box.length(1);
-        AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( blo, tbox,
-        {
-            mlalap_flux_yface(tbox, fyarr, solarr, fac, blen, ncomp);
-        });
-        fac = m_b_scalar * RT(dxinv[2]);
-        blo = amrex::bdryLo(box, 2);
-        blen = box.length(2);
-        AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( blo, tbox,
-        {
-            mlalap_flux_zface(tbox, fzarr, solarr, fac, blen, ncomp);
-        });
-    } else {
-        RT fac = m_b_scalar * RT(dxinv[0]);
-        Box bflux = amrex::surroundingNodes(box, 0);
-        AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bflux, tbox,
-        {
-            mlalap_flux_x(tbox, fxarr, solarr, fac, ncomp);
-        });
-        fac = m_b_scalar * RT(dxinv[1]);
-        bflux = amrex::surroundingNodes(box, 1);
-        AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bflux, tbox,
-        {
-            mlalap_flux_y(tbox, fyarr, solarr, fac, ncomp);
-        });
-        fac = m_b_scalar * RT(dxinv[2]);
-        bflux = amrex::surroundingNodes(box, 2);
-        AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bflux, tbox,
-        {
-            mlalap_flux_z(tbox, fzarr, solarr, fac, ncomp);
-        });
-    }
-#elif (AMREX_SPACEDIM == 2)
-    if (face_only) {
-        RT fac = m_b_scalar * RT(dxinv[0]);
-        Box blo = amrex::bdryLo(box, 0);
-        int blen = box.length(0);
-        if (this->m_has_metric_term) {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( blo, tbox,
-            {
-                mlalap_flux_xface_m(tbox, fxarr, solarr, fac, blen, dx, probxlo, ncomp);
-            });
-        } else {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( blo, tbox,
+        if (this->hiddenDirection() != 0) {
+            RT fac = m_b_scalar * RT(dxinv[0]);
+            Box blo = amrex::bdryLo(box, 0);
+            int blen = box.length(0);
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( blo, tbox,
             {
                 mlalap_flux_xface(tbox, fxarr, solarr, fac, blen, ncomp);
             });
-        }
-        fac = m_b_scalar * RT(dxinv[1]);
-        blo = amrex::bdryLo(box, 1);
-        blen = box.length(1);
-        if (this->m_has_metric_term) {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( blo, tbox,
-            {
-                mlalap_flux_yface_m(tbox, fyarr, solarr, fac, blen, dx, probxlo, ncomp);
-            });
         } else {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( blo, tbox,
+            flux[0]->template setVal<RunOn::Device>(RT(0.0));
+        }
+        if (this->hiddenDirection() != 1) {
+            RT fac = m_b_scalar * RT(dxinv[1]);
+            Box blo = amrex::bdryLo(box, 1);
+            int blen = box.length(1);
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( blo, tbox,
             {
                 mlalap_flux_yface(tbox, fyarr, solarr, fac, blen, ncomp);
             });
+        } else {
+            flux[1]->template setVal<RunOn::Device>(RT(0.0));
         }
-    } else {
-        RT fac = m_b_scalar * RT(dxinv[0]);
-        Box bflux = amrex::surroundingNodes(box, 0);
-        if (this->m_has_metric_term) {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bflux, tbox,
+        if (this->hiddenDirection() != 2) {
+            RT fac = m_b_scalar * RT(dxinv[2]);
+            Box blo = amrex::bdryLo(box, 2);
+            int blen = box.length(2);
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( blo, tbox,
             {
-                mlalap_flux_x_m(tbox, fxarr, solarr, fac, dx, probxlo, ncomp);
+                mlalap_flux_zface(tbox, fzarr, solarr, fac, blen, ncomp);
             });
         } else {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bflux, tbox,
+            flux[2]->template setVal<RunOn::Device>(RT(0.0));
+        }
+    } else {
+        if (this->hiddenDirection() != 0) {
+            RT fac = m_b_scalar * RT(dxinv[0]);
+            Box bflux = amrex::surroundingNodes(box, 0);
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( bflux, tbox,
             {
                 mlalap_flux_x(tbox, fxarr, solarr, fac, ncomp);
             });
-        }
-        fac = m_b_scalar * RT(dxinv[1]);
-        bflux = amrex::surroundingNodes(box, 1);
-        if (this->m_has_metric_term) {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bflux, tbox,
-            {
-                mlalap_flux_y_m(tbox, fyarr, solarr, fac, dx, probxlo, ncomp);
-            });
         } else {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bflux, tbox,
+            flux[0]->template setVal<RunOn::Device>(RT(0.0));
+        }
+        if (this->hiddenDirection() != 1) {
+            RT fac = m_b_scalar * RT(dxinv[1]);
+            Box bflux = amrex::surroundingNodes(box, 1);
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( bflux, tbox,
             {
                 mlalap_flux_y(tbox, fyarr, solarr, fac, ncomp);
             });
+        } else {
+            flux[1]->template setVal<RunOn::Device>(RT(0.0));
+        }
+        if (this->hiddenDirection() != 2) {
+            RT fac = m_b_scalar * RT(dxinv[2]);
+            Box bflux = amrex::surroundingNodes(box, 2);
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( bflux, tbox,
+            {
+                mlalap_flux_z(tbox, fzarr, solarr, fac, ncomp);
+            });
+        } else {
+            flux[2]->template setVal<RunOn::Device>(RT(0.0));
+        }
+    }
+#elif (AMREX_SPACEDIM == 2)
+    if (face_only) {
+        if (this->hiddenDirection() != 0) {
+            RT fac = m_b_scalar * RT(dxinv[0]);
+            Box blo = amrex::bdryLo(box, 0);
+            int blen = box.length(0);
+            if (this->m_has_metric_term) {
+                AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( blo, tbox,
+                {
+                    mlalap_flux_xface_m(tbox, fxarr, solarr, fac, blen, dx, probxlo, ncomp);
+                });
+            } else {
+                AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( blo, tbox,
+                {
+                    mlalap_flux_xface(tbox, fxarr, solarr, fac, blen, ncomp);
+                });
+            }
+        } else {
+            flux[0]->template setVal<RunOn::Device>(RT(0.0));
+        }
+        if (this->hiddenDirection() != 1) {
+            RT fac = m_b_scalar * RT(dxinv[1]);
+            Box blo = amrex::bdryLo(box, 1);
+            int blen = box.length(1);
+            if (this->m_has_metric_term) {
+                AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( blo, tbox,
+                {
+                    mlalap_flux_yface_m(tbox, fyarr, solarr, fac, blen, dx, probxlo, ncomp);
+                });
+            } else {
+                AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( blo, tbox,
+                {
+                    mlalap_flux_yface(tbox, fyarr, solarr, fac, blen, ncomp);
+                });
+            }
+        } else {
+            flux[1]->template setVal<RunOn::Device>(RT(0.0));
+        }
+    } else {
+        if (this->hiddenDirection() != 0) {
+            RT fac = m_b_scalar * RT(dxinv[0]);
+            Box bflux = amrex::surroundingNodes(box, 0);
+            if (this->m_has_metric_term) {
+                AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( bflux, tbox,
+                {
+                    mlalap_flux_x_m(tbox, fxarr, solarr, fac, dx, probxlo, ncomp);
+                });
+            } else {
+                AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( bflux, tbox,
+                {
+                    mlalap_flux_x(tbox, fxarr, solarr, fac, ncomp);
+                });
+            }
+        } else {
+            flux[0]->template setVal<RunOn::Device>(RT(0.0));
+        }
+        if (this->hiddenDirection() != 1) {
+            RT fac = m_b_scalar * RT(dxinv[1]);
+            Box bflux = amrex::surroundingNodes(box, 1);
+            if (this->m_has_metric_term) {
+                AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( bflux, tbox,
+                {
+                    mlalap_flux_y_m(tbox, fyarr, solarr, fac, dx, probxlo, ncomp);
+                });
+            } else {
+                AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( bflux, tbox,
+                {
+                    mlalap_flux_y(tbox, fyarr, solarr, fac, ncomp);
+                });
+            }
+        } else {
+            flux[1]->template setVal<RunOn::Device>(RT(0.0));
         }
     }
 #else
@@ -729,12 +767,12 @@ MLALaplacianT<MF>::FFlux (int amrlev, const MFIter& mfi,
         Box blo = amrex::bdryLo(box, 0);
         int blen = box.length(0);
         if (this->m_has_metric_term) {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( blo, tbox,
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( blo, tbox,
             {
                 mlalap_flux_xface_m(tbox, fxarr, solarr, fac, blen, dx, probxlo, ncomp);
             });
         } else {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( blo, tbox,
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( blo, tbox,
             {
                 mlalap_flux_xface(tbox, fxarr, solarr, fac, blen, ncomp);
             });
@@ -743,12 +781,12 @@ MLALaplacianT<MF>::FFlux (int amrlev, const MFIter& mfi,
         RT fac = m_b_scalar * RT(dxinv[0]);
         Box bflux = amrex::surroundingNodes(box, 0);
         if (this->m_has_metric_term) {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bflux, tbox,
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( bflux, tbox,
             {
                 mlalap_flux_x_m(tbox, fxarr, solarr, fac, dx, probxlo, ncomp);
             });
         } else {
-            AMREX_LAUNCH_HOST_DEVICE_LAMBDA ( bflux, tbox,
+            AMREX_GPU_LAUNCH_HOST_DEVICE_LAMBDA_RANGE ( bflux, tbox,
             {
                 mlalap_flux_x(tbox, fxarr, solarr, fac, ncomp);
             });
