@@ -368,7 +368,7 @@ void mlebabeclap_gsrb (Box const& box,
                        bool is_dirichlet, bool beta_on_centroid, bool phi_on_centroid,
                        Box const& vbox, int redblack, int ncomp) noexcept
 {
-    amrex::ignore_unused(dx);
+    amrex::ignore_unused(dh, dx);
 
     const auto vlo = amrex::lbound(vbox);
     const auto vhi = amrex::ubound(vbox);
@@ -550,10 +550,10 @@ void mlebabeclap_gsrb (Box const& box,
                         Real dphidn =  (    -phig)/dg;
 
                         Real feb = dphidn * beb(i,j,k,n);
-                        rho += -vfrcinv*(-dh)*feb;
+                        rho += vfrcinv*feb;
 
                         Real feb_gamma = -phig_gamma/dg * beb(i,j,k,n);
-                        gamma += vfrcinv*(-dh)*feb_gamma;
+                        gamma += -vfrcinv*feb_gamma;
                     }
 
                     Real res = rhs(i,j,k,n) - (gamma*phi(i,j,k,n) - rho);
