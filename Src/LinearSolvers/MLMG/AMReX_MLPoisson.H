@@ -10,16 +10,14 @@
 
 namespace amrex {
 
-/**
- * \ingroup amrex_solver_mlmg
- * \brief Cell-centered Poisson operator template class.
- *
- * Solves `del dot grad phi = rhs.`
- *
- * Inherits from MLCellABecLapT<MF>.
- *
- * \tparam MF Typename of phi and rhs, typically MultiFab
- */
+/// \ingroup amrex_solver_mlmg
+/// \brief Cell-centered Poisson operator template.
+///
+/// Solves `del dot grad phi = rhs.`
+///
+/// Inherits from MLCellABecLapT<MF>.
+///
+/// \tparam MF Typename of phi and rhs, typically MultiFab
 template <typename MF>
 class MLPoissonT
     : public MLCellABecLapT<MF>

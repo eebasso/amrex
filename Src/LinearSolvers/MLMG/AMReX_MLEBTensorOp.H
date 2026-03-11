@@ -7,8 +7,7 @@
 namespace amrex {
 
 /**
- * \brief Cell-centered embedded boundary tensor solver for
- * high Reynolds flows with small gradient in viscosity.
+ * \brief Cell-centered EB tensor solver for high Reynolds flows with small gradient in viscosity.
  *
  * The system it solves is
  *

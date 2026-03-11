@@ -13,7 +13,8 @@ namespace amrex {
  *
  * Solves `(A * alpha - B * (del dot beta grad)) phi = rhs` ,
  *
- * where `A` and `B` are scalar constants, `alpha` is a cell-centered field,
+ * where `A` and `B` are scalar constants,
+ * `alpha` is a cell-centered field,
  * and `beta` is a face-centered field.
  *
  * \tparam MF Typename of phi and rhs, typically MultiFab

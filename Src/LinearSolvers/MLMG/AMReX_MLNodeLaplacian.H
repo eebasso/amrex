@@ -11,7 +11,7 @@ namespace amrex {
 
 /**
  * \ingroup amrex_eb
- * \brief Multi-level nodal Laplacian solver.
+ * \brief Nodal Laplacian solver.
  *
  * Solves
  *

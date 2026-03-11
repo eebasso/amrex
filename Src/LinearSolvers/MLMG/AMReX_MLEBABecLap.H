@@ -14,11 +14,12 @@ struct MLMGABCEBTag;
 
 /**
  * \ingroup amrex_eb
- * \brief Cell-centered embedded boundary `A`,`alpha`,`B`,`beta` coefficient Laplacian operator.
+ * \brief `(A * alpha - B * (del dot beta grad)) phi = rhs`
  *
- * Solves `(A * alpha - B * (del dot beta grad)) phi = rhs` ,
+ * Cell-centered embedded boundary `A`,`alpha`,`B`,`beta` coefficient Laplacian operator.
  *
- * where `A` and `B` are scalar constants, `alpha` is a cell-centered field,
+ * where `A` and `B` are scalar constants,
+ * `alpha` is a cell-centered field,
  * and `beta` is a face-centered field.
  */
 class MLEBABecLap

@@ -7,13 +7,13 @@
 namespace amrex {
 
 /**
- * \brief Multi-Level nodal tensor Laplacian solver:
+ * \brief Nodal tensor Laplacian solver.
  *
- *   `del dot (sigma grad phi) = rhs`
+ * Solves `del dot (sigma grad phi) = rhs`,
  *
- * where `phi` and `rhs` are nodal multifab, and `sigma` is a constant
- * rank-2 symmetric tensor with AMREX_SPACEDIM*(AMREX_SPACEDIM+1)/2
- * components.
+ * where `phi` and `rhs` are nodal multifab, and `sigma` is a tensor constant.
+ * It is assumed that `sigma` is a rank-2 symmetric tensor
+ * with AMREX_SPACEDIM*(AMREX_SPACEDIM+1)/2 components.
  *
  * Only periodic and Dirichlet BCs are supported.
  *

@@ -19,7 +19,7 @@ template <typename T>
 struct MLMGABCTag;
 
 /**
- * \brief Multi-level cell-centered linear operator template
+ * \brief Multi-level cell-centered linear operator template.
  *
  * \tparam MF Type acted on by operator, typically MultiFab
  */
