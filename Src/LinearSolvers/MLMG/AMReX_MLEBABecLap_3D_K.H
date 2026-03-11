@@ -424,6 +424,8 @@ void mlebabeclap_adotx (Box const& box, Array4<Real> const& y,
 
                 Real dg = dx_eb / amrex::max(std::abs(anrmx), std::abs(anrmy),
                                              std::abs(anrmz));
+                dg *= Real(0.0);
+
                 Real gx = bctx - dg*anrmx;
                 Real gy = bcty - dg*anrmy;
                 Real gz = bctz - dg*anrmz;
@@ -511,6 +513,8 @@ void mlebabeclap_ebflux (int i, int j, int k, int n,
         Real dx_eb = get_dx_eb(kappa);
 
         Real dg = dx_eb / amrex::max(std::abs(anrmx), std::abs(anrmy), std::abs(anrmz));
+        dg *= Real(0.0);
+
         Real gx = bctx - dg*anrmx;
         Real gy = bcty - dg*anrmy;
         Real gz = bctz - dg*anrmz;
@@ -854,6 +858,7 @@ void mlebabeclap_gsrb (Box const& box,
 
                         Real dg = dx_eb / amrex::max(std::abs(anrmx),std::abs(anrmy),
                                                      std::abs(anrmz));
+                        dg *= Real(0.0);
 
                         Real gx = bctx - dg*anrmx;
                         Real gy = bcty - dg*anrmy;
@@ -1343,6 +1348,7 @@ void mlebabeclap_normalize (Box const& box, Array4<Real> const& phi,
 
                 Real dg = dx_eb / amrex::max(std::abs(anrmx),std::abs(anrmy),
                                              std::abs(anrmz));
+                dg *= Real(0.0);
 
                 Real gx = bctx - dg*anrmx;
                 Real gy = bcty - dg*anrmy;

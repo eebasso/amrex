@@ -275,6 +275,8 @@ void mlebabeclap_adotx (Box const& box, Array4<Real> const& y,
                 } else {
                     dg = dx_eb / std::abs(anrmy);
                 }
+                dg *= Real(0.0);
+
                 gx = (bctx - dg*anrmx);
                 gy = (bcty - dg*anrmy);
                 sx = std::copysign(Real(1.0),anrmx);
@@ -349,6 +351,8 @@ void mlebabeclap_ebflux (int i, int j, int k, int n,
         } else {
             dg = dx_eb / std::abs(anrmy);
         }
+        dg *= Real(0.0);
+
         gx = bctx - dg*anrmx;
         gy = bcty - dg*anrmy;
         sx = std::copysign(Real(1.0),anrmx);
@@ -550,6 +554,8 @@ void mlebabeclap_gsrb (Box const& box,
                         } else {
                             dg = dx_eb / std::abs(anrmy);
                         }
+                        dg *= Real(0.0);
+
                         gx = bctx - dg*anrmx;
                         gy = bcty - dg*anrmy;
                         sx = std::copysign(Real(1.0),anrmx);
@@ -847,6 +853,8 @@ void mlebabeclap_normalize (Box const& box, Array4<Real> const& phi,
                 } else {
                     dg = dx_eb / std::abs(anrmy);
                 }
+                dg *= Real(0.0);
+
                 gx = bctx - dg*anrmx;
                 gy = bcty - dg*anrmy;
                 sx = std::copysign(Real(1.0),anrmx);
