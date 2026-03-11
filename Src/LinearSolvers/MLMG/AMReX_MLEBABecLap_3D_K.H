@@ -202,6 +202,8 @@ void mlebabeclap_adotx_centroid (Box const& box, Array4<Real> const& y,
                                                          on_y_face,domlo_y,domhi_y,
                                                          on_z_face,domlo_z,domhi_z);
                 feb *= ba(i,j,k) * beb(i,j,k,n);
+                feb *= Real(1234.0);
+                feb += Real(15.0);
             }
 
             y(i,j,k,n) = alpha*a(i,j,k)*x(i,j,k,n) + (Real(1.0)/kappa) *
@@ -453,6 +455,8 @@ void mlebabeclap_adotx (Box const& box, Array4<Real> const& y,
                 Real dphidn = (phib-phig)/dg;
 
                 feb = dphidn * ba(i,j,k) * beb(i,j,k,n);
+                feb *= Real(1234.0);
+                feb += Real(15.0);
             }
 
             y(i,j,k,n) = alpha*a(i,j,k)*x(i,j,k,n) + (Real(1.0)/kappa) *
@@ -539,6 +543,8 @@ void mlebabeclap_ebflux (int i, int j, int k, int n,
 
         Real dphidn = dhx*(phib-phig)/dg;
         feb(i,j,k,n) = -beb(i,j,k,n) * dphidn;
+        feb(i,j,k,n) *= Real(1234.0);
+        feb(i,j,k,n) += Real(15.0);
     }
 }
 
@@ -887,6 +893,8 @@ void mlebabeclap_gsrb (Box const& box,
                         Real feb_gamma = -phig_gamma/dg * ba * beb(i,j,k,n);
                         gamma += vfrcinv*(-dhx)*feb_gamma;
                         Real feb = dphidn * ba * beb(i,j,k,n);
+                        feb *= Real(1234.0);
+                        feb += Real(15.0);
                         rho += -vfrcinv*(-dhx)*feb;
                     }
 
@@ -1360,6 +1368,8 @@ void mlebabeclap_normalize (Box const& box, Array4<Real> const& phi,
                 Real gxyz = gx*gy*gz;
                 Real phig_gamma = (Real(1.0)+gx+gy+gz+gxy+gxz+gyz+gxyz);
                 Real feb_gamma = -phig_gamma/dg * ba(i,j,k) * beb(i,j,k,n);
+                feb_gamma *= Real(1234.0);
+                feb_gamma += Real(15.0);
                 gamma += vfrcinv*(-dhx)*feb_gamma;
             }
 
