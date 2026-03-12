@@ -473,6 +473,13 @@ void habec_ijmat_eb (GpuArray<Real,9>& sten, Array4<Int> const& ncols,
         }
 
         if (beb) {
+            Real dapx = apx(i,j,k) - apx(i+1,j,k);
+            Real dapy = apy(i,j,k) - apy(i,j+1,k);
+            Real dV = dx[0] * dx[1];
+            Real bareax = dapx * dV / dx[0];
+            Real bareay = dapy * dV / dx[1];
+            Real barea = std::sqrt(bareax*bareax + bareay*bareay);
+
             Real anorm = std::sqrt((apx(i,j,k) - apx(i+1,j,k))*(apx(i,j,k) - apx(i+1,j,k))
                                  + (apy(i,j,k) - apy(i,j+1,k))*(apy(i,j,k) - apy(i,j+1,k)));
 
@@ -497,6 +504,7 @@ void habec_ijmat_eb (GpuArray<Real,9>& sten, Array4<Int> const& ncols,
             for (int ii=0; ii<4; ii++){
                 feb(ii) = -phig1(ii) * (ba(i,j,k) * beb(i,j,k) / dg);
             }
+            // Imbalance here: only using fac[0]. This is biased towards one direction
             mat_tmp(0   , 0  ) -= feb(0)*fac[0];
             mat_tmp(ioff, 0  ) -= feb(1)*fac[0];
             mat_tmp(0   ,joff) -= feb(2)*fac[0];
