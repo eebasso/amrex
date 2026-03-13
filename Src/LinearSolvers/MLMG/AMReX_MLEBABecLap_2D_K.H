@@ -319,21 +319,15 @@ void mlebabeclap_ebflux (int i, int j, int k, int n,
         Real apym = apy(i,j,k);
         Real apyp = apy(i,j+1,k);
 
-        Real dAx = Real(1.0) / dxinv[1];
-        Real dAy = Real(1.0) / dxinv[0];
+        Real dapx = (apxm-apxp)/dxinv[1];
+        Real dapy = (apym-apyp)/dxinv[0];
+        Real anorm = std::hypot(dapx,dapy);
+        Real anorminv = Real(1.0)/anorm;
+        Real anrmx = dapx * anorminv * dxinv[0];
+        Real anrmy = dapy * anorminv * dxinv[1];
+        const Real bareascaling = std::sqrt( (anrmx/dxinv[0])*(anrmx/dxinv[0]) +
+                (anrmy/dxinv[1])*(anrmy/dxinv[1]) );
 
-        Real dapx = apxm-apxp;
-        Real dapy = apym-apyp;
-
-        Real bareax = dapx * dAx;
-        Real bareay = dapy * dAy;
-        Real bareanorm = std::hypot(bareax,bareay);
-
-        Real bnrmx = bareax / bareanorm;
-        Real bnrmy = bareay / bareanorm;
-
-        Real anrmx = bnrmx * dxinv[0];
-        Real anrmy = bnrmy * dxinv[1];
 
         Real phib = is_inhomog ? phieb(i,j,k,n) : Real(0.0);
 
@@ -360,7 +354,7 @@ void mlebabeclap_ebflux (int i, int j, int k, int n,
             +       (            - gy*sy - gx*gy*sx*sy) * x(i ,jj,k,n)
             +       (                    + gx*gy*sx*sy) * x(ii,jj,k,n) ;
 
-        Real dphidn = (phib-phig)/(dg);
+        Real dphidn = (phib-phig)/(dg * bareascaling);
         feb(i,j,k,n) = -beb(i,j,k,n) * dphidn;
     }
 }
