@@ -319,8 +319,21 @@ void mlebabeclap_ebflux (int i, int j, int k, int n,
         Real apym = apy(i,j,k);
         Real apyp = apy(i,j+1,k);
 
-        Real anrmx = (apxm-apxp) * dxinv[0];
-        Real anrmy = (apym-apyp) * dxinv[1];
+        Real dAx = Real(1.0) / dxinv[1];
+        Real dAy = Real(1.0) / dxinv[0];
+
+        Real dapx = apxm-apxp;
+        Real dapy = apym-apyp;
+
+        Real bareax = dapx * dAx;
+        Real bareay = dapy * dAy;
+        Real bareanorm = std::hypot(bareax,bareay);
+
+        Real bnrmx = bareax / bareanorm;
+        Real bnrmy = bareay / bareanorm;
+
+        Real anrmx = bnrmx * dxinv[0];
+        Real anrmy = bnrmy * dxinv[1];
 
         Real phib = is_inhomog ? phieb(i,j,k,n) : Real(0.0);
 
