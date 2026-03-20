@@ -75,7 +75,7 @@ detailed throughout the rest of this chapter:
   movement for mesh and particle data.  Simple data structures, such
   as :cpp:`IntVect`\s can be passed by value and complex data structures, such as
   :cpp:`FArrayBox`\es, have specialized AMReX classes to handle the
-  data movement for the user. This particularly useful for the early stages
+  data movement for the user. This is particularly useful for the early stages
   of porting an application to GPUs. However, for best performance on a
   variety of platforms, we recommend disabling managed memory and handling
   host/device data migration explicitly. managed memory is not used by
@@ -115,7 +115,7 @@ detailed throughout the rest of this chapter:
 
    Timeline illustration of GPU streams. Illustrates the case of an
    MFIter loop of five iterations with three GPU kernels each being
-   ran with three GPU streams.
+   run with three GPU streams.
 
 .. raw:: latex
 
@@ -1004,7 +1004,7 @@ possible to allow efficient utilization of GPU hardware.
 However, it is important for applications to use these launches whenever appropriate
 because they contain optimizations for both CPU and GPU variations of nested
 loops.  For example, on the GPU the spatial coordinate loops are reduced to a single
-loop and the component loop is moved to these inner most loop.  AMReX's launch functions
+loop and the component loop is moved to these innermost loops.  AMReX's launch functions
 apply the appropriate optimizations for compiling both with and without GPU support
 in a compact and readable format.
 
@@ -1048,11 +1048,11 @@ returns ``false`` in the GPU case to turn off tiling and maximize the amount of
 work given to the GPU in each launch. When tiling is off, :cpp:`tilebox()`
 returns the :cpp:`validbox()`.  The :cpp:`BaseFab::array()` function returns a
 lightweight :cpp:`Array4` object that defines access to the underlying :cpp:`FArrayBox`
-data.  The :cpp:`Array4`\s is then captured by the C++ lambda functions defined in the
+data.  The :cpp:`Array4`\s are then captured by the C++ lambda functions defined in the
 launch function.
 
 ``amrex::ParallelFor()`` expands into different variations of a quadruply-nested
-:cpp:`for` loop depending dimensionality and whether it is being implemented on CPU or GPU.
+:cpp:`for` loop depending on dimensionality and whether it is being implemented on CPU or GPU.
 The best way to understand this function is to take a look at the 4D :cpp:`amrex::ParallelFor`
 that is implemented when AMReX is compiled without GPU support, such as ``USE_CUDA=FALSE``.
 A simplified version is reproduced here:
@@ -1314,7 +1314,7 @@ However, AMReX uses the default GPU stream outside of :cpp:`MFIter`
 loops.
 
 Launching kernels with AMReX's launch macros or functions implement
-a C++ lambda function. Lambdas functions used for launches on the GPU have some
+a C++ lambda function. Lambda functions used for launches on the GPU have some
 restrictions the user must understand.  First, the function enclosing the
 extended lambda must not have private or protected access within its parent
 class,  otherwise the code will not compile.  This can be fixed by changing
@@ -1470,7 +1470,7 @@ streams, the data must be synchronized before being passed to MPI calls.
 Other synchronizations are introduced for safety. A notable example is
 :cpp:`MFIter`, which performs implicit synchronizations at both the
 beginning and end of the loop (as a whole, not on each iteration). These
-synchronizations can be disabled using with :cpp:`MFItInfo`. For example,
+synchronizations can be disabled using :cpp:`MFItInfo`. For example,
 
 .. highlight:: c++
 
@@ -1500,6 +1500,111 @@ One could also use :cpp:`Gpu::NoSyncRegion`, as shown below:
 This approach suppresses implicit synchronization for all operations within
 the scoped region and restores the previous synchronization setting upon
 exiting.
+
+.. _sec:gpu:external-streams:
+
+External GPU Streams
+====================
+
+AMReX normally launches GPU kernels from an internal pool of GPU streams and
+round-robins across them inside :cpp:`MFIter` loops.  When an application
+needs to integrate with an externally managed stream, AMReX provides an
+override mechanism.  External-stream overrides form a stack and all calls
+must occur outside OpenMP parallel regions.  If you install a new external
+stream while another is already active, the new handle becomes current until
+it is reset, at which point AMReX restores the previous external stream.
+
+* Call :cpp:`amrex::Gpu::setExternalGpuStream(stream)` (or use the RAII
+  helper :cpp:`amrex::Gpu::ExternalGpuStreamRegion(stream,sync_on_exit)`) on
+  the host.  Every subsequent call to :cpp:`amrex::Gpu::gpuStream()` returns
+  the supplied stream.  Calls must be paired with
+  :cpp:`amrex::Gpu::resetExternalGpuStream(sync_stream)` (RAII helpers pass
+  the same flag via ``sync_on_exit``); popping the current stream restores
+  the previous external stream, if any.  Passing
+  :cpp:`amrex::Gpu::ExternalStreamSync::No` to
+  ``sync_stream``/``sync_on_exit`` skips the final
+  :cpp:`Gpu::streamSynchronize` unless deferred frees recorded by
+  :cpp:`The_Async_Arena` are still pending, in which case AMReX forces a
+  synchronization to keep the arena safe.  The external stream or queue must
+  belong to the active AMReX device.  For SYCL, the queue must also use the
+  same SYCL context as AMReX and must be an in-order queue.  AMReX selects the
+  active GPU during :cpp:`amrex::Initialize`, whose overloads accept an
+  optional trailing :cpp:`int device_id` argument; pass the desired GPU there
+  if an external runtime needs AMReX to adopt a specific device before the
+  stream is created.  Conversely, if AMReX should drive the selection, query
+  :cpp:`amrex::Gpu::Device::deviceId()` and configure the external runtime
+  (for example, by calling :cpp:`cudaSetDevice` or :cpp:`hipSetDevice` before
+  constructing the stream) so that the stream is associated with the device
+  AMReX is already using.
+* All asynchronous frees recorded through :cpp:`amrex::Gpu::freeAsync` and
+  The_Async_Arena continue to work because AMReX tracks the external stream with
+  an internal :cpp:`StreamManager`.
+
+Limitations and best practices:
+
+* Entering or exiting the override inside an OpenMP parallel region is
+  illegal and will trigger an assertion.  Configure the stream on the main
+  thread before launching GPU work, if OpenMP threading is used.
+* Backend compatibility rules are checked when the override is installed.
+  CUDA and HIP external streams must be associated with the current
+  :cpp:`amrex::Gpu::Device::deviceId()`.  SYCL external queues must use
+  AMReX's SYCL device and SYCL context, and must be in-order.
+* While an override is active, :cpp:`Gpu::numGpuStreams()` reports ``1``.  This
+  keeps :cpp:`MFIter` from trying to pipeline across multiple AMReX-managed
+  streams, but it also means you cannot currently provide a *set* of external
+  streams for MFIter to round-robin across.
+* Objects that use stream-ordered memory (for example, a :cpp:`BaseFab`
+  allocated from :cpp:`The_Async_Arena`) should generally be created and
+  destroyed within the same external-stream region.  In particular, avoid
+  creating or resizing such an object inside an external-stream region and
+  then destroying it after that region has exited, or creating it outside and
+  then resizing or destroying it inside the region.  Stream-ordered frees
+  remember the stream associated with the allocation, and AMReX requires that
+  stream to still be managed when the free occurs.  If that stream was
+  external and has already been popped, AMReX aborts instead of guessing where
+  to enqueue the deferred free.
+* Likewise, reuse a given :cpp:`Reducer` or :cpp:`ReduceData` object only on a
+  single external stream.  Reusing the same object across different external
+  stream regions, or across an external stream and AMReX stream 0, is not
+  supported.  If a reduction is launched inside an external-stream region,
+  read its final value before leaving that region.
+* Make sure the external stream remains valid for the duration of the override.
+  Destroying it before the RAII guard goes out of scope is undefined behavior.
+* Using :cpp:`ExternalStreamSync::No` transfers synchronization responsibility
+  to the caller.  After :cpp:`resetExternalGpuStream(ExternalStreamSync::No)`,
+  AMReX no longer tracks that external stream, and later AMReX global
+  synchronization helpers are not guaranteed to wait for work already queued
+  on it.  It is the user's responsibility to synchronize that external stream
+  before any dependent teardown or finalization.
+
+Example: wrap AMReX work inside an externally created CUDA stream:
+
+.. code-block:: cpp
+
+   #ifdef AMREX_USE_CUDA
+     cudaStream_t external{};
+     AMREX_CUDA_SAFE_CALL(cudaStreamCreateWithFlags(&external, cudaStreamNonBlocking));
+   #endif
+     {
+       amrex::Gpu::ExternalGpuStreamRegion stream_scope(external);
+       MultiFab mf(...);
+       MFItInfo info;
+       info.DisableDeviceSync();
+       for (MFIter mfi(mf,info); mfi.isValid(); ++mfi) {
+         auto const& box = mfi.tilebox();
+         auto const arr = mf.array(mfi);
+         amrex::ParallelFor(box, [=] AMReX_GPU_DEVICE (int i, int j, int k) {
+           arr(i,j,k) = 0.0_rt;
+         });
+       }
+       // Optional: launch non-AMReX CUDA kernels on 'external' here.
+     }
+   #ifdef AMREX_USE_CUDA
+     AMREX_CUDA_SAFE_CALL(cudaStreamDestroy(external));
+   #endif
+
+The same pattern works for HIP streams and, in SYCL builds, with
+:cpp:`sycl::queue` objects.
 
 .. _sec:gpu:example:
 
@@ -1769,7 +1874,7 @@ AMReX for GPUs:
   resources to perform other tasks. This increases parallel
   performance and greatly reduces runtime.  Functions are written
   inline by putting their definitions in the ``.H`` file and using
-  the ``AMREX_FORCE_INLINE`` AMReX macro.  Examples can be found in
+  the ``AMREX_FORCE_INLINE`` AMReX macro.  Examples can be found
   in the `Launch`_ tutorial. For example:
 
 .. highlight:: cpp
