@@ -478,9 +478,13 @@ void mlebabeclap_ebflux (int i, int j, int k, int n,
                          bool is_inhomog,
                          GpuArray<Real,AMREX_SPACEDIM> const& dxinv) noexcept
 {
-    Real dhx = dxinv[0];
-    Real dhy = dxinv[1];
-    Real dhz = dxinv[2];
+    Real dhx = dxinv[0] * dxinv[0];
+    Real dhy = dxinv[1] * dxinv[1];
+    Real dhz = dxinv[2] * dxinv[2];
+
+    Real dAx = Real(1.0) / (dxinv[1] * dxinv[2]);
+    Real dAy = Real(1.0) / (dxinv[0] * dxinv[2]);
+    Real dAz = Real(1.0) / (dxinv[0] * dxinv[1]);
 
     if (!flag(i,j,k).isSingleValued())
     {
@@ -499,9 +503,23 @@ void mlebabeclap_ebflux (int i, int j, int k, int n,
         Real dapx = apxm-apxp;
         Real dapy = apym-apyp;
         Real dapz = apzm-apzp;
-        Real anrmx = dapx * dhx;
-        Real anrmy = dapy * dhy;
-        Real anrmz = dapz * dhz;
+        Real anorm = std::sqrt(dapx*dapx*dhx+dapy*dapy*dhy+dapz*dapz*dhz);
+        Real anorminv = Real(1.0)/anorm;
+        Real anrmx = dapx * anorminv * dhx;
+        Real anrmy = dapy * anorminv * dhy;
+        Real anrmz = dapz * anorminv * dhz;
+
+        // Real dax = dapx * dxinv[0];
+        // Real day = dapy * dxinv[1];
+        // Real daz = dapz * dxinv[2];
+        // Real dax = dapx * dAx;
+        // Real day = dapy * dAy;
+        // Real daz = dapz * dAz;
+        // Real anorm = std::sqrt(dax*dax+day*day+daz*daz);
+        // Real anorminv = Real(1.0)/anorm;
+        // Real anrmx = dax * anorminv * dxinv[0];
+        // Real anrmy = day * anorminv * dxinv[1];
+        // Real anrmz = daz * anorminv * dxinv[2];
 
         Real phib = is_inhomog ? phieb(i,j,k,n) : Real(0.0);
 
