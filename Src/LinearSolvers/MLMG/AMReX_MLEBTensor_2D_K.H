@@ -284,11 +284,19 @@ void mlebtensor_cross_terms (Box const& box, Array4<Real> const& Ax,
                 Real feb_1 = Real(0.0);
                 if (is_dirichlet)
                 {
+
+
                     Real dapx = apx(i+1,j,0)-apx(i,j,0);
                     Real dapy = apy(i,j+1,0)-apy(i,j,0);
-                    Real anorminv = Real(1.0)/std::sqrt(dapx*dapx+dapy*dapy);
-                    Real anrmx = -dapx * anorminv;
-                    Real anrmy = -dapy * anorminv;
+                    Real anorminv = Real(1.0)/std::sqrt((dxi*dapx)*(dxi*dapx)+(dyi*dapy)*(dyi*dapy));
+                    Real anrmx = -dxi * dapx * anorminv;
+                    Real anrmy = -dyi * dapy * anorminv;
+
+                    // Real dapxdxi = -dxi*dapx;
+                    // Real dapydyi = -dyi*dapy;
+                    // Real anorminv = Real(1.0)/std::sqrt(dapxdxi*dapxdxi+dapydyi*dapydyi);
+                    // Real anrmx = dapxdxi * anorminv;
+                    // Real anrmy = dapydyi * anorminv;
 
                     Real velb_0 = 0, velb_1 = 0;
 
@@ -298,10 +306,13 @@ void mlebtensor_cross_terms (Box const& box, Array4<Real> const& Ax,
                     }
 
                     Real dx_eb = amrex::max(Real(0.3), (kappa*kappa-Real(0.25))/(Real(2.)*kappa));
-                    Real dg = dx_eb / amrex::max(std::abs(anrmx),std::abs(anrmy));
+
+                    // dg = dx_eb / max(dapx dxi, dapy dyi)
+                    // [dg] = 1/[dxi] = [dx]
+                    Real dg = dx_eb / amrex::max(std::abs(dxi*anrmx),std::abs(dyi*anrmy));
                     Real dginv = Real(1.0)/dg;
-                    Real gx = bc(i,j,0,0) - dg*anrmx;
-                    Real gy = bc(i,j,0,1) - dg*anrmy;
+                    Real gx = bc(i,j,0,0) - dg*dxi*anrmx;
+                    Real gy = bc(i,j,0,1) - dg*dyi*anrmy;
                     int isx = (anrmx > Real(0.0)) ? 1 : -1;
                     int isy = (anrmy > Real(0.0)) ? 1 : -1;
                     int ii = i - isx;
@@ -312,10 +323,14 @@ void mlebtensor_cross_terms (Box const& box, Array4<Real> const& Ax,
                     Real gxy = gx*gy;
                     Real oneggg = Real(1.0)+gx+gy+gxy;
 
+                    // Expansion: velg = velb + dx*(gx-bcx)*dvxdx + dy*(gy-bcy)*dvdy
                     Real velg = oneggg * vel(i ,j ,0,0)
                         +  (-gy - gxy) * vel(i ,jj,0,0)
                         +  (-gx - gxy) * vel(ii,j ,0,0)
                         +    gxy       * vel(ii,jj,0,0);
+                    // Expansion: (velb-velg)/dg = (dx*(bcx - gx)/dg)*dvdx + (dy*(bcy - gy)/dg)*dvdy
+
+                    // gx = bcx - dg * dax_dVi = bcx
                     Real dudn = (velb_0-velg) * dginv;
 
                     velg      = oneggg * vel(i ,j ,0,1)
@@ -338,18 +353,64 @@ void mlebtensor_cross_terms (Box const& box, Array4<Real> const& Ax,
                     Real tauyx = mu*dvdx;
                     Real tauyy = mu*dvdy + tautmp;
                     Real tauxy = mu*dudy;
-                    // assuming dxi == dyi == dzi
-                    feb_0 = dxi*(dapx*tauxx + dapy*tauyx);
-                    feb_1 = dxi*(dapx*tauxy + dapy*tauyy);
+                    // [feb] = 1/dV*(barea.tau)
+                    //       = [dxi][dap][tau]
+                    feb_0 = dxi*dapx*tauxx + dyi*dapy*tauyx;
+                    feb_1 = dxi*dapx*tauxy + dyi*dapy*tauyy;
+
+                    // The system it solves is
+                    //
+                    //   alpha a v - beta div dot tau = rhs
+                    //
+                    // where tau = eta [grad v + (grad v)^T] +  (kappa-(2/3)eta) (div v) I.
+
+                    // Expansion: velg = velb + dx*(bcx - gx)*dvdx + dy*(bcy - gy)*dvdy + O(dx^2)
+                    // We want (velb-velg)/dg = dvdn = nrm_x*dvdx + nrm_y*dvdy
+                    // Note dvdn = anrmx*dvdx + anrm_y*dvdy
+                    // Expansion: (velb-velg)/dg = dx*(bcx - gx)/dg*dvdx + dy*(bcy - gy)/dg*dvdy + O(dx^2)
+                    // Thus anmrx = dx*(bcx - gx)/dg
+                    // Thus gx = bcx - (dg*anmrx)/dx
+
+                    // Currently, we have
+                    // dvdn = (velb-velg)/dg
+                    //      = dx*(bcx - gx)/dg*dvdx + dy*(bcy - gy)/dg*dvdy
+                    //      = dx*anrmx*dvdx + dy*anrmy*dvdy
+
+                    // dvdx = dvdn * anrmx
+                    // dvdy = dvdn * anrmy
+                    // divu = dvxdx + dvydy
+                    // tauxx = etab*dudx + (kapb-(2./3.)*etab)*divu;
+
+                    // feb_0 = dxi*(dapx*tauxx + dapy*tauyx);
+
+                    // Ax += volinv*dxi*feb_0
+
+                    // Units:
+                    // [dap] = [1]
+                    // [anrm] = [1]
+                    // [dvdn] = [anrm][v]
+                    //        = [v]
+                    // [dvdx] = [anrm][dvdn]
+                    //        = [anrm]^2[v]
+                    // [divu] = [dvdx]
+                    //        = [anrm]^2[v]
+                    // [tau] = [dvdx]
+                    //       = [anrm]^2[v]
+                    // [feb] = [dxi][dap][tau]
+                    //       = [dxi][dap][anrm]^2[v]
+                    // [Ax] = [dxi][feb]
+                    //      = [dxi]^2[dap][anrm]^2[v]
+
+
                 }
 
                 Real volinv = bscalar / kappa;
                 Ax(i,j,0,0) += volinv * (dxi*(apx(i+1,j,0)*fxp_0-apx(i,j,0)*fxm_0)
                                         +dyi*(apy(i,j+1,0)*fyp_0-apy(i,j,0)*fym_0)
-                                        +dxi*                               feb_0);
+                                        +                                   feb_0);
                 Ax(i,j,0,1) += volinv * (dxi*(apx(i+1,j,0)*fxp_1-apx(i,j,0)*fxm_1)
                                         +dyi*(apy(i,j+1,0)*fyp_1-apy(i,j,0)*fym_1)
-                                        +dxi*                               feb_1);
+                                        +                                   feb_1);
             }
         }
     }
