@@ -153,7 +153,7 @@ void mlebabeclap_adotx_centroid (Box const& box, Array4<Real> const& y,
                                                          on_y_face, domlo_y, domhi_y);
 
                 feb *= ba(i,j,k) * beb(i,j,k,n);
-                feb *= Real(1.0);
+                feb *= Real(0.0);
             }
 
 
