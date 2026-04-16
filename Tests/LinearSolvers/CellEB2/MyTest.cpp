@@ -206,6 +206,135 @@ MyTest::solve ()
             Real norminf_feb = mf_feb_err.norm0();
             Real norm1_feb = mf_feb_err.norm1()*AMREX_D_TERM((1.0/n_cell_x), *(1.0/n_cell_y), *(1.0/n_cell_z));
             amrex::Print() << "Level " << ilev << ": weighted max and 1 norms for EB flux error " << norminf_feb << ", " << norm1_feb << '\n';
+
+            Real n1scale = AMREX_D_TERM((1.0/n_cell_x), *(1.0/n_cell_y), *(1.0/n_cell_z));
+
+            auto bArr = fluxeb_phi[ilev].boxArray();
+            auto dmap = fluxeb_phi[ilev].DistributionMap();
+
+            // sol
+            MultiFab m_sol(bArr, dmap, 1, 0);
+            MultiFab::Copy(m_sol, fluxeb_phi[ilev], 0, 0, 1, 0);
+
+            // exact
+            MultiFab m_exact(bArr, dmap, 1, 0);
+            MultiFab::Copy(m_exact, fluxeb_phiexact[ilev], 0, 0, 1, 0);
+
+            // sol + exact
+            MultiFab m_add(bArr, dmap, 1, 0);
+            MultiFab::Copy(    m_add, fluxeb_phi[ilev], 0, 0, 1, 0);
+            MultiFab::Add(     m_add, fluxeb_phiexact[ilev], 0, 0, 1, 0);
+
+            // sol - exact
+            MultiFab mf_feb_sub(bArr, dmap, 1, 0);
+            MultiFab::Copy(    mf_feb_sub, fluxeb_phi[ilev], 0, 0, 1, 0);
+            MultiFab::Subtract(mf_feb_sub, fluxeb_phiexact[ilev], 0, 0, 1, 0);
+
+            // (sol + exact) * vfrc
+            MultiFab m_add_vfrc(bArr, dmap, 1, 0);
+            MultiFab::Copy(    m_add_vfrc, m_add, 0, 0, 1, 0);
+            MultiFab::Multiply(m_add_vfrc, vfrc, 0, 0, 1, 0);
+
+            // (sol - exact) * vfrc
+            MultiFab m_sub_vfrc(bArr, dmap, 1, 0);
+            MultiFab::Copy(    m_sub_vfrc, mf_feb_sub, 0, 0, 1, 0);
+            MultiFab::Multiply(m_sub_vfrc, vfrc, 0, 0, 1, 0);
+
+            // sol * vfrc
+            MultiFab m_sol_vfrc(bArr, dmap, 1, 0);
+            MultiFab::Copy(    m_sol_vfrc, m_sol, 0, 0, 1, 0);
+            MultiFab::Multiply(m_sol_vfrc, vfrc, 0, 0, 1, 0);
+
+            // exact * vfrc
+            MultiFab m_exact_vfrc(bArr, dmap, 1, 0);
+            MultiFab::Copy(    m_exact_vfrc, m_exact, 0, 0, 1, 0);
+            MultiFab::Multiply(m_exact_vfrc, vfrc, 0, 0, 1, 0);
+
+            // 2*sol + 3*exact
+            MultiFab m_lincomb_1(bArr, dmap, 1, 0);
+            MultiFab::LinComb(
+                m_lincomb_1,
+                2.0, m_sol, 0,
+                3.0, m_exact, 0,
+                0, 1, 0
+            );
+
+            // 5*sol - 11*exact
+            MultiFab m_lincomb_2(bArr, dmap, 1, 0);
+            MultiFab::LinComb(
+                m_lincomb_2,
+                5.0, m_sol, 0,
+                -11.0, m_exact, 0,
+                0, 1, 0
+            );
+
+            // -7*sol + 13*exact
+            MultiFab m_lincomb_3(bArr, dmap, 1, 0);
+            MultiFab::LinComb(
+                m_lincomb_3,
+                -7.0, m_sol, 0,
+                13.0, m_exact, 0,
+                0, 1, 0
+            );
+
+            // -17*sol - 19*exact
+            MultiFab m_lincomb_4(bArr, dmap, 1, 0);
+            MultiFab::LinComb(
+                m_lincomb_4,
+                -17.0, m_sol, 0,
+                -19.0, m_exact, 0,
+                0, 1, 0
+            );
+
+            // -1*sol + 1*exact
+            MultiFab m_lincomb_5(bArr, dmap, 1, 0);
+            MultiFab::LinComb(
+                m_lincomb_5,
+                -1.0, m_sol, 0,
+                +1.0, m_exact, 0,
+                0, 1, 0
+            );
+
+            // -1*sol - 1*exact
+            MultiFab m_lincomb_6(bArr, dmap, 1, 0);
+            MultiFab::LinComb(
+                m_lincomb_6,
+                -1.0, m_sol, 0,
+                -1.0, m_exact, 0,
+                0, 1, 0
+            );
+
+            // amrex::Print() << "\n";
+
+            // amrex::Print() << "Level " << ilev << "\n    EB fluxes:\n";
+
+            amrex::Print() << "        ||feb_add||      " << m_add.norm0() << ", " << m_add.norm1()*n1scale << "\n";
+
+            amrex::Print() << "        ||feb_add*vfrc|| " << m_add_vfrc.norm0() << ", " << m_add_vfrc.norm1()*n1scale << "\n";
+
+            amrex::Print() << "        ||feb_sub||      " << mf_feb_sub.norm0() << ", " << mf_feb_sub.norm1()*n1scale << "\n";
+
+            amrex::Print() << "        ||feb_sub*vfrc|| " << m_sub_vfrc.norm0() << ", " << m_sub_vfrc.norm1()*n1scale << "\n";
+
+            amrex::Print() << "        ||sol||      " << fluxeb_phi[ilev].norm0() << ", " << fluxeb_phi[ilev].norm1()*n1scale << "\n";
+
+            amrex::Print() << "        ||sol*vfrc|| " << m_sol_vfrc.norm0() << ", " << m_sol_vfrc.norm1()*n1scale << "\n";
+
+            amrex::Print() << "        ||exact||      " << fluxeb_phiexact[ilev].norm0() << ", " << fluxeb_phiexact[ilev].norm1()*n1scale << "\n";
+
+            amrex::Print() << "        ||exact*vfrc|| " << m_exact_vfrc.norm0() << ", " << m_exact_vfrc.norm1()*n1scale << "\n";
+
+            amrex::Print() << "        ||+ 2*sol +  3*exact|| " << m_lincomb_1.norm0() << ", " << m_lincomb_1.norm1()*n1scale << "\n";
+
+            amrex::Print() << "        ||+ 5*sol - 11*exact|| " << m_lincomb_2.norm0() << ", " << m_lincomb_2.norm1()*n1scale << "\n";
+
+            amrex::Print() << "        ||- 7*sol + 13*exact|| " << m_lincomb_3.norm0() << ", " << m_lincomb_3.norm1()*n1scale << "\n";
+
+            amrex::Print() << "        ||-17*sol - 19*exact|| " << m_lincomb_4.norm0() << ", " << m_lincomb_4.norm1()*n1scale << "\n";
+
+            amrex::Print() << "        ||- 1*sol +  1*exact|| " << m_lincomb_5.norm0() << ", " << m_lincomb_5.norm1()*n1scale << "\n";
+
+            amrex::Print() << "        ||- 1*sol -  1*exact|| " << m_lincomb_6.norm0() << ", " << m_lincomb_6.norm1()*n1scale << "\n";
         }
     }
 }
@@ -458,6 +587,7 @@ MyTest::initData ()
                                       AMREX_D_DECL(bx_arr,by_arr,bz_arr),
                                       beb_arr,flag_arr,cent_arr,bcent_arr,
                                       dx, lprob_type, bx);
+                    // feb_ex_arr(i,j,k) = 0.0;
                     mytest_set_fluxeb(i,j,k,feb_ex_arr,ebdata,dx,lprob_type,bx);
                 });
             }
