@@ -148,7 +148,7 @@ void mytest_set_fluxeb (
     amrex::IntVect iv(AMREX_D_DECL(i,j,k));
 
     if (vbx.contains(iv)) {
-        amrex::EBCellFlag const flag = ebdata.get<EBData_t::cellflag>(i,j,k);
+        amrex::EBCellFlag const flag = ebdata.get<amrex::EBData_t::cellflag>(i,j,k);
 
         if (!flag.isSingleValued() || flag.isCovered()) {
             fluxeb_exact(i,j,k) = 0.0;
