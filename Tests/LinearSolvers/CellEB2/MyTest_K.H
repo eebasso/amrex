@@ -137,6 +137,50 @@ void mytest_set_phi_eb (int i, int j, int k, amrex::Array4<amrex::Real> const& p
 }
 
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
+void mytest_set_fluxeb (
+    int i, int j, int k,
+    amrex::Array4<amrex::Real> const& fluxeb_exact,
+    amrex::Array4<amrex::EBCellFlag const> const& flag,
+    amrex::EBData const& ebdata,
+    amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> const& dx,
+    int prob_type, amrex::Box const& vbx)
+{
+    constexpr amrex::Real pi = 3.1415926535897932;
+    amrex::IntVect iv(AMREX_D_DECL(i,j,k));
+
+    if (vbx.contains(iv)) {
+        if (!flag(i,j,k).isSingleValued() || flag(i,j,k).isCovered()) {
+            fluxeb_exact(i,j,k) = 0.0;
+        } else {
+            amrex::Real const nx = ebdata.get<amrex::EBData_t::bndrynorm>(i,j,k,0);
+            amrex::Real const ny = ebdata.get<amrex::EBData_t::bndrynorm>(i,j,k,1);
+            amrex::Real const bcentx = ebdata.get<amrex::EBData_t::bndrycent>(i,j,k,0);
+            amrex::Real const bcenty = ebdata.get<amrex::EBData_t::bndrycent>(i,j,k,1);
+
+            amrex::Real x = (i+0.5+bcentx)*dx[0] - 0.5;
+            amrex::Real y = (j+0.5+bcenty)*dx[1] - 0.5;
+            amrex::Real theta = std::atan2(x,y) + 0.5*pi;
+            amrex::Real r = std::hypot(x,y);
+            amrex::Real r2 = r*r;
+            amrex::Real r3 = r*r2;
+
+            amrex::Real dphidx = -0.5 * r3 * (7.0*std::sin(2.*theta) - std::sin(4.*theta));
+            amrex::Real dphidy = -0.5 * r3 * (7.0*std::cos(2.*theta) + std::cos(4.*theta));
+
+            amrex::Real bx = 1.0;
+            amrex::Real by = 1.0;
+            if (prob_type == 2) {
+                bx = 1.0 - r2;
+                by = 1.0 - r2;
+            }
+            // flux on eb surface = - (area normal).(b tensor).(grad phi)
+            amrex::Real n_b_gradphi = nx * bx * dphidx + ny * by * dphidy;
+            fluxeb_exact(i,j,k) = -n_b_gradphi;
+        }
+    }
+}
+
+AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 void mytest_set_phi_boundary (int i, int j, int k, amrex::Array4<amrex::Real> const& phi,
                               amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> const& dx,
                               amrex::Box const& dbx)
