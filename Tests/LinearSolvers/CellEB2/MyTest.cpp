@@ -113,6 +113,12 @@ MyTest::solve ()
         const Real tol_rel = reltol;
         const Real tol_abs = 0.0;
         mlmg.solve(amrex::GetVecOfPtrs(phi), amrex::GetVecOfConstPtrs(rhs), tol_rel, tol_abs);
+
+        amrex::Print() << "\n";
+        amrex::Print() << "MyTest::solve: Start getEBFluxes, composite_solve = True\n";
+        mleb.getEBFluxes(amrex::GetVecOfPtrs(fluxeb_phi), amrex::GetVecOfPtrs(phi));
+        amrex::Print() << "MyTest::solve: Finished getEBFluxes, composite_solve = True\n";
+        amrex::Print() << "\n";
     }
     else
     {
@@ -155,6 +161,12 @@ MyTest::solve ()
             const Real tol_rel = reltol;
             const Real tol_abs = 0.0;
             mlmg.solve({&phi[ilev]}, {&rhs[ilev]}, tol_rel, tol_abs);
+
+            amrex::Print() << "\n";
+            amrex::Print() << "MyTest::solve: Start getEBFluxes, composite_solve = False\n";
+            mleb.getEBFluxes(amrex::GetVecOfPtrs(fluxeb_phi), amrex::GetVecOfPtrs(phi));
+            amrex::Print() << "MyTest::solve: Finished getEBFluxes, composite_solve = False\n";
+            amrex::Print() << "\n";
         }
     }
 
@@ -327,6 +339,8 @@ MyTest::initData ()
     acoef.resize(nlevels);
     bcoef.resize(nlevels);
     bcoef_eb.resize(nlevels);
+    fluxeb_phi.resize(nlevels);
+    fluxeb_phiexact.resize(nlevels);
 
     for (int ilev = 0; ilev < nlevels; ++ilev)
     {
@@ -347,6 +361,8 @@ MyTest::initData ()
         }
         bcoef_eb[ilev].define(grids[ilev], dmap[ilev], 1, 0, MFInfo(), *factory[ilev]);
         bcoef_eb[ilev].setVal(1.0);
+        fluxeb_phi[ilev].define(grids[ilev], dmap[ilev], 1, 1, MFInfo(), *factory[ilev]);
+        fluxeb_phiexact[ilev].define(grids[ilev], dmap[ilev], 1, 0, MFInfo(), *factory[ilev]);
 
         phi[ilev].setVal(0.0);
         rhs[ilev].setVal(0.0);
@@ -354,6 +370,8 @@ MyTest::initData ()
         for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
             bcoef[ilev][idim].setVal(1.0);
         }
+        fluxeb_phi[ilev].setVal(0.0);
+        fluxeb_phiexact[ilev].setVal(0.0);
 
         const auto dx = geom[ilev].CellSizeArray();
         const Box& domainbox = geom[ilev].Domain();
