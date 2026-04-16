@@ -140,7 +140,6 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 void mytest_set_fluxeb (
     int i, int j, int k,
     amrex::Array4<amrex::Real> const& fluxeb_exact,
-    amrex::Array4<amrex::EBCellFlag const> const& flag,
     amrex::EBData const& ebdata,
     amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> const& dx,
     int prob_type, amrex::Box const& vbx)
@@ -149,7 +148,9 @@ void mytest_set_fluxeb (
     amrex::IntVect iv(AMREX_D_DECL(i,j,k));
 
     if (vbx.contains(iv)) {
-        if (!flag(i,j,k).isSingleValued() || flag(i,j,k).isCovered()) {
+        amrex::EBCellFlag const flag = ebdata.get<EBData_t::cellflag>(i,j,k);
+
+        if (!flag.isSingleValued() || flag.isCovered()) {
             fluxeb_exact(i,j,k) = 0.0;
         } else {
             amrex::Real const nx = ebdata.get<amrex::EBData_t::bndrynorm>(i,j,k,0);
