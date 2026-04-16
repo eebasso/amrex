@@ -395,6 +395,7 @@ MyTest::initData ()
 #endif
         for (MFIter mfi(phiexact[ilev]); mfi.isValid(); ++mfi)
         {
+            const amrex::EBData& ebdata = factory[ilev]->getEBData(mfi);
             const Box& bx = mfi.validbox();
             const Box& nbx = amrex::surroundingNodes(bx);
             Array4<Real> const& phi_arr = phi[ilev].array(mfi);
@@ -404,6 +405,7 @@ MyTest::initData ()
             AMREX_D_TERM(Array4<Real> const& bx_arr = bcoef[ilev][0].array(mfi);,
                          Array4<Real> const& by_arr = bcoef[ilev][1].array(mfi);,
                          Array4<Real> const& bz_arr = bcoef[ilev][2].array(mfi););
+            Array4<Real> const& feb_ex_arr = fluxeb_phiexact[ilev].array(mfi);
 
             auto fabtyp = flags[mfi].getType(bx);
             if (FabType::covered == fabtyp) {
@@ -411,6 +413,7 @@ MyTest::initData ()
                 {
                     phi_ex_arr(i,j,k) = 0.0;
                     phi_eb_arr(i,j,k) = 0.0;
+                    feb_ex_arr(i,j,k) = 0.0;
                 });
             } else if (FabType::regular == fabtyp) {
                 amrex::ParallelFor(nbx, [=] AMREX_GPU_DEVICE (int i, int j, int k) noexcept
@@ -418,6 +421,7 @@ MyTest::initData ()
                     mytest_set_phi_reg(i,j,k,phi_ex_arr,rhs_arr,
                                        AMREX_D_DECL(bx_arr,by_arr,bz_arr),
                                        dx, lprob_type, bx);
+                    feb_ex_arr(i,j,k) = 0.0;
                 });
             } else {
                 Array4<Real> const& beb_arr = bcoef_eb[ilev].array(mfi);
@@ -430,6 +434,7 @@ MyTest::initData ()
                                       AMREX_D_DECL(bx_arr,by_arr,bz_arr),
                                       beb_arr,flag_arr,cent_arr,bcent_arr,
                                       dx, lprob_type, bx);
+                    mytest_set_fluxeb(i,j,k,feb_ex_arr,ebdata,dx,lprob_type,bx);
                 });
             }
 
