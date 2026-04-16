@@ -222,20 +222,22 @@ MyTest::writePlotfile ()
     if (gpu_regtest) {
         for (int ilev = 0; ilev <= max_level; ++ilev) {
             const MultiFab& vfrc = factory[ilev]->getVolFrac();
-            plotmf[ilev].define(grids[ilev],dmap[ilev],3,0);
+            plotmf[ilev].define(grids[ilev],dmap[ilev], 5, 0);
             MultiFab::Copy(plotmf[ilev], phi[ilev], 0, 0, 1, 0);
             MultiFab::Copy(plotmf[ilev], phiexact[ilev], 0, 1, 1, 0);
             MultiFab::Copy(plotmf[ilev], vfrc, 0, 2, 1, 0);
+            MultiFab::Copy(plotmf[ilev], fluxeb_phi[ilev], 0, 3, 1, 0);
+            MultiFab::Copy(plotmf[ilev], fluxeb_phiexact[ilev], 0, 4, 1, 0);
         }
         WriteMultiLevelPlotfile(plot_file_name, max_level+1,
                                 amrex::GetVecOfConstPtrs(plotmf),
-                                {"phi","exact","vfrac"},
+                                {"phi","exact","vfrac","EB flux sol","EB flux exact"},
                                 geom, 0.0, Vector<int>(max_level+1,0),
                                 Vector<IntVect>(max_level,IntVect{2}));
     } else {
         for (int ilev = 0; ilev <= max_level; ++ilev) {
             const MultiFab& vfrc = factory[ilev]->getVolFrac();
-            plotmf[ilev].define(grids[ilev],dmap[ilev],5,0);
+            plotmf[ilev].define(grids[ilev],dmap[ilev], 8, 0);
 
             MultiFab::Copy(plotmf[ilev], phi[ilev], 0, 0, 1, 0);
 
@@ -249,10 +251,19 @@ MyTest::writePlotfile ()
             MultiFab::Multiply(plotmf[ilev], vfrc, 0, 3, 1, 0);
 
             MultiFab::Copy(plotmf[ilev], vfrc, 0, 4, 1, 0);
+
+            // EB fluxes
+            MultiFab::Copy(plotmf[ilev], fluxeb_phi[ilev], 0, 5, 1, 0);
+
+            MultiFab::Copy(plotmf[ilev], fluxeb_phiexact[ilev], 0, 6, 1, 0);
+
+            MultiFab::Copy(    plotmf[ilev], fluxeb_phi[ilev]     , 0, 7, 1, 0);
+            MultiFab::Subtract(plotmf[ilev], fluxeb_phiexact[ilev], 0, 7, 1, 0);
+            // MultiFab::Multiply(plotmf[ilev], vfrc                 , 0, 7, 1, 0);
         }
         WriteMultiLevelPlotfile(plot_file_name, max_level+1,
                                 amrex::GetVecOfConstPtrs(plotmf),
-                                {"phi","exact","error","error*vfrac","vfrac"},
+                                {"phi","exact","error","error*vfrac","vfrac","EB flux sol","EB flux exact","EB flux error"},
                                 geom, 0.0, Vector<int>(max_level+1,0),
                                 Vector<IntVect>(max_level,IntVect{2}));
     }
