@@ -194,6 +194,19 @@ MyTest::solve ()
             Real norm1 = mf.norm1()*AMREX_D_TERM((1.0/n_cell_x), *(1.0/n_cell_y), *(1.0/n_cell_z));
             amrex::Print() << "Level " << ilev << ": weighted max and 1 norms " << norminf << ", " << norm1 << '\n';
         }
+        for (int ilev = 0; ilev <= max_level; ++ilev)
+        {
+            const MultiFab& vfrc = factory[ilev]->getVolFrac();
+
+            MultiFab mf_feb_err(fluxeb_phi[ilev].boxArray(), fluxeb_phi[ilev].DistributionMap(), 1, 0);
+            MultiFab::Copy(mf_feb_err, fluxeb_phi[ilev], 0, 0, 1, 0);
+            MultiFab::Subtract(mf_feb_err, fluxeb_phiexact[ilev], 0, 0, 1, 0);
+            MultiFab::Multiply(mf_feb_err, vfrc, 0, 0, 1, 0);
+
+            Real norminf_feb = mf_feb_err.norm0();
+            Real norm1_feb = mf_feb_err.norm1()*AMREX_D_TERM((1.0/n_cell_x), *(1.0/n_cell_y), *(1.0/n_cell_z));
+            amrex::Print() << "Level " << ilev << ": weighted max and 1 norms for EB flux error " << norminf_feb << ", " << norm1_feb << '\n';
+        }
     }
 }
 
