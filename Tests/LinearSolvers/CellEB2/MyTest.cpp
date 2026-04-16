@@ -173,7 +173,7 @@ MyTest::solve ()
             // It seems to be because the Distribution maps are mismatched between flags and mfi
             amrex::Print() << "\n";
             amrex::Print() << "MyTest::solve: Start getEBFluxes, composite_solve = False\n";
-            mleb.getEBFluxes(amrex::GetVecOfPtrs(fluxeb_phi), amrex::GetVecOfPtrs(phi));
+            mleb.getEBFluxes({&fluxeb_phi[ilev]}, {&phi[ilev]});
             amrex::Print() << "MyTest::solve: Finished getEBFluxes, composite_solve = False\n";
             amrex::Print() << "\n";
         }
