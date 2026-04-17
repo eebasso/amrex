@@ -210,48 +210,48 @@ MyTest::solve ()
             Real nxyzi = AMREX_D_TERM((1.0/n_cell_x), *(1.0/n_cell_y), *(1.0/n_cell_z));
 
             auto bArr = fluxeb_phi[ilev].boxArray();
-            auto dmap = fluxeb_phi[ilev].DistributionMap();
+            auto _dmap = fluxeb_phi[ilev].DistributionMap();
 
             // sol
-            MultiFab m_sol(bArr, dmap, 1, 0);
+            MultiFab m_sol(bArr, _dmap, 1, 0);
             MultiFab::Copy(m_sol, fluxeb_phi[ilev], 0, 0, 1, 0);
 
             // exact
-            MultiFab m_exact(bArr, dmap, 1, 0);
+            MultiFab m_exact(bArr, _dmap, 1, 0);
             MultiFab::Copy(m_exact, fluxeb_phiexact[ilev], 0, 0, 1, 0);
 
             // sol + exact
-            MultiFab m_add(bArr, dmap, 1, 0);
+            MultiFab m_add(bArr, _dmap, 1, 0);
             MultiFab::Copy(    m_add, fluxeb_phi[ilev], 0, 0, 1, 0);
             MultiFab::Add(     m_add, fluxeb_phiexact[ilev], 0, 0, 1, 0);
 
             // sol - exact
-            MultiFab m_sub(bArr, dmap, 1, 0);
+            MultiFab m_sub(bArr, _dmap, 1, 0);
             MultiFab::Copy(    m_sub, fluxeb_phi[ilev], 0, 0, 1, 0);
             MultiFab::Subtract(m_sub, fluxeb_phiexact[ilev], 0, 0, 1, 0);
 
             // (sol + exact) * vfrc
-            MultiFab m_add_vfrc(bArr, dmap, 1, 0);
+            MultiFab m_add_vfrc(bArr, _dmap, 1, 0);
             MultiFab::Copy(    m_add_vfrc, m_add, 0, 0, 1, 0);
             MultiFab::Multiply(m_add_vfrc, vfrc, 0, 0, 1, 0);
 
             // (sol - exact) * vfrc
-            MultiFab m_sub_vfrc(bArr, dmap, 1, 0);
+            MultiFab m_sub_vfrc(bArr, _dmap, 1, 0);
             MultiFab::Copy(    m_sub_vfrc, m_sub, 0, 0, 1, 0);
             MultiFab::Multiply(m_sub_vfrc, vfrc, 0, 0, 1, 0);
 
             // sol * vfrc
-            MultiFab m_sol_vfrc(bArr, dmap, 1, 0);
+            MultiFab m_sol_vfrc(bArr, _dmap, 1, 0);
             MultiFab::Copy(    m_sol_vfrc, m_sol, 0, 0, 1, 0);
             MultiFab::Multiply(m_sol_vfrc, vfrc, 0, 0, 1, 0);
 
             // exact * vfrc
-            MultiFab m_exact_vfrc(bArr, dmap, 1, 0);
+            MultiFab m_exact_vfrc(bArr, _dmap, 1, 0);
             MultiFab::Copy(    m_exact_vfrc, m_exact, 0, 0, 1, 0);
             MultiFab::Multiply(m_exact_vfrc, vfrc, 0, 0, 1, 0);
 
             // 2*sol + 0*exact
-            MultiFab m_lincomb_1(bArr, dmap, 1, 0);
+            MultiFab m_lincomb_1(bArr, _dmap, 1, 0);
             MultiFab::LinComb(
                 m_lincomb_1,
                 +2.0, m_sol, 0,
@@ -260,7 +260,7 @@ MyTest::solve ()
             );
 
             // 0*sol + 2*exact
-            MultiFab m_lincomb_2(bArr, dmap, 1, 0);
+            MultiFab m_lincomb_2(bArr, _dmap, 1, 0);
             MultiFab::LinComb(
                 m_lincomb_2,
                 +0.0, m_sol, 0,
@@ -269,7 +269,7 @@ MyTest::solve ()
             );
 
             // 2*sol + 0.001*exact
-            MultiFab m_lincomb_3(bArr, dmap, 1, 0);
+            MultiFab m_lincomb_3(bArr, _dmap, 1, 0);
             MultiFab::LinComb(
                 m_lincomb_3,
                 +2.0, m_sol, 0,
@@ -278,7 +278,7 @@ MyTest::solve ()
             );
 
             // 0.001*sol + 2*exact
-            MultiFab m_lincomb_4(bArr, dmap, 1, 0);
+            MultiFab m_lincomb_4(bArr, _dmap, 1, 0);
             MultiFab::LinComb(
                 m_lincomb_4,
                 +0.001, m_sol, 0,
@@ -287,7 +287,7 @@ MyTest::solve ()
             );
 
             // +2*sol + 2*exact
-            MultiFab m_lincomb_5(bArr, dmap, 1, 0);
+            MultiFab m_lincomb_5(bArr, _dmap, 1, 0);
             MultiFab::LinComb(
                 m_lincomb_5,
                 +2.0, m_sol, 0,
@@ -296,7 +296,7 @@ MyTest::solve ()
             );
 
             // +2*sol - 2*exact
-            MultiFab m_lincomb_6(bArr, dmap, 1, 0);
+            MultiFab m_lincomb_6(bArr, _dmap, 1, 0);
             MultiFab::LinComb(
                 m_lincomb_6,
                 +2.0, m_sol, 0,
@@ -325,14 +325,14 @@ MyTest::solve ()
             printMultiFabNorms("||+ 2*sol + 2*exact||", m_lincomb_5);
             printMultiFabNorms("||+ 2*sol - 2*exact||", m_lincomb_6);
 
-            MultiFab test2(bArr, dmap, 1, 0);
+            MultiFab test2(bArr, _dmap, 1, 0);
             test2.setVal(2.0);
 
-            MultiFab test3(bArr, dmap, 1, 0);
+            MultiFab test3(bArr, _dmap, 1, 0);
             test3.setVal(3.0);
 
             // 3*test2 - 2*test3
-            MultiFab testLinComb1(bArr, dmap, 1, 0);
+            MultiFab testLinComb1(bArr, _dmap, 1, 0);
             MultiFab::LinComb(
                 testLinComb1,
                 +3.0, test2, 0,
@@ -341,7 +341,7 @@ MyTest::solve ()
             );
 
             // 3*test2 + 2*test3
-            MultiFab testLinComb2(bArr, dmap, 1, 0);
+            MultiFab testLinComb2(bArr, _dmap, 1, 0);
             MultiFab::LinComb(
                 testLinComb2,
                 +3.0, test2, 0,
@@ -350,7 +350,7 @@ MyTest::solve ()
             );
 
             // test2 + test3
-            MultiFab testLinComb3(bArr, dmap, 1, 0);
+            MultiFab testLinComb3(bArr, _dmap, 1, 0);
             MultiFab::LinComb(
                 testLinComb3,
                 +1.0, test2, 0,
@@ -359,7 +359,7 @@ MyTest::solve ()
             );
 
             // test2 - test3
-            MultiFab testLinComb4(bArr, dmap, 1, 0);
+            MultiFab testLinComb4(bArr, _dmap, 1, 0);
             MultiFab::LinComb(
                 testLinComb4,
                 +1.0, test2, 0,
@@ -376,7 +376,7 @@ MyTest::solve ()
             printMultiFabNorms("||test2 - test3||", testLinComb4);
 
             // sol + test2
-            MultiFab foo1(bArr, dmap, 1, 0);
+            MultiFab foo1(bArr, _dmap, 1, 0);
             MultiFab::LinComb(
                 foo1,
                 +1.0, m_sol, 0,
@@ -386,7 +386,7 @@ MyTest::solve ()
             printMultiFabNorms("||sol + test2||", foo1);
 
             // sol - test2
-            MultiFab foo2(bArr, dmap, 1, 0);
+            MultiFab foo2(bArr, _dmap, 1, 0);
             MultiFab::LinComb(
                 foo2,
                 +1.0, m_sol, 0,
