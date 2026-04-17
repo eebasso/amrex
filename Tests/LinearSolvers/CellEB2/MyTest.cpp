@@ -207,7 +207,7 @@ MyTest::solve ()
             Real norm1_feb = mf_feb_err.norm1()*AMREX_D_TERM((1.0/n_cell_x), *(1.0/n_cell_y), *(1.0/n_cell_z));
             amrex::Print() << "Level " << ilev << ": weighted max and 1 norms for EB flux error " << norminf_feb << ", " << norm1_feb << '\n';
 
-            Real n1scale = AMREX_D_TERM((1.0/n_cell_x), *(1.0/n_cell_y), *(1.0/n_cell_z));
+            Real nxyzi = AMREX_D_TERM((1.0/n_cell_x), *(1.0/n_cell_y), *(1.0/n_cell_z));
 
             auto bArr = fluxeb_phi[ilev].boxArray();
             auto dmap = fluxeb_phi[ilev].DistributionMap();
@@ -226,9 +226,9 @@ MyTest::solve ()
             MultiFab::Add(     m_add, fluxeb_phiexact[ilev], 0, 0, 1, 0);
 
             // sol - exact
-            MultiFab mf_feb_sub(bArr, dmap, 1, 0);
-            MultiFab::Copy(    mf_feb_sub, fluxeb_phi[ilev], 0, 0, 1, 0);
-            MultiFab::Subtract(mf_feb_sub, fluxeb_phiexact[ilev], 0, 0, 1, 0);
+            MultiFab m_sub(bArr, dmap, 1, 0);
+            MultiFab::Copy(    m_sub, fluxeb_phi[ilev], 0, 0, 1, 0);
+            MultiFab::Subtract(m_sub, fluxeb_phiexact[ilev], 0, 0, 1, 0);
 
             // (sol + exact) * vfrc
             MultiFab m_add_vfrc(bArr, dmap, 1, 0);
@@ -237,7 +237,7 @@ MyTest::solve ()
 
             // (sol - exact) * vfrc
             MultiFab m_sub_vfrc(bArr, dmap, 1, 0);
-            MultiFab::Copy(    m_sub_vfrc, mf_feb_sub, 0, 0, 1, 0);
+            MultiFab::Copy(    m_sub_vfrc, m_sub, 0, 0, 1, 0);
             MultiFab::Multiply(m_sub_vfrc, vfrc, 0, 0, 1, 0);
 
             // sol * vfrc
@@ -308,33 +308,37 @@ MyTest::solve ()
 
             // amrex::Print() << "Level " << ilev << "\n    EB fluxes:\n";
 
-            amrex::Print() << "        ||feb_add||      " << m_add.norm0() << ", " << m_add.norm1()*n1scale << "\n";
+            amrex::Print() << "        ||feb_add||      " << m_add.norm0() << ", " << m_add.norm1()*nxyzi << ", " << m_add.norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||feb_add*vfrc|| " << m_add_vfrc.norm0() << ", " << m_add_vfrc.norm1()*n1scale << "\n";
+            amrex::Print() << "        ||feb_add*vfrc|| " << m_add_vfrc.norm0() << ", " << m_add_vfrc.norm1()*nxyzi << ", " << m_add_vfrc.norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||feb_sub||      " << mf_feb_sub.norm0() << ", " << mf_feb_sub.norm1()*n1scale << "\n";
+            amrex::Print() << "        ||feb_sub||      " << m_sub.norm0() << ", " << m_sub.norm1()*nxyzi << ", " << m_sub.norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||feb_sub*vfrc|| " << m_sub_vfrc.norm0() << ", " << m_sub_vfrc.norm1()*n1scale << "\n";
+            amrex::Print() << "        ||feb_sub*vfrc|| " << m_sub_vfrc.norm0() << ", " << m_sub_vfrc.norm1()*nxyzi << ", " << m_sub_vfrc.norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||sol||      " << fluxeb_phi[ilev].norm0() << ", " << fluxeb_phi[ilev].norm1()*n1scale << "\n";
+            amrex::Print() << "        ||sol||      " << fluxeb_phi[ilev].norm0() << ", " << fluxeb_phi[ilev].norm1()*nxyzi << ", " << fluxeb_phi[ilev].norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||sol*vfrc|| " << m_sol_vfrc.norm0() << ", " << m_sol_vfrc.norm1()*n1scale << "\n";
+            amrex::Print() << "        ||sol||      " << m_sol.norm0() << ", " << m_sol.norm1()*nxyzi << ", " << m_sol.norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||exact||      " << fluxeb_phiexact[ilev].norm0() << ", " << fluxeb_phiexact[ilev].norm1()*n1scale << "\n";
+            amrex::Print() << "        ||sol*vfrc|| " << m_sol_vfrc.norm0() << ", " << m_sol_vfrc.norm1()*nxyzi << ", " << m_sol_vfrc.norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||exact*vfrc|| " << m_exact_vfrc.norm0() << ", " << m_exact_vfrc.norm1()*n1scale << "\n";
+            amrex::Print() << "        ||exact||      " << fluxeb_phiexact[ilev].norm0() << ", " << fluxeb_phiexact[ilev].norm1()*nxyzi << ", " << fluxeb_phiexact[ilev].norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||+ 3*sol + 7*exact|| " << m_lincomb_1.norm0() << ", " << m_lincomb_1.norm1()*n1scale << "\n";
+            amrex::Print() << "        ||exact||      " << m_exact.norm0() << ", " << m_exact.norm1()*nxyzi << ", " << m_exact.norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||+ 3*sol - 7*exact|| " << m_lincomb_2.norm0() << ", " << m_lincomb_2.norm1()*n1scale << "\n";
+            amrex::Print() << "        ||exact*vfrc|| " << m_exact_vfrc.norm0() << ", " << m_exact_vfrc.norm1()*nxyzi << ", " << m_exact_vfrc.norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||- 3*sol + 7*exact|| " << m_lincomb_3.norm0() << ", " << m_lincomb_3.norm1()*n1scale << "\n";
+            amrex::Print() << "        ||+ 3*sol + 7*exact|| " << m_lincomb_1.norm0() << ", " << m_lincomb_1.norm1()*nxyzi << ", " << m_lincomb_1.norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||- 3*sol - 7*exact|| " << m_lincomb_4.norm0() << ", " << m_lincomb_4.norm1()*n1scale << "\n";
+            amrex::Print() << "        ||+ 3*sol - 7*exact|| " << m_lincomb_2.norm0() << ", " << m_lincomb_2.norm1()*nxyzi << ", " << m_lincomb_2.norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||+ 7*sol + 3*exact|| " << m_lincomb_5.norm0() << ", " << m_lincomb_5.norm1()*n1scale << "\n";
+            amrex::Print() << "        ||- 3*sol + 7*exact|| " << m_lincomb_3.norm0() << ", " << m_lincomb_3.norm1()*nxyzi << ", " << m_lincomb_3.norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||- 7*sol + 3*exact|| " << m_lincomb_6.norm0() << ", " << m_lincomb_6.norm1()*n1scale << "\n";
+            amrex::Print() << "        ||- 3*sol - 7*exact|| " << m_lincomb_4.norm0() << ", " << m_lincomb_4.norm1()*nxyzi << ", " << m_lincomb_4.norm2()*nxyzi << "\n";
+
+            amrex::Print() << "        ||+ 7*sol + 3*exact|| " << m_lincomb_5.norm0() << ", " << m_lincomb_5.norm1()*nxyzi << ", " << m_lincomb_5.norm2()*nxyzi << "\n";
+
+            amrex::Print() << "        ||- 7*sol + 3*exact|| " << m_lincomb_6.norm0() << ", " << m_lincomb_6.norm1()*nxyzi << ", " << m_lincomb_6.norm2()*nxyzi << "\n";
         }
     }
 }
