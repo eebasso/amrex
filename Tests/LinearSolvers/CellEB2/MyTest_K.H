@@ -186,12 +186,6 @@ void mytest_set_fluxeb (
             amrex::Real const nx_ebdata = ebdata.get<amrex::EBData_t::bndrynorm>(i,j,k,0);
             amrex::Real const ny_ebdata = ebdata.get<amrex::EBData_t::bndrynorm>(i,j,k,1);
 
-            // if (std::hypot(nx - nx_ebdata, ny - ny_ebddata) > 1.0e-7)
-
-
-            BL_ASSERT(std::abs(nx - nx_ebdata) < 1.0e-7);
-            BL_ASSERT(std::abs(ny - ny_ebdata) < 1.0e-7);
-
             amrex::Real x = (i+0.5+bcentx)*dx[0] - 0.5;
             amrex::Real y = (j+0.5+bcenty)*dx[1] - 0.5;
             amrex::Real theta = std::atan2(x,y) + 0.5*pi;
@@ -215,6 +209,19 @@ void mytest_set_fluxeb (
             amrex::Real gradphi_t = +3.0 * r3 * std::sin(3.*theta);
             amrex::Real gradphi_cyl_x = costh*gradphi_r - sinth*gradphi_t;
             amrex::Real gradphi_cyl_y = sinth*gradphi_r + costh*gradphi_t;
+
+            if (std::hypot(nx - nx_ebdata, ny - ny_ebdata) >= 1.0e-7) {
+                amrex::Print() << "\n";
+                amrex::Print() << "i j k: " << i << " " << j << " " << k << "\n";
+                amrex::Print() << "    x = " << x << ", y = " << y << "\n";
+                amrex::Print() << "    r = " << r << ", costh = " << costh << ", sinth = " << sinth << "\n";
+                amrex::Print() << "    nx = " << nx << " nx_ebdata = " << nx_ebdata << "\n";
+                amrex::Print() << "    ny = " << ny << " ny_ebdata = " << ny_ebdata << "\n";
+                amrex::Print() << "\n";
+            }
+
+            BL_ASSERT(std::abs(nx - nx_ebdata) < 1.0e-7);
+            BL_ASSERT(std::abs(ny - ny_ebdata) < 1.0e-7);
 
             BL_ASSERT(std::abs(gradphi_x - gradphi_cyl_x) < 1.0e-9);
             BL_ASSERT(std::abs(gradphi_y - gradphi_cyl_y) < 1.0e-9);
