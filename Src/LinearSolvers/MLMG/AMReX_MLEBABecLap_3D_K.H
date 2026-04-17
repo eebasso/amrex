@@ -478,7 +478,6 @@ void mlebabeclap_ebflux (int i, int j, int k, int n,
                          bool is_inhomog,
                          GpuArray<Real,AMREX_SPACEDIM> const& dxinv) noexcept
 {
-    Real dhx = dxinv[0];
 
     if (!flag(i,j,k).isSingleValued())
     {
@@ -494,14 +493,14 @@ void mlebabeclap_ebflux (int i, int j, int k, int n,
         Real apzm = apz(i,j,k);
         Real apzp = apz(i,j,k+1);
 
-        Real dapx = apxm-apxp;
-        Real dapy = apym-apyp;
-        Real dapz = apzm-apzp;
+        Real dapx = (apxm-apxp)*dxinv[0];
+        Real dapy = (apym-apyp)*dxinv[1];
+        Real dapz = (apzm-apzp)*dxinv[2];
         Real anorm = std::sqrt(dapx*dapx+dapy*dapy+dapz*dapz);
         Real anorminv = Real(1.0)/anorm;
-        Real anrmx = dapx * anorminv;
-        Real anrmy = dapy * anorminv;
-        Real anrmz = dapz * anorminv;
+        Real anrmx = dapx * anorminv * dxinv[0];
+        Real anrmy = dapy * anorminv * dxinv[1];
+        Real anrmz = dapz * anorminv * dxinv[2];
 
         Real phib = is_inhomog ? phieb(i,j,k,n) : Real(0.0);
 
@@ -537,7 +536,7 @@ void mlebabeclap_ebflux (int i, int j, int k, int n,
             +       (gxy + gxyz)                    * x(ii,jj,k ,n)
             +       (-gxyz)                         * x(ii,jj,kk,n);
 
-        Real dphidn = dhx*(phib-phig)/dg;
+        Real dphidn = (phib-phig)/dg;
         feb(i,j,k,n) = -beb(i,j,k,n) * dphidn;
     }
 }
