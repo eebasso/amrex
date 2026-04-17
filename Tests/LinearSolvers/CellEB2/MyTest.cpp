@@ -308,37 +308,22 @@ MyTest::solve ()
 
             // amrex::Print() << "Level " << ilev << "\n    EB fluxes:\n";
 
-            amrex::Print() << "        ||feb_add||      " << m_add.norm0() << ", " << m_add.norm1()*nxyzi << ", " << m_add.norm2()*nxyzi << "\n";
-
-            amrex::Print() << "        ||feb_add*vfrc|| " << m_add_vfrc.norm0() << ", " << m_add_vfrc.norm1()*nxyzi << ", " << m_add_vfrc.norm2()*nxyzi << "\n";
-
-            amrex::Print() << "        ||feb_sub||      " << m_sub.norm0() << ", " << m_sub.norm1()*nxyzi << ", " << m_sub.norm2()*nxyzi << "\n";
-
-            amrex::Print() << "        ||feb_sub*vfrc|| " << m_sub_vfrc.norm0() << ", " << m_sub_vfrc.norm1()*nxyzi << ", " << m_sub_vfrc.norm2()*nxyzi << "\n";
-
-            amrex::Print() << "        ||sol||      " << fluxeb_phi[ilev].norm0() << ", " << fluxeb_phi[ilev].norm1()*nxyzi << ", " << fluxeb_phi[ilev].norm2()*nxyzi << "\n";
-
-            amrex::Print() << "        ||sol||      " << m_sol.norm0() << ", " << m_sol.norm1()*nxyzi << ", " << m_sol.norm2()*nxyzi << "\n";
-
-            amrex::Print() << "        ||sol*vfrc|| " << m_sol_vfrc.norm0() << ", " << m_sol_vfrc.norm1()*nxyzi << ", " << m_sol_vfrc.norm2()*nxyzi << "\n";
-
-            amrex::Print() << "        ||exact||      " << fluxeb_phiexact[ilev].norm0() << ", " << fluxeb_phiexact[ilev].norm1()*nxyzi << ", " << fluxeb_phiexact[ilev].norm2()*nxyzi << "\n";
-
-            amrex::Print() << "        ||exact||      " << m_exact.norm0() << ", " << m_exact.norm1()*nxyzi << ", " << m_exact.norm2()*nxyzi << "\n";
-
-            amrex::Print() << "        ||exact*vfrc|| " << m_exact_vfrc.norm0() << ", " << m_exact_vfrc.norm1()*nxyzi << ", " << m_exact_vfrc.norm2()*nxyzi << "\n";
-
-            amrex::Print() << "        ||+ 2*sol + 0*exact|| " << m_lincomb_1.norm0() << ", " << m_lincomb_1.norm1()*nxyzi << ", " << m_lincomb_1.norm2()*nxyzi << "\n";
-
-            amrex::Print() << "        ||+ 0*sol + 2*exact|| " << m_lincomb_2.norm0() << ", " << m_lincomb_2.norm1()*nxyzi << ", " << m_lincomb_2.norm2()*nxyzi << "\n";
-
-            amrex::Print() << "        ||+ 2*sol + 0.001*exact|| " << m_lincomb_3.norm0() << ", " << m_lincomb_3.norm1()*nxyzi << ", " << m_lincomb_3.norm2()*nxyzi << "\n";
-
-            amrex::Print() << "        ||+ 0.001*sol + 2*exact|| " << m_lincomb_4.norm0() << ", " << m_lincomb_4.norm1()*nxyzi << ", " << m_lincomb_4.norm2()*nxyzi << "\n";
-
-            amrex::Print() << "        ||+ 2*sol + 2*exact|| " << m_lincomb_5.norm0() << ", " << m_lincomb_5.norm1()*nxyzi << ", " << m_lincomb_5.norm2()*nxyzi << "\n";
-
-            amrex::Print() << "        ||+ 2*sol - 2*exact|| " << m_lincomb_6.norm0() << ", " << m_lincomb_6.norm1()*nxyzi << ", " << m_lincomb_6.norm2()*nxyzi << "\n";
+            printMultiFabNorms("||feb_add||", m_add);
+            printMultiFabNorms("||feb_add*vfrc||", m_add_vfrc);
+            printMultiFabNorms("||feb_sub||", m_sub);
+            printMultiFabNorms("||feb_sub*vfrc||", m_sub_vfrc);
+            printMultiFabNorms("||sol||", fluxeb_phi[ilev]);
+            printMultiFabNorms("||sol||", m_sol);
+            printMultiFabNorms("||sol*vfrc||", m_sol_vfrc);
+            printMultiFabNorms("||exact||", fluxeb_phiexact[ilev]);
+            printMultiFabNorms("||exact||", m_exact);
+            printMultiFabNorms("||m_exact_vfrc||", m_exact_vfrc);
+            printMultiFabNorms("||+ 2*sol + 0*exact||", m_lincomb_1);
+            printMultiFabNorms("||+ 0*sol + 2*exact||", m_lincomb_2);
+            printMultiFabNorms("||+ 2*sol + 0.001*exact||", m_lincomb_3);
+            printMultiFabNorms("||+ 0.001*sol + 2*exact||", m_lincomb_4);
+            printMultiFabNorms("||+ 2*sol + 2*exact||", m_lincomb_5);
+            printMultiFabNorms("||+ 2*sol - 2*exact||", m_lincomb_6);
 
             MultiFab test2(bArr, dmap, 1, 0);
             test2.setVal(2.0);
@@ -364,11 +349,51 @@ MyTest::solve ()
                 0, 1, 0
             );
 
-            amrex::Print() << "    More tests:";
-            amrex::Print() << "        ||test2|| " << test2.norm0() << ", " << test2.norm1()*nxyzi << ", " << test2.norm2()*nxyzi << "\n";
-            amrex::Print() << "        ||test3|| " << test3.norm0() << ", " << test3.norm1()*nxyzi << ", " << test3.norm2()*nxyzi << "\n";
-            amrex::Print() << "        ||3*test2 - 2*test3|| " << testLinComb1.norm0() << ", " << testLinComb1.norm1()*nxyzi << ", " << testLinComb1.norm2()*nxyzi << "\n";
-            amrex::Print() << "        ||3*test2 + 2*test3|| " << testLinComb2.norm0() << ", " << testLinComb2.norm1()*nxyzi << ", " << testLinComb2.norm2()*nxyzi << "\n";
+            // test2 + test3
+            MultiFab testLinComb3(bArr, dmap, 1, 0);
+            MultiFab::LinComb(
+                testLinComb3,
+                +1.0, test2, 0,
+                +1.0, test3, 0,
+                0, 1, 0
+            );
+
+            // test2 - test3
+            MultiFab testLinComb4(bArr, dmap, 1, 0);
+            MultiFab::LinComb(
+                testLinComb4,
+                +1.0, test2, 0,
+                -1.0, test3, 0,
+                0, 1, 0
+            );
+
+            amrex::Print() << "    More tests:" << "\n";
+            printMultiFabNorms("||test2||", test2);
+            printMultiFabNorms("||test3||", test3);
+            printMultiFabNorms("||3*test2 - 2*test3||", testLinComb1);
+            printMultiFabNorms("||3*test2 + 2*test3||", testLinComb2);
+            printMultiFabNorms("||test2 + test3||", testLinComb3);
+            printMultiFabNorms("||test2 - test3||", testLinComb4);
+
+            // sol + test2
+            MultiFab foo1(bArr, dmap, 1, 0);
+            MultiFab::LinComb(
+                foo1,
+                +1.0, m_sol, 0,
+                +1.0, test2, 0,
+                0, 1, 0
+            );
+            printMultiFabNorms("||sol + test2||", foo1);
+
+            // sol - test2
+            MultiFab foo2(bArr, dmap, 1, 0);
+            MultiFab::LinComb(
+                foo2,
+                +1.0, m_sol, 0,
+                -1.0, test2, 0,
+                0, 1, 0
+            );
+            printMultiFabNorms("||sol - test2||", foo2);
 
         }
     }

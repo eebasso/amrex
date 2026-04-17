@@ -25,6 +25,12 @@ private:
     void initGrids ();
     void addFineGrids ();
 
+    void printMultiFabNorms (const std::string &title, const amrex::MultiFab &mf)
+    {
+        const amrex::Real nxyzi = AMREX_D_TERM((1.0/n_cell_x), *(1.0/n_cell_y), *(1.0/n_cell_z));
+        amrex::Print() << "        " << title << " " << mf.norm0() << ", " << mf.norm1()*nxyzi << ", " << mf.norm2()*std::sqrt(nxyzi) << "\n";
+    }
+
     int max_level = 0;
     int ref_ratio = 2;
     int n_cell = 128;
