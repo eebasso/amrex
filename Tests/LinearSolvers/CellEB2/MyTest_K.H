@@ -162,8 +162,8 @@ void mytest_set_fluxeb (
             amrex::Real x = (i+0.5+bcentx)*dx[0] - 0.5;
             amrex::Real y = (j+0.5+bcenty)*dx[1] - 0.5;
             amrex::Real theta = std::atan2(x,y) + 0.5*pi;
-            amrex::Real r = std::hypot(x,y);
-            amrex::Real r2 = r*r;
+            amrex::Real r2 = x*x+y*y;
+            amrex::Real r = std::sqrt(r2);
             amrex::Real r3 = r*r2;
 
             amrex::Real dphidx = -0.5 * r3 * (7.0*std::sin(2.*theta) - std::sin(4.*theta));

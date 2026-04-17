@@ -114,14 +114,13 @@ MyTest::solve ()
         const Real tol_abs = 0.0;
         mlmg.solve(amrex::GetVecOfPtrs(phi), amrex::GetVecOfConstPtrs(rhs), tol_rel, tol_abs);
 
-        // getEBFluxes succeeds here
-        // It seems to work only when using composite_solve.
-        // The 3D case uses composite solve. The 2D case does not.
-        // The failure point occurs in applyBC
-        // It seems to be because the Distribution maps are mismatched between flags and mfi
         amrex::Print() << "\n";
         amrex::Print() << "MyTest::solve: Start getEBFluxes, composite_solve = True\n";
+        printMultiFabNorms("||fluxeb_from_phi[0]||", fluxeb_from_phi[0]);
+        printMultiFabNorms("||phi[0]||", phi[0]);
         mleb.getEBFluxes(amrex::GetVecOfPtrs(fluxeb_from_phi), amrex::GetVecOfPtrs(phi));
+        printMultiFabNorms("||fluxeb_from_phi[0]||", fluxeb_from_phi[0]);
+        printMultiFabNorms("||phi[0]||", phi[0]);
         amrex::Print() << "MyTest::solve: Finished getEBFluxes, composite_solve = True\n";
         amrex::Print() << "\n";
     }
@@ -167,14 +166,14 @@ MyTest::solve ()
             const Real tol_abs = 0.0;
             mlmg.solve({&phi[ilev]}, {&rhs[ilev]}, tol_rel, tol_abs);
 
-            // getEBFluxes FAILS here
-            // The 2D has composite_solve=False and fails
-            // The failure point occurs in applyBC
-            // It seems to be because the Distribution maps are mismatched between flags and mfi
             amrex::Print() << "\n";
             amrex::Print() << "MyTest::solve: Start getEBFluxes, composite_solve = False\n";
+            printMultiFabNorms("||fluxeb_from_phi[ilev]||", fluxeb_from_phi[ilev]);
+            printMultiFabNorms("||phi[ilev]||", phi[ilev]);
             mleb.getEBFluxes({&fluxeb_from_phi[ilev]}, {&phi[ilev]});
             amrex::Print() << "MyTest::solve: Finished getEBFluxes, composite_solve = False\n";
+            printMultiFabNorms("||fluxeb_from_phi[ilev]||", fluxeb_from_phi[ilev]);
+            printMultiFabNorms("||phi[ilev]||", phi[ilev]);
             amrex::Print() << "\n";
         }
     }
@@ -613,7 +612,7 @@ MyTest::initData ()
             bcoef[ilev][idim].setVal(1.0);
         }
         fluxeb_from_phi[ilev].setVal(0.0);
-        fluxeb_exact[ilev].setVal(0.0);
+        // fluxeb_exact[ilev].setVal(0.0);
 
         const auto dx = geom[ilev].CellSizeArray();
         const Box& domainbox = geom[ilev].Domain();
