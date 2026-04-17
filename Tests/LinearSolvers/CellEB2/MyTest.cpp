@@ -250,57 +250,57 @@ MyTest::solve ()
             MultiFab::Copy(    m_exact_vfrc, m_exact, 0, 0, 1, 0);
             MultiFab::Multiply(m_exact_vfrc, vfrc, 0, 0, 1, 0);
 
-            // 3*sol + 7*exact
+            // 2*sol + 0*exact
             MultiFab m_lincomb_1(bArr, dmap, 1, 0);
             MultiFab::LinComb(
                 m_lincomb_1,
-                +3.0, m_sol, 0,
-                +7.0, m_exact, 0,
+                +2.0, m_sol, 0,
+                +0.0, m_exact, 0,
                 0, 1, 0
             );
 
-            // 3*sol - 7*exact
+            // 0*sol + 2*exact
             MultiFab m_lincomb_2(bArr, dmap, 1, 0);
             MultiFab::LinComb(
                 m_lincomb_2,
-                +3.0, m_sol, 0,
-                -7.0, m_exact, 0,
+                +0.0, m_sol, 0,
+                +2.0, m_exact, 0,
                 0, 1, 0
             );
 
-            // -3*sol + 7*exact
+            // 2*sol + 0.001*exact
             MultiFab m_lincomb_3(bArr, dmap, 1, 0);
             MultiFab::LinComb(
                 m_lincomb_3,
-                -3.0, m_sol, 0,
-                +7.0, m_exact, 0,
+                +2.0, m_sol, 0,
+                +0.001, m_exact, 0,
                 0, 1, 0
             );
 
-            // -3*sol - 7*exact
+            // 0.001*sol + 2*exact
             MultiFab m_lincomb_4(bArr, dmap, 1, 0);
             MultiFab::LinComb(
                 m_lincomb_4,
-                -3.0, m_sol, 0,
-                -7.0, m_exact, 0,
+                +0.001, m_sol, 0,
+                +2.0, m_exact, 0,
                 0, 1, 0
             );
 
-            // +7*sol + 3*exact
+            // +2*sol + 2*exact
             MultiFab m_lincomb_5(bArr, dmap, 1, 0);
             MultiFab::LinComb(
                 m_lincomb_5,
-                +7.0, m_sol, 0,
-                +3.0, m_exact, 0,
+                +2.0, m_sol, 0,
+                +2.0, m_exact, 0,
                 0, 1, 0
             );
 
-            // -7*sol + 3*exact
+            // +2*sol - 2*exact
             MultiFab m_lincomb_6(bArr, dmap, 1, 0);
             MultiFab::LinComb(
                 m_lincomb_6,
-                -7.0, m_sol, 0,
-                +3.0, m_exact, 0,
+                +2.0, m_sol, 0,
+                -2.0, m_exact, 0,
                 0, 1, 0
             );
 
@@ -328,17 +328,17 @@ MyTest::solve ()
 
             amrex::Print() << "        ||exact*vfrc|| " << m_exact_vfrc.norm0() << ", " << m_exact_vfrc.norm1()*nxyzi << ", " << m_exact_vfrc.norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||+ 3*sol + 7*exact|| " << m_lincomb_1.norm0() << ", " << m_lincomb_1.norm1()*nxyzi << ", " << m_lincomb_1.norm2()*nxyzi << "\n";
+            amrex::Print() << "        ||+ 2*sol + 0*exact|| " << m_lincomb_1.norm0() << ", " << m_lincomb_1.norm1()*nxyzi << ", " << m_lincomb_1.norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||+ 3*sol - 7*exact|| " << m_lincomb_2.norm0() << ", " << m_lincomb_2.norm1()*nxyzi << ", " << m_lincomb_2.norm2()*nxyzi << "\n";
+            amrex::Print() << "        ||+ 0*sol + 2*exact|| " << m_lincomb_2.norm0() << ", " << m_lincomb_2.norm1()*nxyzi << ", " << m_lincomb_2.norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||- 3*sol + 7*exact|| " << m_lincomb_3.norm0() << ", " << m_lincomb_3.norm1()*nxyzi << ", " << m_lincomb_3.norm2()*nxyzi << "\n";
+            amrex::Print() << "        ||+ 2*sol + 0.001*exact|| " << m_lincomb_3.norm0() << ", " << m_lincomb_3.norm1()*nxyzi << ", " << m_lincomb_3.norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||- 3*sol - 7*exact|| " << m_lincomb_4.norm0() << ", " << m_lincomb_4.norm1()*nxyzi << ", " << m_lincomb_4.norm2()*nxyzi << "\n";
+            amrex::Print() << "        ||+ 0.001*sol + 2*exact|| " << m_lincomb_4.norm0() << ", " << m_lincomb_4.norm1()*nxyzi << ", " << m_lincomb_4.norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||+ 7*sol + 3*exact|| " << m_lincomb_5.norm0() << ", " << m_lincomb_5.norm1()*nxyzi << ", " << m_lincomb_5.norm2()*nxyzi << "\n";
+            amrex::Print() << "        ||+ 2*sol + 2*exact|| " << m_lincomb_5.norm0() << ", " << m_lincomb_5.norm1()*nxyzi << ", " << m_lincomb_5.norm2()*nxyzi << "\n";
 
-            amrex::Print() << "        ||- 7*sol + 3*exact|| " << m_lincomb_6.norm0() << ", " << m_lincomb_6.norm1()*nxyzi << ", " << m_lincomb_6.norm2()*nxyzi << "\n";
+            amrex::Print() << "        ||+ 2*sol - 2*exact|| " << m_lincomb_6.norm0() << ", " << m_lincomb_6.norm1()*nxyzi << ", " << m_lincomb_6.norm2()*nxyzi << "\n";
         }
     }
 }
