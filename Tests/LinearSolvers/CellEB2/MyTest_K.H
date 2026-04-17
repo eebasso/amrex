@@ -199,16 +199,20 @@ void mytest_set_fluxeb (
             amrex::Real r = std::sqrt(r2);
             amrex::Real r3 = r*r2;
 
-            amrex::Real gradphi_x = -0.5 * r3 * (7.0*std::sin(2.*theta) - std::sin(4.*theta));
-            amrex::Real gradphi_y = -0.5 * r3 * (7.0*std::cos(2.*theta) + std::cos(4.*theta));
+            amrex::Real gradphi_x = 0.5 * r3 * (-7.0*std::cos(2.*theta) - std::cos(4.*theta));
+            amrex::Real gradphi_y = 0.5 * r3 * (-7.0*std::sin(2.*theta) + std::sin(4.*theta));
 
-            amrex::Real th = std::atan2(x,y);
+            // amrex::Real gradphi_x = r2 * (4.0 * x *std::cos(3.*theta) - 3.0 * y * std::cos(3.*theta));
+            // amrex::Real gradphi_y = r2 * (4.0 * y *std::sin(3.*theta) + 3.0 * x * std::sin(3.*theta));
+
+            amrex::Real th = atan2(y,x);
             amrex::Real costh = std::cos(th);
             amrex::Real sinth = std::sin(th);
 
-            // phi = r^4 cos(3*(th + 0.5*pi))
+            // theta = pi - th
+            // phi = r^4 cos(theta) = r^4 cos(3*(pi - th))
             amrex::Real gradphi_r = +4.0 * r3 * std::cos(3.*theta);
-            amrex::Real gradphi_t = -3.0 * r3 * std::sin(3.*theta);
+            amrex::Real gradphi_t = +3.0 * r3 * std::sin(3.*theta);
             amrex::Real gradphi_cyl_x = costh*gradphi_r - sinth*gradphi_t;
             amrex::Real gradphi_cyl_y = sinth*gradphi_r + costh*gradphi_t;
 
