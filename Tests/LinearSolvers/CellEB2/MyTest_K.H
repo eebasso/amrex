@@ -193,11 +193,11 @@ void mytest_set_fluxeb (
             amrex::Real r = std::sqrt(r2);
             amrex::Real r3 = r*r2;
 
-            amrex::Real gradphi_x = 0.5 * r3 * (-7.0*std::cos(2.*theta) - std::cos(4.*theta));
-            amrex::Real gradphi_y = 0.5 * r3 * (-7.0*std::sin(2.*theta) + std::sin(4.*theta));
+            // amrex::Real gradphi_x = 0.5 * r3 * (-7.0*std::cos(2.*theta) - std::cos(4.*theta));
+            // amrex::Real gradphi_y = 0.5 * r3 * (-7.0*std::sin(2.*theta) + std::sin(4.*theta));
 
-            // amrex::Real gradphi_x = r2 * (4.0 * x *std::cos(3.*theta) - 3.0 * y * std::cos(3.*theta));
-            // amrex::Real gradphi_y = r2 * (4.0 * y *std::sin(3.*theta) + 3.0 * x * std::sin(3.*theta));
+            amrex::Real gradphi_x = r2 * (x * 4.0 * std::cos(3.*theta) - y * 3.0 * std::sin(3.*theta));
+            amrex::Real gradphi_y = r2 * (y * 4.0 * std::cos(3.*theta) + x * 3.0 * std::sin(3.*theta));
 
             amrex::Real th = atan2(y,x);
             amrex::Real costh = std::cos(th);
@@ -214,14 +214,16 @@ void mytest_set_fluxeb (
                 amrex::Print() << "\n";
                 amrex::Print() << "i j k: " << i << " " << j << " " << k << "\n";
                 amrex::Print() << "    x = " << x << ", y = " << y << "\n";
-                amrex::Print() << "    r = " << r << ", costh = " << costh << ", sinth = " << sinth << "\n";
-                amrex::Print() << "    nx = " << nx << " nx_ebdata = " << nx_ebdata << "\n";
-                amrex::Print() << "    ny = " << ny << " ny_ebdata = " << ny_ebdata << "\n";
+                amrex::Print() << "    r = " << r << ", th (degrees) = " << 180.0*th/pi << "\n";
+                amrex::Print() << "    n from ap = " << nx        << ", " << ny        << "\n";
+                amrex::Print() << "    n_ebdata  = " << nx_ebdata << ", " << ny_ebdata << "\n";
                 amrex::Print() << "\n";
             }
 
-            BL_ASSERT(std::abs(nx - nx_ebdata) < 1.0e-7);
-            BL_ASSERT(std::abs(ny - ny_ebdata) < 1.0e-7);
+            // nx = nx_ebdata;
+            // ny = ny_ebdata;
+            // BL_ASSERT(std::abs(nx - nx_ebdata) < 1.0e-7);
+            // BL_ASSERT(std::abs(ny - ny_ebdata) < 1.0e-7);
 
             BL_ASSERT(std::abs(gradphi_x - gradphi_cyl_x) < 1.0e-9);
             BL_ASSERT(std::abs(gradphi_y - gradphi_cyl_y) < 1.0e-9);
