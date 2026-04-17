@@ -159,6 +159,14 @@ void mytest_set_fluxeb (
             amrex::Real const bcentx = ebdata.get<amrex::EBData_t::bndrycent>(i,j,k,0);
             amrex::Real const bcenty = ebdata.get<amrex::EBData_t::bndrycent>(i,j,k,1);
 
+            // Real apxm = ebdata.get<EBData_t::apx>(i  ,j  ,k  );
+            // Real apxp = ebdata.get<EBData_t::apx>(i+1,j  ,k  );
+            // Real apym = ebdata.get<EBData_t::apy>(i  ,j  ,k  );
+            // Real apyp = ebdata.get<EBData_t::apy>(i  ,j+1,k  );
+            // Real anrmx = (apxm - apxp)/dx[0];
+            // Real anrmy = (apym - apyp)/dx[1];
+            // Real apnorm2 = anrmx*anrmx
+
             amrex::Real x = (i+0.5+bcentx)*dx[0] - 0.5;
             amrex::Real y = (j+0.5+bcenty)*dx[1] - 0.5;
             amrex::Real theta = std::atan2(x,y) + 0.5*pi;
@@ -166,8 +174,21 @@ void mytest_set_fluxeb (
             amrex::Real r = std::sqrt(r2);
             amrex::Real r3 = r*r2;
 
-            amrex::Real dphidx = -0.5 * r3 * (7.0*std::sin(2.*theta) - std::sin(4.*theta));
-            amrex::Real dphidy = -0.5 * r3 * (7.0*std::cos(2.*theta) + std::cos(4.*theta));
+            amrex::Real gradphi_x = -0.5 * r3 * (7.0*std::sin(2.*theta) - std::sin(4.*theta));
+            amrex::Real gradphi_y = -0.5 * r3 * (7.0*std::cos(2.*theta) + std::cos(4.*theta));
+
+            amrex::Real th = std::atan2(x,y);
+            amrex::Real costh = std::cos(th);
+            amrex::Real sinth = std::sin(th);
+
+            // phi = r^4 cos(3*(th + 0.5*pi))
+            amrex::Real gradphi_r = +4.0 * r3 * std::cos(3.*theta);
+            amrex::Real gradphi_t = -3.0 * r3 * std::sin(3.*theta);
+            amrex::Real gradphi_cyl_x = costh*gradphi_r - sinth*gradphi_t;
+            amrex::Real gradphi_cyl_y = sinth*gradphi_r + costh*gradphi_t;
+
+            BL_ASSERT(std::abs(gradphi_x - gradphi_cyl_x) < 1.0e-7);
+            BL_ASSERT(std::abs(gradphi_y - gradphi_cyl_y) < 1.0e-7);
 
             amrex::Real bx = 1.0;
             amrex::Real by = 1.0;
@@ -176,7 +197,7 @@ void mytest_set_fluxeb (
                 by = 1.0 - r2;
             }
             // flux on eb surface = - (area normal).(b tensor).(grad phi)
-            amrex::Real n_b_gradphi = nx * bx * dphidx + ny * by * dphidy;
+            amrex::Real n_b_gradphi = nx * bx * gradphi_x + ny * by * gradphi_y;
             fluxeb_exact(i,j,k) = -n_b_gradphi;
         } else {
             fluxeb_exact(i,j,k) = 0.0;
