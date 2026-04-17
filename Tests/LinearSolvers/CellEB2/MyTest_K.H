@@ -140,6 +140,7 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 void mytest_set_fluxeb (
     int i, int j, int k,
     amrex::Array4<amrex::Real> const& fluxeb_exact,
+    amrex::Array4<amrex::EBCellFlag const> const& flag_arr,
     amrex::EBData const& ebdata,
     amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> const& dx,
     int prob_type, amrex::Box const& vbx)
@@ -148,11 +149,11 @@ void mytest_set_fluxeb (
     amrex::IntVect iv(AMREX_D_DECL(i,j,k));
 
     if (vbx.contains(iv)) {
-        amrex::EBCellFlag const flag = ebdata.get<amrex::EBData_t::cellflag>(i,j,k);
+        amrex::EBCellFlag const flag = flag_arr(i,j,k);
 
-        if (!flag.isSingleValued() || flag.isCovered()) {
+        if (flag.isCovered()) {
             fluxeb_exact(i,j,k) = 0.0;
-        } else {
+        } else if (flag.isSingleValued()) {
             amrex::Real const nx = ebdata.get<amrex::EBData_t::bndrynorm>(i,j,k,0);
             amrex::Real const ny = ebdata.get<amrex::EBData_t::bndrynorm>(i,j,k,1);
             amrex::Real const bcentx = ebdata.get<amrex::EBData_t::bndrycent>(i,j,k,0);
@@ -177,7 +178,10 @@ void mytest_set_fluxeb (
             // flux on eb surface = - (area normal).(b tensor).(grad phi)
             amrex::Real n_b_gradphi = nx * bx * dphidx + ny * by * dphidy;
             fluxeb_exact(i,j,k) = -n_b_gradphi;
+        } else {
+            fluxeb_exact(i,j,k) = 0.0;
         }
+        // fluxeb_exact(i,j,k) = 7.0;
     }
 }
 
