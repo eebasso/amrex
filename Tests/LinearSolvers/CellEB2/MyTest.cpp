@@ -654,7 +654,7 @@ MyTest::initData ()
                                        AMREX_D_DECL(bx_arr,by_arr,bz_arr),
                                        dx, lprob_type, bx);
                     // Maybe don't set feb_ex_arr here because phi_eb_arr is not changed here
-                    feb_ex_arr(i,j,k) = 0.0;
+                    // feb_ex_arr(i,j,k) = 0.0;
                 });
             } else {
                 Array4<Real> const& beb_arr = bcoef_eb[ilev].array(mfi);
