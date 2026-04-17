@@ -395,6 +395,26 @@ MyTest::solve ()
             );
             printMultiFabNorms("||sol - test2||", foo2);
 
+            // exact + test2
+            MultiFab foo3(bArr, _dmap, 1, 0);
+            MultiFab::LinComb(
+                foo3,
+                +1.0, m_exact, 0,
+                +1.0, test2, 0,
+                0, 1, 0
+            );
+            printMultiFabNorms("||exact + test2||", foo3);
+
+            // exact - test2
+            MultiFab foo4(bArr, _dmap, 1, 0);
+            MultiFab::LinComb(
+                foo4,
+                +1.0, m_exact, 0,
+                -1.0, test2, 0,
+                0, 1, 0
+            );
+            printMultiFabNorms("||exact - test2||", foo4);
+
         }
     }
 }
