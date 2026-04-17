@@ -339,6 +339,37 @@ MyTest::solve ()
             amrex::Print() << "        ||+ 2*sol + 2*exact|| " << m_lincomb_5.norm0() << ", " << m_lincomb_5.norm1()*nxyzi << ", " << m_lincomb_5.norm2()*nxyzi << "\n";
 
             amrex::Print() << "        ||+ 2*sol - 2*exact|| " << m_lincomb_6.norm0() << ", " << m_lincomb_6.norm1()*nxyzi << ", " << m_lincomb_6.norm2()*nxyzi << "\n";
+
+            MultiFab test2(bArr, dmap, 1, 0);
+            test2.setVal(2.0);
+
+            MultiFab test3(bArr, dmap, 1, 0);
+            test3.setVal(3.0);
+
+            // 3*test2 - 2*test3
+            MultiFab testLinComb1(bArr, dmap, 1, 0);
+            MultiFab::LinComb(
+                testLinComb1,
+                +3.0, test2, 0,
+                -2.0, test3, 0,
+                0, 1, 0
+            );
+
+            // 3*test2 + 2*test3
+            MultiFab testLinComb2(bArr, dmap, 1, 0);
+            MultiFab::LinComb(
+                testLinComb2,
+                +3.0, test2, 0,
+                +2.0, test3, 0,
+                0, 1, 0
+            );
+
+            amrex::Print() << "    More tests:";
+            amrex::Print() << "        ||test2|| " << test2.norm0() << ", " << test2.norm1()*nxyzi << ", " << test2.norm2()*nxyzi << "\n";
+            amrex::Print() << "        ||test3|| " << test3.norm0() << ", " << test3.norm1()*nxyzi << ", " << test3.norm2()*nxyzi << "\n";
+            amrex::Print() << "        ||3*test2 - 2*test3|| " << testLinComb1.norm0() << ", " << testLinComb1.norm1()*nxyzi << ", " << testLinComb1.norm2()*nxyzi << "\n";
+            amrex::Print() << "        ||3*test2 + 2*test3|| " << testLinComb2.norm0() << ", " << testLinComb2.norm1()*nxyzi << ", " << testLinComb2.norm2()*nxyzi << "\n";
+
         }
     }
 }
