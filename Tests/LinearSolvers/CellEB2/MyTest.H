@@ -74,8 +74,9 @@ private:
     amrex::Vector<amrex::MultiFab> acoef;
     amrex::Vector<amrex::Array<amrex::MultiFab,AMREX_SPACEDIM> > bcoef;
     amrex::Vector<amrex::MultiFab> bcoef_eb;
-    amrex::Vector<amrex::MultiFab> fluxeb_phi;
-    amrex::Vector<amrex::MultiFab> fluxeb_phiexact;
+    amrex::Vector<amrex::MultiFab> fluxeb_from_phi;
+    amrex::Vector<amrex::MultiFab> fluxeb_from_phiexact;
+    amrex::Vector<amrex::MultiFab> fluxeb_exact;
 };
 
 #endif

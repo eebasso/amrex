@@ -121,7 +121,7 @@ MyTest::solve ()
         // It seems to be because the Distribution maps are mismatched between flags and mfi
         amrex::Print() << "\n";
         amrex::Print() << "MyTest::solve: Start getEBFluxes, composite_solve = True\n";
-        mleb.getEBFluxes(amrex::GetVecOfPtrs(fluxeb_phi), amrex::GetVecOfPtrs(phi));
+        mleb.getEBFluxes(amrex::GetVecOfPtrs(fluxeb_from_phi), amrex::GetVecOfPtrs(phi));
         amrex::Print() << "MyTest::solve: Finished getEBFluxes, composite_solve = True\n";
         amrex::Print() << "\n";
     }
@@ -173,7 +173,7 @@ MyTest::solve ()
             // It seems to be because the Distribution maps are mismatched between flags and mfi
             amrex::Print() << "\n";
             amrex::Print() << "MyTest::solve: Start getEBFluxes, composite_solve = False\n";
-            mleb.getEBFluxes({&fluxeb_phi[ilev]}, {&phi[ilev]});
+            mleb.getEBFluxes({&fluxeb_from_phi[ilev]}, {&phi[ilev]});
             amrex::Print() << "MyTest::solve: Finished getEBFluxes, composite_solve = False\n";
             amrex::Print() << "\n";
         }
@@ -198,9 +198,9 @@ MyTest::solve ()
         {
             const MultiFab& vfrc = factory[ilev]->getVolFrac();
 
-            MultiFab mf_feb_err(fluxeb_phi[ilev].boxArray(), fluxeb_phi[ilev].DistributionMap(), 1, 0);
-            MultiFab::Copy(mf_feb_err, fluxeb_phi[ilev], 0, 0, 1, 0);
-            MultiFab::Subtract(mf_feb_err, fluxeb_phiexact[ilev], 0, 0, 1, 0);
+            MultiFab mf_feb_err(fluxeb_from_phi[ilev].boxArray(), fluxeb_from_phi[ilev].DistributionMap(), 1, 0);
+            MultiFab::Copy(mf_feb_err, fluxeb_from_phi[ilev], 0, 0, 1, 0);
+            MultiFab::Subtract(mf_feb_err, fluxeb_exact[ilev], 0, 0, 1, 0);
             MultiFab::Multiply(mf_feb_err, vfrc, 0, 0, 1, 0);
 
             Real norminf_feb = mf_feb_err.norm0();
@@ -209,26 +209,26 @@ MyTest::solve ()
 
             Real nxyzi = AMREX_D_TERM((1.0/n_cell_x), *(1.0/n_cell_y), *(1.0/n_cell_z));
 
-            auto bArr = fluxeb_phi[ilev].boxArray();
-            auto _dmap = fluxeb_phi[ilev].DistributionMap();
+            auto bArr = fluxeb_from_phi[ilev].boxArray();
+            auto _dmap = fluxeb_from_phi[ilev].DistributionMap();
 
             // sol
             MultiFab m_sol(bArr, _dmap, 1, 0);
-            MultiFab::Copy(m_sol, fluxeb_phi[ilev], 0, 0, 1, 0);
+            MultiFab::Copy(m_sol, fluxeb_from_phi[ilev], 0, 0, 1, 0);
 
             // exact
             MultiFab m_exact(bArr, _dmap, 1, 0);
-            MultiFab::Copy(m_exact, fluxeb_phiexact[ilev], 0, 0, 1, 0);
+            MultiFab::Copy(m_exact, fluxeb_exact[ilev], 0, 0, 1, 0);
 
             // sol + exact
             MultiFab m_add(bArr, _dmap, 1, 0);
-            MultiFab::Copy(    m_add, fluxeb_phi[ilev], 0, 0, 1, 0);
-            MultiFab::Add(     m_add, fluxeb_phiexact[ilev], 0, 0, 1, 0);
+            MultiFab::Copy(    m_add, fluxeb_from_phi[ilev], 0, 0, 1, 0);
+            MultiFab::Add(     m_add, fluxeb_exact[ilev], 0, 0, 1, 0);
 
             // sol - exact
             MultiFab m_sub(bArr, _dmap, 1, 0);
-            MultiFab::Copy(    m_sub, fluxeb_phi[ilev], 0, 0, 1, 0);
-            MultiFab::Subtract(m_sub, fluxeb_phiexact[ilev], 0, 0, 1, 0);
+            MultiFab::Copy(    m_sub, fluxeb_from_phi[ilev], 0, 0, 1, 0);
+            MultiFab::Subtract(m_sub, fluxeb_exact[ilev], 0, 0, 1, 0);
 
             // (sol + exact) * vfrc
             MultiFab m_add_vfrc(bArr, _dmap, 1, 0);
@@ -312,10 +312,10 @@ MyTest::solve ()
             printMultiFabNorms("||feb_add*vfrc||", m_add_vfrc);
             printMultiFabNorms("||feb_sub||", m_sub);
             printMultiFabNorms("||feb_sub*vfrc||", m_sub_vfrc);
-            printMultiFabNorms("||sol||", fluxeb_phi[ilev]);
+            printMultiFabNorms("||sol||", fluxeb_from_phi[ilev]);
             printMultiFabNorms("||sol||", m_sol);
             printMultiFabNorms("||sol*vfrc||", m_sol_vfrc);
-            printMultiFabNorms("||exact||", fluxeb_phiexact[ilev]);
+            printMultiFabNorms("||exact||", fluxeb_exact[ilev]);
             printMultiFabNorms("||exact||", m_exact);
             printMultiFabNorms("||m_exact_vfrc||", m_exact_vfrc);
             printMultiFabNorms("||+ 2*sol + 0*exact||", m_lincomb_1);
@@ -435,8 +435,8 @@ MyTest::writePlotfile ()
             MultiFab::Copy(plotmf[ilev], phi[ilev], 0, 0, 1, 0);
             MultiFab::Copy(plotmf[ilev], phiexact[ilev], 0, 1, 1, 0);
             MultiFab::Copy(plotmf[ilev], vfrc, 0, 2, 1, 0);
-            MultiFab::Copy(plotmf[ilev], fluxeb_phi[ilev], 0, 3, 1, 0);
-            MultiFab::Copy(plotmf[ilev], fluxeb_phiexact[ilev], 0, 4, 1, 0);
+            MultiFab::Copy(plotmf[ilev], fluxeb_from_phi[ilev], 0, 3, 1, 0);
+            MultiFab::Copy(plotmf[ilev], fluxeb_exact[ilev], 0, 4, 1, 0);
         }
         WriteMultiLevelPlotfile(plot_file_name, max_level+1,
                                 amrex::GetVecOfConstPtrs(plotmf),
@@ -462,12 +462,12 @@ MyTest::writePlotfile ()
             MultiFab::Copy(plotmf[ilev], vfrc, 0, 4, 1, 0);
 
             // EB fluxes
-            MultiFab::Copy(plotmf[ilev], fluxeb_phi[ilev], 0, 5, 1, 0);
+            MultiFab::Copy(plotmf[ilev], fluxeb_from_phi[ilev], 0, 5, 1, 0);
 
-            MultiFab::Copy(plotmf[ilev], fluxeb_phiexact[ilev], 0, 6, 1, 0);
+            MultiFab::Copy(plotmf[ilev], fluxeb_exact[ilev], 0, 6, 1, 0);
 
-            MultiFab::Copy(    plotmf[ilev], fluxeb_phi[ilev]     , 0, 7, 1, 0);
-            MultiFab::Subtract(plotmf[ilev], fluxeb_phiexact[ilev], 0, 7, 1, 0);
+            MultiFab::Copy(    plotmf[ilev], fluxeb_from_phi[ilev]     , 0, 7, 1, 0);
+            MultiFab::Subtract(plotmf[ilev], fluxeb_exact[ilev], 0, 7, 1, 0);
             // MultiFab::Multiply(plotmf[ilev], vfrc                 , 0, 7, 1, 0);
         }
         WriteMultiLevelPlotfile(plot_file_name, max_level+1,
@@ -581,8 +581,8 @@ MyTest::initData ()
     acoef.resize(nlevels);
     bcoef.resize(nlevels);
     bcoef_eb.resize(nlevels);
-    fluxeb_phi.resize(nlevels);
-    fluxeb_phiexact.resize(nlevels);
+    fluxeb_from_phi.resize(nlevels);
+    fluxeb_exact.resize(nlevels);
 
     for (int ilev = 0; ilev < nlevels; ++ilev)
     {
@@ -603,8 +603,8 @@ MyTest::initData ()
         }
         bcoef_eb[ilev].define(grids[ilev], dmap[ilev], 1, 0, MFInfo(), *factory[ilev]);
         bcoef_eb[ilev].setVal(1.0);
-        fluxeb_phi[ilev].define(grids[ilev], dmap[ilev], 1, 1, MFInfo(), *factory[ilev]);
-        fluxeb_phiexact[ilev].define(grids[ilev], dmap[ilev], 1, 0, MFInfo(), *factory[ilev]);
+        fluxeb_from_phi[ilev].define(grids[ilev], dmap[ilev], 1, 1, MFInfo(), *factory[ilev]);
+        fluxeb_exact[ilev].define(grids[ilev], dmap[ilev], 1, 0, MFInfo(), *factory[ilev]);
 
         phi[ilev].setVal(0.0);
         rhs[ilev].setVal(0.0);
@@ -612,8 +612,8 @@ MyTest::initData ()
         for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
             bcoef[ilev][idim].setVal(1.0);
         }
-        fluxeb_phi[ilev].setVal(0.0);
-        fluxeb_phiexact[ilev].setVal(0.0);
+        fluxeb_from_phi[ilev].setVal(0.0);
+        fluxeb_exact[ilev].setVal(0.0);
 
         const auto dx = geom[ilev].CellSizeArray();
         const Box& domainbox = geom[ilev].Domain();
@@ -638,7 +638,7 @@ MyTest::initData ()
             AMREX_D_TERM(Array4<Real> const& bx_arr = bcoef[ilev][0].array(mfi);,
                          Array4<Real> const& by_arr = bcoef[ilev][1].array(mfi);,
                          Array4<Real> const& bz_arr = bcoef[ilev][2].array(mfi););
-            Array4<Real> const& feb_ex_arr = fluxeb_phiexact[ilev].array(mfi);
+            Array4<Real> const& feb_ex_arr = fluxeb_exact[ilev].array(mfi);
 
             auto fabtyp = flags[mfi].getType(bx);
             if (FabType::covered == fabtyp) {
@@ -654,6 +654,7 @@ MyTest::initData ()
                     mytest_set_phi_reg(i,j,k,phi_ex_arr,rhs_arr,
                                        AMREX_D_DECL(bx_arr,by_arr,bz_arr),
                                        dx, lprob_type, bx);
+                    // Maybe don't set feb_ex_arr here because phi_eb_arr is not changed here
                     feb_ex_arr(i,j,k) = 0.0;
                 });
             } else {
