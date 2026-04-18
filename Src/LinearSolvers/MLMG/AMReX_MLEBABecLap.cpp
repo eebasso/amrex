@@ -1074,7 +1074,7 @@ MLEBABecLap::applyBC (int amrlev, int mglev, MultiFab& in, BCMode bc_mode, State
         const int local_index = mfi.LocalIndex();
         amrex::ignore_unused(local_index);
 
-        // The failure wtih applyBC is related to amrex::FabArray<amrex::EBCellFlagFab>::fabPtr
+        // The failure with applyBC is related to amrex::FabArray<amrex::EBCellFlagFab>::fabPtr
         // *flags is of type amrex::FabArray<amrex::EBCellFlagFab>
         // (*flags)[mfi] calls on FabArray::operator[], which calls on FabArray::fabPtr
         // The failure seems to come from the following assertion in FabArray::fabPtr
