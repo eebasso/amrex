@@ -193,7 +193,7 @@ void mytest_set_fluxeb (
             amrex::Real gradphi_x = r2 * (4.0 * x * std::cos(3.*theta) - 3.0 * y * std::sin(3.*theta));
             amrex::Real gradphi_y = r2 * (4.0 * y * std::cos(3.*theta) + 3.0 * x * std::sin(3.*theta));
 
-            amrex::Real th = atan2(y,x);
+            amrex::Real th = std::atan2(y,x);
             amrex::Real costh = std::cos(th);
             amrex::Real sinth = std::sin(th);
 
