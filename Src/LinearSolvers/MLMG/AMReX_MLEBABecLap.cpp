@@ -1065,7 +1065,6 @@ MLEBABecLap::applyBC (int amrlev, int mglev, MultiFab& in, BCMode bc_mode, State
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (Gpu::notInLaunchRegion())
 #endif
-    // `mfi` is created from `in` which is ultimately `phi`/`a_sol` in getEBFluxes
     for (MFIter mfi(in, mfi_info); mfi.isValid(); ++mfi)
     {
         const Box& vbx   = mfi.validbox();
@@ -1074,12 +1073,6 @@ MLEBABecLap::applyBC (int amrlev, int mglev, MultiFab& in, BCMode bc_mode, State
         const int local_index = mfi.LocalIndex();
         amrex::ignore_unused(local_index);
 
-        // The failure with applyBC is related to amrex::FabArray<amrex::EBCellFlagFab>::fabPtr
-        // *flags is of type amrex::FabArray<amrex::EBCellFlagFab>
-        // (*flags)[mfi] calls on FabArray::operator[], which calls on FabArray::fabPtr
-        // The failure seems to come from the following assertion in FabArray::fabPtr
-        // AMREX_ASSERT(DistributionMap() == mfi.DistributionMap());
-        // This implies `*flags` and `mfi` have differing distribution maps
         auto fabtyp = (flags) ? (*flags)[mfi].getType(vbx) : FabType::regular;
         if (fabtyp != FabType::covered)
         {

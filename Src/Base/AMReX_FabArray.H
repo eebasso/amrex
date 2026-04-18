@@ -1791,7 +1791,6 @@ FAB const*
 FabArray<FAB>::fabPtr (const MFIter& mfi) const noexcept
 {
     AMREX_ASSERT(mfi.LocalIndex() < indexArray.size());
-    // Failure point here for applyBC
     AMREX_ASSERT(DistributionMap() == mfi.DistributionMap());
     int li = mfi.LocalIndex();
     return m_fabs_v[li];

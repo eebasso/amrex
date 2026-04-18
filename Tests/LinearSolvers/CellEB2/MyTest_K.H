@@ -198,7 +198,7 @@ void mytest_set_fluxeb (
             amrex::Real sinth = std::sin(th);
 
             // theta = pi - th
-            // phi = r^4 cos(theta) = r^4 cos(3*(pi - th))
+            // phi = r^4 cos(3 theta) = r^4 cos(3 (pi - th))
             amrex::Real gradphi_r = +4.0 * r3 * std::cos(3.*theta);
             amrex::Real gradphi_t = +3.0 * r3 * std::sin(3.*theta);
             amrex::Real gradphi_cyl_x = costh*gradphi_r - sinth*gradphi_t;
@@ -234,7 +234,6 @@ void mytest_set_fluxeb (
         } else {
             fluxeb_exact(i,j,k) = 0.0;
         }
-        // fluxeb_exact(i,j,k) = 7.0;
     }
 }
 
