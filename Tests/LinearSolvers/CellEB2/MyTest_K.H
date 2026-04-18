@@ -154,8 +154,8 @@ void mytest_set_fluxeb (
         if (flag.isCovered()) {
             fluxeb_exact(i,j,k) = 0.0;
         } else if (flag.isSingleValued()) {
-            // amrex::Real const nx = ebdata.get<amrex::EBData_t::bndrynorm>(i,j,k,0);
-            // amrex::Real const ny = ebdata.get<amrex::EBData_t::bndrynorm>(i,j,k,1);
+            amrex::Real const nx_ebdata = ebdata.get<amrex::EBData_t::bndrynorm>(i,j,k,0);
+            amrex::Real const ny_ebdata = ebdata.get<amrex::EBData_t::bndrynorm>(i,j,k,1);
             amrex::Real const bcentx = ebdata.get<amrex::EBData_t::bndrycent>(i,j,k,0);
             amrex::Real const bcenty = ebdata.get<amrex::EBData_t::bndrycent>(i,j,k,1);
 
@@ -183,9 +183,6 @@ void mytest_set_fluxeb (
             amrex::Real nx = dapx * anorminv;
             amrex::Real ny = dapy * anorminv;
 
-            amrex::Real const nx_ebdata = ebdata.get<amrex::EBData_t::bndrynorm>(i,j,k,0);
-            amrex::Real const ny_ebdata = ebdata.get<amrex::EBData_t::bndrynorm>(i,j,k,1);
-
             amrex::Real x = (i+0.5+bcentx)*dx[0] - 0.5;
             amrex::Real y = (j+0.5+bcenty)*dx[1] - 0.5;
             amrex::Real theta = std::atan2(x,y) + 0.5*pi;
@@ -193,11 +190,8 @@ void mytest_set_fluxeb (
             amrex::Real r = std::sqrt(r2);
             amrex::Real r3 = r*r2;
 
-            // amrex::Real gradphi_x = 0.5 * r3 * (-7.0*std::cos(2.*theta) - std::cos(4.*theta));
-            // amrex::Real gradphi_y = 0.5 * r3 * (-7.0*std::sin(2.*theta) + std::sin(4.*theta));
-
-            amrex::Real gradphi_x = r2 * (x * 4.0 * std::cos(3.*theta) - y * 3.0 * std::sin(3.*theta));
-            amrex::Real gradphi_y = r2 * (y * 4.0 * std::cos(3.*theta) + x * 3.0 * std::sin(3.*theta));
+            amrex::Real gradphi_x = r2 * (4.0 * x * std::cos(3.*theta) - 3.0 * y * std::sin(3.*theta));
+            amrex::Real gradphi_y = r2 * (4.0 * y * std::cos(3.*theta) + 3.0 * x * std::sin(3.*theta));
 
             amrex::Real th = atan2(y,x);
             amrex::Real costh = std::cos(th);
