@@ -321,6 +321,17 @@ void build_cellflag_from_ap (int i, int j, Array4<EBCellFlag> const& cflag,
     cflag(i,j,k) = flg;
 }
 
+namespace Test {
+
+void
+set_eb_data_wrapper (
+    const int i, const int j,
+    Array4<Real> const& apx, Array4<Real> const& apy,
+    GpuArray<Real,AMREX_SPACEDIM> const& dx,
+    Array4<Real> const& vfrac, Array4<Real> const& vcent,
+    Array4<Real> const& barea, Array4<Real> const& bcent,
+    Array4<Real> const& bnorm, Array4<Real> const& levset);
+
 }
 
 #endif
