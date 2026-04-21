@@ -26,7 +26,7 @@ private:
     GpuArray<Real,AMREX_SPACEDIM> m_dx_aniso{AMREX_D_DECL(7.0, 11.0, 13.0)};
 
     amrex::Geometry m_geom;
-    amrex::BoxArray m_box_arr;
+    amrex::BoxArray m_grid;
     amrex::DistributionMapping m_dmap;
 
     amrex::EB2::MultiGFab m_mgf;

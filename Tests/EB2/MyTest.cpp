@@ -26,13 +26,13 @@ MyTest::define_multifabs ()
 
     m_geom.define(domain);
 
-    m_box_arr.define(domain);
-    m_dmap.define(m_box_arr);
+    m_grid.define(domain);
+    m_dmap.define(m_grid);
 
     // FArrayBox m_levelset = FArrayBox{domain, 1};
 
     // MFInfo mfinfo{};
-    // m_mgf.define(m_box_arr, m_dmap);
+    // m_mgf.define(m_grid, m_dmap);
     // const int ng = amrex::EB2::GFab::ng;
     const int ng = 0;
     // IntVect ng{0};
@@ -40,25 +40,22 @@ MyTest::define_multifabs ()
     // mfinfo.SetTag("Tests::EB2::MyTest");
 
     IntVect node_type = IntVect::TheNodeVector();
-    BoxArray box_arr_node_type = amrex::convert(m_box_arr, node_type);
-    m_levelset.define(box_arr_node_type, m_dmap, 1, ng, mfinfo);
+    m_levelset.define(amrex::convert(m_grid, node_type), m_dmap, 1, ng, mfinfo);
 
-    m_cellflag.define(m_box_arr, m_dmap, 1, ng, mfinfo);
-    m_volfrac.define(m_box_arr, m_dmap, 1, ng, mfinfo);
-    m_volcent.define(m_box_arr, m_dmap, AMREX_SPACEDIM, ng, mfinfo);
+    m_cellflag.define(m_grid, m_dmap, 1, ng, mfinfo);
+    m_volfrac.define(m_grid, m_dmap, 1, ng, mfinfo);
+    m_volcent.define(m_grid, m_dmap, AMREX_SPACEDIM, ng, mfinfo);
 
-    m_bndryarea.define(m_box_arr, m_dmap, 1, ng, mfinfo);
-    m_bndrycent.define(m_box_arr, m_dmap, AMREX_SPACEDIM, ng, mfinfo);
-    m_bndrynorm.define(m_box_arr, m_dmap, AMREX_SPACEDIM, ng, mfinfo);
+    m_bndryarea.define(m_grid, m_dmap, 1, ng, mfinfo);
+    m_bndrycent.define(m_grid, m_dmap, AMREX_SPACEDIM, ng, mfinfo);
+    m_bndrynorm.define(m_grid, m_dmap, AMREX_SPACEDIM, ng, mfinfo);
 
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
         IntVect face_type = IntVect::TheDimensionVector(idim);
         IntVect edge_type{1}; edge_type[idim] = 0;
-        BoxArray box_arr_face_type = amrex::convert(m_box_arr, face_type);
-        BoxArray box_arr_edge_type = amrex::convert(m_box_arr, edge_type);
-        m_areafrac[idim].define(box_arr_face_type, m_dmap, 1, ng, mfinfo);
-        m_facecent[idim].define(box_arr_face_type, m_dmap, AMREX_SPACEDIM-1, ng, mfinfo);
-        m_edgecent[idim].define(box_arr_edge_type, m_dmap, 1, ng, mfinfo);
+        m_areafrac[idim].define(amrex::convert(m_grid, face_type), m_dmap, 1, ng, mfinfo);
+        m_facecent[idim].define(amrex::convert(m_grid, face_type), m_dmap, AMREX_SPACEDIM-1, ng, mfinfo);
+        m_edgecent[idim].define(amrex::convert(m_grid, edge_type), m_dmap, 1, ng, mfinfo);
     }
 }
 
@@ -67,7 +64,7 @@ MyTest::test_eb2 (
     const GpuArray<Real,AMREX_SPACEDIM> &dx
 )
 {
-    for (MFIter mfi(m_box_arr, m_dmap); mfi.isValid(); ++mfi)
+    for (MFIter mfi(m_grid, m_dmap); mfi.isValid(); ++mfi)
     {
         // const Box& bx = mfi.validbox();
         // const Box& nbx = amrex::surroundingNodes(bx);
