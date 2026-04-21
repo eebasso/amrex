@@ -20,8 +20,6 @@ private:
 
     void define_multifabs ();
 
-    // void init_fabs ();
-
     void test_eb2 (const GpuArray<Real,AMREX_SPACEDIM> &dx);
 
     GpuArray<Real,AMREX_SPACEDIM> m_dx_iso{AMREX_D_DECL(0.2, 0.2, 0.2)};
@@ -46,26 +44,6 @@ private:
     Array<MultiFab,AMREX_SPACEDIM> m_areafrac;
     Array<MultiFab,AMREX_SPACEDIM> m_facecent;
     Array<MultiFab,AMREX_SPACEDIM> m_edgecent;
-
-    // Box domain{IntVect(AMREX_D_DECL(0,0,0)), IntVect(AMREX_D_DECL(0,0,0))};
-
-    // Array<BaseFab<EB2::Type_t>, AMREX_SPACEDIM> m_facetype;
-
-    // iMultiFab m_cutcellmask;
-
-    // FArrayBox m_levelset;
-    // EBCellFlagFab m_cellflag;
-
-    // FArrayBox m_volfrac;
-    // FArrayBox m_volcent;
-
-    // FArrayBox m_bndryarea;
-    // FArrayBox m_bndrycent;
-    // FArrayBox m_bndrynorm;
-
-    // Array<FArrayBox,AMREX_SPACEDIM> m_areafrac;
-    // Array<FArrayBox,AMREX_SPACEDIM> m_facecent;
-    // Array<FArrayBox,AMREX_SPACEDIM> m_edgecent;
 
     // iMultiFab m_cutcellmask;
 };

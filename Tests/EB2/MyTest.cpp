@@ -19,46 +19,12 @@ MyTest::MyTest ()
     test_eb2(m_dx_aniso);
 }
 
-// void
-// MyTest::init_fabs ()
-// {
-//     Box domain(IntVect(AMREX_D_DECL(0,0,0)), IntVect(AMREX_D_DECL(0,0,0)));
-
-//     IntVect node_type = IntVect::TheNodeVector();
-//     Box domain_ntype = amrex::convert(domain, node_type);
-
-//     m_dx_iso = GpuArray<Real,AMREX_SPACEDIM>{AMREX_D_DECL(0.2, 0.2, 0.2)};
-//     m_dx_aniso = GpuArray<Real,AMREX_SPACEDIM>{AMREX_D_DECL(0.3, 0.5, 0.7)};
-
-//     m_levelset = FArrayBox(domain_ntype, 1);
-
-//     m_cellflag = EBCellFlagFab(domain, 1);
-//     m_volfrac = FArrayBox(m_box_arr, m_dmap, 1, ng, mfinfo);
-//     m_volcent.define(m_box_arr, m_dmap, AMREX_SPACEDIM, ng, mfinfo);
-
-//     m_bndryarea.define(m_box_arr, m_dmap, 1, ng, mfinfo);
-//     m_bndrycent.define(m_box_arr, m_dmap, AMREX_SPACEDIM, ng, mfinfo);
-//     m_bndrynorm.define(m_box_arr, m_dmap, AMREX_SPACEDIM, ng, mfinfo);
-
-//     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
-//         IntVect face_type = IntVect::TheDimensionVector(idim);
-//         IntVect edge_type{1}; edge_type[idim] = 0;
-//         Box domain_ftype = amrex::convert(domain, face_type);
-//         Box domain_etype = amrex::convert(domain, edge_type);
-//         m_areafrac[idim] = FArrayBox(domain_ftype, 1);
-//         m_facecent[idim] = FArrayBox(domain_ftype, AMREX_SPACEDIM-1);
-//         m_edgecent[idim] = FArrayBox(domain_etype, 1);
-//     }
-// }
-
 void
 MyTest::define_multifabs ()
 {
     Box domain(IntVect(AMREX_D_DECL(0,0,0)), IntVect(AMREX_D_DECL(0,0,0)));
 
     m_geom.define(domain);
-    // m_dx_iso = GpuArray<Real,AMREX_SPACEDIM>{AMREX_D_DECL(0.2, 0.2, 0.2)};
-    // m_dx_aniso = GpuArray<Real,AMREX_SPACEDIM>{AMREX_D_DECL(0.3, 0.5, 0.7)};
 
     m_box_arr.define(domain);
     m_dmap.define(m_box_arr);
@@ -166,7 +132,6 @@ MyTest::test_eb2 (
         Real bcenty_exact = 0.5 - 0.5*apXm;
         Real bnormx_exact = apXm*dx[1] / apnorm_exact;
         Real bnormy_exact = apYm*dx[0] / apnorm_exact;
-        // Real barea_exact = Real(0.5) * Ax * Ay;
 
         EB2::Test::set_eb_data_wrapper(
             0, 0,
