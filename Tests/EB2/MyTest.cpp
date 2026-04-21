@@ -13,7 +13,10 @@ using namespace amrex;
 MyTest::MyTest ()
 {
     define_multifabs();
-    test_eb2();
+    amrex::Print() << "Tests::EB2::MyTest: test isotropic cell sizes (dx = dy)";
+    test_eb2(m_dx_iso);
+    amrex::Print() << "Tests::EB2::MyTest: test anisotropic cell sizes (dx =/= dy)";
+    test_eb2(m_dx_aniso);
 }
 
 // void
@@ -94,7 +97,9 @@ MyTest::define_multifabs ()
 }
 
 void
-MyTest::test_eb2 ()
+MyTest::test_eb2 (
+    const GpuArray<Real,AMREX_SPACEDIM> &dx
+)
 {
     for (MFIter mfi(m_box_arr, m_dmap); mfi.isValid(); ++mfi)
     {
@@ -133,8 +138,6 @@ MyTest::test_eb2 ()
             // const Array4<EB2::Type_t> &ftypez_arr = facetype[2].array();
         );
 
-        auto dx = m_dx_aniso;
-
 #if AMREX_SPACEDIM == 2
 
         Real apXm = Real(0.3);
@@ -167,8 +170,7 @@ MyTest::test_eb2 ()
 
         EB2::Test::set_eb_data_wrapper(
             0, 0,
-            apx_arr, apy_arr,
-            m_dx_aniso,
+            apx_arr, apy_arr, dx,
             vfrac_arr, vcent_arr,
             barea_arr, bcent_arr,
             bnorm_arr, levset_arr
