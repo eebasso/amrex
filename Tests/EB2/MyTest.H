@@ -29,7 +29,7 @@ private:
     GpuArray<Real,AMREX_SPACEDIM> dx_iso;
     GpuArray<Real,AMREX_SPACEDIM> dx_aniso;
 
-    MultiGFab m_mgf;
+    amrex::EB2::MultiGFab m_mgf;
     MultiFab m_levelset;
     FabArray<EBCellFlagFab> m_cellflag;
 
