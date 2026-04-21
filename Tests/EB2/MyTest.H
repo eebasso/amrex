@@ -24,8 +24,8 @@ private:
 
     void test_eb2 ();
 
-    GpuArray<Real,AMREX_SPACEDIM> dx_iso{AMREX_D_DECL(0.2, 0.2, 0.2)};
-    GpuArray<Real,AMREX_SPACEDIM> dx_aniso{AMREX_D_DECL(0.3, 1.1, 1.7)};
+    GpuArray<Real,AMREX_SPACEDIM> m_dx_iso{AMREX_D_DECL(0.2, 0.2, 0.2)};
+    GpuArray<Real,AMREX_SPACEDIM> m_dx_aniso{AMREX_D_DECL(7.0, 11.0, 13.0)};
 
     amrex::Geometry m_geom;
     amrex::BoxArray m_box_arr;

@@ -24,8 +24,8 @@ MyTest::MyTest ()
 //     IntVect node_type = IntVect::TheNodeVector();
 //     Box domain_ntype = amrex::convert(domain, node_type);
 
-//     dx_iso = GpuArray<Real,AMREX_SPACEDIM>{AMREX_D_DECL(0.2, 0.2, 0.2)};
-//     dx_aniso = GpuArray<Real,AMREX_SPACEDIM>{AMREX_D_DECL(0.3, 0.5, 0.7)};
+//     m_dx_iso = GpuArray<Real,AMREX_SPACEDIM>{AMREX_D_DECL(0.2, 0.2, 0.2)};
+//     m_dx_aniso = GpuArray<Real,AMREX_SPACEDIM>{AMREX_D_DECL(0.3, 0.5, 0.7)};
 
 //     m_levelset = FArrayBox(domain_ntype, 1);
 
@@ -54,8 +54,8 @@ MyTest::define_multifabs ()
     Box domain(IntVect(AMREX_D_DECL(0,0,0)), IntVect(AMREX_D_DECL(0,0,0)));
 
     m_geom.define(domain);
-    dx_iso = GpuArray<Real,AMREX_SPACEDIM>{AMREX_D_DECL(0.2, 0.2, 0.2)};
-    dx_aniso = GpuArray<Real,AMREX_SPACEDIM>{AMREX_D_DECL(0.3, 0.5, 0.7)};
+    // m_dx_iso = GpuArray<Real,AMREX_SPACEDIM>{AMREX_D_DECL(0.2, 0.2, 0.2)};
+    // m_dx_aniso = GpuArray<Real,AMREX_SPACEDIM>{AMREX_D_DECL(0.3, 0.5, 0.7)};
 
     m_box_arr.define(domain);
     m_dmap.define(m_box_arr);
@@ -96,11 +96,6 @@ MyTest::define_multifabs ()
 void
 MyTest::test_eb2 ()
 {
-    // Real apxm = Real(0.3);
-    // Real apxp = Real(1.0);
-    // Real apym = Real(0.4);
-    // Real apyp = Real(1.0);
-
     for (MFIter mfi(m_box_arr, m_dmap); mfi.isValid(); ++mfi)
     {
         // const Box& bx = mfi.validbox();
@@ -110,15 +105,6 @@ MyTest::test_eb2 ()
         // auto& gfab = m_mgf[mfi];
         // const Box& vbx = gfab.validbox();
         // auto& levelset = gfab.getLevelSet();
-
-//         if (iter == 0) {
-//             gshop.fillFab(levelset, geom, gshop_run_on, bounding_box);
-// #ifdef AMREX_USE_GPU
-//             if (hybrid) {
-//                 levelset.prefetchToDevice();
-//             }
-// #endif
-//         }
 
         // auto& cellflag = m_cellflag[mfi];
         // gfab.buildTypes(cellflag);
@@ -133,32 +119,84 @@ MyTest::test_eb2 ()
 
         // auto& facetype = gfab.getFaceType();
         AMREX_D_TERM(
-            Array4<Real> const& apx_arr = m_areafrac[0].array(mfi);
-            Array4<Real> const& fcentx_arr = m_facecent[0].array(mfi);
-            // Array4<EB2::Type_t> const& ftypex_arr = facetype[0].array();
+            const Array4<Real> &apx_arr = m_areafrac[0].array(mfi);
+            const Array4<Real> &fcentx_arr = m_facecent[0].array(mfi);
+            // const Array4<EB2::Type_t> &ftypex_arr = facetype[0].array();
             ,
-            Array4<Real> const& apy_arr = m_areafrac[1].array(mfi);
-            Array4<Real> const& fcenty_arr = m_facecent[1].array(mfi);
-            // Array4<EB2::Type_t> const& ftypey_arr = facetype[0].array();
+            const Array4<Real> &apy_arr = m_areafrac[1].array(mfi);
+            const Array4<Real> &fcenty_arr = m_facecent[1].array(mfi);
+            // const Array4<EB2::Type_t> &ftypey_arr = facetype[0].array();
 
             ,
-            Array4<Real> const& apz_arr = m_areafrac[2].array(mfi);
-            Array4<Real> const& fcentz_arr = m_facecent[1].array(mfi);
-            // Array4<EB2::Type_t> const& ftypez_arr = facetype[2].array();
+            const Array4<Real> &apz_arr = m_areafrac[2].array(mfi);
+            const Array4<Real> &fcentz_arr = m_facecent[1].array(mfi);
+            // const Array4<EB2::Type_t> &ftypez_arr = facetype[2].array();
         );
 
+        auto dx = m_dx_aniso;
+
 #if AMREX_SPACEDIM == 2
+
+        Real apXm = Real(0.3);
+        // Real apxp = Real(0.0);
+        Real apYm = Real(0.4);
+        // Real apyp = Real(0.0);
+
+        apx_arr(0,0,0) = apXm;
+        apx_arr(1,0,0) = Real(0.0);
+        apy_arr(0,0,0) = apYm;
+        apy_arr(0,1,0) = Real(0.0);
+
+        levset_arr(0,0,0) = Real(1.0);
+        levset_arr(1,0,0) = Real(-1.0);
+        levset_arr(0,1,0) = Real(-1.0);
+        levset_arr(1,1,0) = Real(-1.0);
+
+
+        Real apnorm_exact =  hypot(apXm*dx[1], apYm*dx[0]);
+
+        Real vfrac_exact = 0.5*apXm*apYm;
+        Real vcentx_exact = (1./ vfrac_exact)*(1./12.)*apXm*apYm*(-3.0 + 2.0*apYm);
+        Real vcenty_exact = (1./ vfrac_exact)*(1./12.)*apYm*apXm*(-3.0 + 2.0*apXm);
+        Real barea_exact = (apnorm_exact * apnorm_exact) / hypot(apXm*dx[1]*dx[1], apYm*dx[0]*dx[0]);
+        Real bcentx_exact = 0.5 - 0.5*apYm;
+        Real bcenty_exact = 0.5 - 0.5*apXm;
+        Real bnormx_exact = apXm*dx[1] / apnorm_exact;
+        Real bnormy_exact = apYm*dx[0] / apnorm_exact;
+        // Real barea_exact = Real(0.5) * Ax * Ay;
+
         EB2::Test::set_eb_data_wrapper(
             0, 0,
             apx_arr, apy_arr,
-            dx_aniso,
+            m_dx_aniso,
             vfrac_arr, vcent_arr,
             barea_arr, bcent_arr,
             bnorm_arr, levset_arr
         );
+
+        Real vfrac = vfrac_arr(0, 0, 0);
+        Real vcentx = vcent_arr(0, 0, 0, 0);
+        Real vcenty = vcent_arr(0, 0, 0, 1);
+        Real barea = barea_arr(0, 0, 0);
+        Real bcentx = bcent_arr(0, 0, 0, 0);
+        Real bcenty = bcent_arr(0, 0, 0, 1);
+        Real bnormx = bnorm_arr(0, 0, 0, 0);
+        Real bnormy = bnorm_arr(0, 0, 0, 1);
+
+        Real tiny = 1.e-9;
+
+        AMREX_ASSERT(amrex::abs(vfrac - vfrac_exact) < tiny);
+        AMREX_ASSERT(amrex::abs(vcentx - vcentx_exact) < tiny);
+        AMREX_ASSERT(amrex::abs(vcenty - vcenty_exact) < tiny);
+        AMREX_ASSERT(amrex::abs(barea - barea_exact) < tiny);
+        AMREX_ASSERT(amrex::abs(bcentx - bcentx_exact) < tiny);
+        AMREX_ASSERT(amrex::abs(bcenty - bcenty_exact) < tiny);
+        AMREX_ASSERT(amrex::abs(bnormx - bnormx_exact) < tiny);
+        AMREX_ASSERT(amrex::abs(bnormy - bnormy_exact) < tiny);
+
 #else
         // amrex::EB2::Testing::set_eb_data_wrapper(
-        //     0, 0, apx_arr, apy_arr, dx_aniso, vcent_arr, bcent_arr, levset
+        //     0, 0, apx_arr, apy_arr, m_dx_aniso, vcent_arr, bcent_arr, levset
         // )
 #endif
 
