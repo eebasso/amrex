@@ -18,18 +18,21 @@ public:
 
 private:
 
-    void init_arrays ();
+    void define_multifabs ();
+
+    // void init_fabs ();
 
     void test_eb2 ();
+
+    GpuArray<Real,AMREX_SPACEDIM> dx_iso{AMREX_D_DECL(0.2, 0.2, 0.2)};
+    GpuArray<Real,AMREX_SPACEDIM> dx_aniso{AMREX_D_DECL(0.3, 1.1, 1.7)};
 
     amrex::Geometry m_geom;
     amrex::BoxArray m_box_arr;
     amrex::DistributionMapping m_dmap;
 
-    GpuArray<Real,AMREX_SPACEDIM> dx_iso;
-    GpuArray<Real,AMREX_SPACEDIM> dx_aniso;
-
     amrex::EB2::MultiGFab m_mgf;
+
     MultiFab m_levelset;
     FabArray<EBCellFlagFab> m_cellflag;
 
@@ -44,15 +47,27 @@ private:
     Array<MultiFab,AMREX_SPACEDIM> m_facecent;
     Array<MultiFab,AMREX_SPACEDIM> m_edgecent;
 
-    iMultiFab m_cutcellmask;
+    // Box domain{IntVect(AMREX_D_DECL(0,0,0)), IntVect(AMREX_D_DECL(0,0,0))};
 
-    // amrex::MultiFab m_apx;
-    // amrex::MultiFab m_apy;
-    // amrex::MultiFab m_vfrac;
-    // amrex::MultiFab m_barea;
+    // Array<BaseFab<EB2::Type_t>, AMREX_SPACEDIM> m_facetype;
 
+    // iMultiFab m_cutcellmask;
 
+    // FArrayBox m_levelset;
+    // EBCellFlagFab m_cellflag;
 
+    // FArrayBox m_volfrac;
+    // FArrayBox m_volcent;
+
+    // FArrayBox m_bndryarea;
+    // FArrayBox m_bndrycent;
+    // FArrayBox m_bndrynorm;
+
+    // Array<FArrayBox,AMREX_SPACEDIM> m_areafrac;
+    // Array<FArrayBox,AMREX_SPACEDIM> m_facecent;
+    // Array<FArrayBox,AMREX_SPACEDIM> m_edgecent;
+
+    // iMultiFab m_cutcellmask;
 };
 
 #endif
