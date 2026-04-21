@@ -4,6 +4,7 @@
 #include <AMReX_EBFabFactory.H>
 #include <AMReX_MLMG.H>
 #include <AMReX_Array.H>
+#include <AMReX_EB2_MultiGFab.H>
 
 using namespace amrex;
 
@@ -19,16 +20,16 @@ private:
 
     void init_arrays ();
 
-    void test_set_eb_data ();
+    void test_eb2 ();
 
-    amrex::Geometry geom;
-    amrex::BoxArray box_arr;
-    amrex::DistributionMapping dmap;
-    std::unique_ptr<amrex::EBFArrayBoxFactory> factory;
+    amrex::Geometry m_geom;
+    amrex::BoxArray m_box_arr;
+    amrex::DistributionMapping m_dmap;
 
     GpuArray<Real,AMREX_SPACEDIM> dx_iso;
     GpuArray<Real,AMREX_SPACEDIM> dx_aniso;
 
+    MultiGFab m_mgf;
     MultiFab m_levelset;
     FabArray<EBCellFlagFab> m_cellflag;
 
