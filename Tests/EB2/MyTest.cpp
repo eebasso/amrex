@@ -26,13 +26,8 @@ MyTest::define_multifabs ()
     m_grid.define(domain);
     m_dmap.define(m_grid);
 
-    // FArrayBox m_levelset = FArrayBox{domain, 1};
-
-    // MFInfo mfinfo{};
     // m_mgf.define(m_grid, m_dmap);
-    // const int ng = amrex::EB2::GFab::ng;
     const int ng = 0;
-    // IntVect ng{0};
     MFInfo mfinfo;
     // mfinfo.SetTag("Tests::EB2::MyTest");
 
@@ -63,12 +58,7 @@ MyTest::test_eb2 (
 {
     for (MFIter mfi(m_grid, m_dmap); mfi.isValid(); ++mfi)
     {
-        // const Box& bx = mfi.validbox();
-        // const Box& nbx = amrex::surroundingNodes(bx);
-        // Array4<Real> const& apx_arr = m_apx.array(mfi);
-        // Array4<Real> const& apy_arr = m_apy.array(mfi);
         // auto& gfab = m_mgf[mfi];
-        // const Box& vbx = gfab.validbox();
         // auto& levelset = gfab.getLevelSet();
 
         // auto& cellflag = m_cellflag[mfi];
@@ -122,8 +112,8 @@ MyTest::test_eb2 (
         Real vcentx_exact = (1./ vfrac_exact)*(1./12.)*apXm*apYm*(-3.0 + 2.0*apYm);
         Real vcenty_exact = (1./ vfrac_exact)*(1./12.)*apYm*apXm*(-3.0 + 2.0*apXm);
         Real barea_exact = (apnorm_exact * apnorm_exact) / hypot(apXm*dx[1]*dx[1], apYm*dx[0]*dx[0]);
-        Real bcentx_exact = 0.5 - 0.5*apYm;
-        Real bcenty_exact = 0.5 - 0.5*apXm;
+        Real bcentx_exact = -0.5 + 0.5*apYm;
+        Real bcenty_exact = -0.5 + 0.5*apXm;
         Real bnormx_exact = apXm*dx[1] / apnorm_exact;
         Real bnormy_exact = apYm*dx[0] / apnorm_exact;
 

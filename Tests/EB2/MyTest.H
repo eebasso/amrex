@@ -25,7 +25,7 @@ private:
     amrex::BoxArray m_grid;
     amrex::DistributionMapping m_dmap;
 
-    amrex::EB2::MultiGFab m_mgf;
+    // amrex::EB2::MultiGFab m_mgf;
 
     amrex::MultiFab m_levelset;
     amrex::FabArray<amrex::EBCellFlagFab> m_cellflag;
