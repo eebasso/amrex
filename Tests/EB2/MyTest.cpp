@@ -23,8 +23,6 @@ MyTest::define_multifabs ()
 {
     Box domain(IntVect(AMREX_D_DECL(0,0,0)), IntVect(AMREX_D_DECL(0,0,0)));
 
-    m_geom.define(domain);
-
     m_grid.define(domain);
     m_dmap.define(m_grid);
 
