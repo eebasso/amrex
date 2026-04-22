@@ -497,7 +497,10 @@ void set_connection_flags (Box const& bxg1,
     });
 }
 
-namespace Test {
+}
+
+#ifdef AMREX_TESTING
+namespace amrex::EB2::Test {
 
 void
 set_eb_data_wrapper (
@@ -511,7 +514,5 @@ set_eb_data_wrapper (
     set_eb_data(i, j, apx, apy, dx, vfrac, vcent, barea, bcent, bnorm, levset);
 }
 
-}
-
-
-}
+} // EB2::Test
+#endif // AMREX_TESTING
