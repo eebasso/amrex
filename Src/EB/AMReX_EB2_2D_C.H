@@ -334,4 +334,6 @@ set_eb_data_wrapper (
 
 }
 
+}
+
 #endif
