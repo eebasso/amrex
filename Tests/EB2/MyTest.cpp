@@ -148,14 +148,14 @@ MyTest::test_eb2 (
 
         Real tiny = 1.e-9;
 
-        AMREX_ASSERT(amrex::abs(vfrac - vfrac_exact) < tiny);
-        AMREX_ASSERT(amrex::abs(vcentx - vcentx_exact) < tiny);
-        AMREX_ASSERT(amrex::abs(vcenty - vcenty_exact) < tiny);
-        AMREX_ASSERT(amrex::abs(barea - barea_exact) < tiny);
-        AMREX_ASSERT(amrex::abs(bcentx - bcentx_exact) < tiny);
-        AMREX_ASSERT(amrex::abs(bcenty - bcenty_exact) < tiny);
-        AMREX_ASSERT(amrex::abs(bnormx - bnormx_exact) < tiny);
-        AMREX_ASSERT(amrex::abs(bnormy - bnormy_exact) < tiny);
+        AMREX_ASSERT(std::abs(vfrac - vfrac_exact) < tiny);
+        AMREX_ASSERT(std::abs(vcentx - vcentx_exact) < tiny);
+        AMREX_ASSERT(std::abs(vcenty - vcenty_exact) < tiny);
+        AMREX_ASSERT(std::abs(barea - barea_exact) < tiny);
+        AMREX_ASSERT(std::abs(bcentx - bcentx_exact) < tiny);
+        AMREX_ASSERT(std::abs(bcenty - bcenty_exact) < tiny);
+        AMREX_ASSERT(std::abs(bnormx - bnormx_exact) < tiny);
+        AMREX_ASSERT(std::abs(bnormy - bnormy_exact) < tiny);
 
 #else
         // amrex::EB2::Testing::set_eb_data_wrapper(
