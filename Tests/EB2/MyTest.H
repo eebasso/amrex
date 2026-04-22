@@ -1,10 +1,9 @@
 #ifndef MY_TEST_H_
 #define MY_TEST_H_
 
-#include <AMReX_EBFabFactory.H>
 #include <AMReX_Array.H>
 #include <AMReX_EB2_MultiGFab.H>
-
+#include <AMReX_EBFabFactory.H>
 
 class MyTest
 {

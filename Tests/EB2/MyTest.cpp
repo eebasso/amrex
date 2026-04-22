@@ -1,12 +1,11 @@
 #include "MyTest.H"
 
-#include <AMReX_MLEBABecLap.H>
-#include <AMReX_ParmParse.H>
-#include <AMReX_MultiFabUtil.H>
-#include <AMReX_EBMultiFabUtil.H>
-#include <AMReX_PlotFileUtil.H>
 #include <AMReX_EB2.H>
 #include <AMReX_EB2_C.H>
+#include <AMReX_EBMultiFabUtil.H>
+#include <AMReX_MultiFabUtil.H>
+#include <AMReX_ParmParse.H>
+#include <AMReX_PlotFileUtil.H>
 
 using namespace amrex;
 
