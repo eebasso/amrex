@@ -12,9 +12,9 @@ using namespace amrex;
 MyTest::MyTest ()
 {
     define_multifabs();
-    amrex::Print() << "Tests::EB2::MyTest: test isotropic cell sizes (dx = dy)";
+    amrex::Print() << "Tests::EB2::MyTest: test isotropic cell sizes (dx = dy)" << "\n";
     test_eb2(m_dx_iso);
-    amrex::Print() << "Tests::EB2::MyTest: test anisotropic cell sizes (dx =/= dy)";
+    amrex::Print() << "Tests::EB2::MyTest: test anisotropic cell sizes (dx =/= dy)" << "\n";
     test_eb2(m_dx_aniso);
 }
 
