@@ -314,6 +314,10 @@ Level::coarsenFromFine (Level& fineLevel, bool fill_boundary)
                 tile_error = std::max(tile_error,ierr);
             });
 
+            build_cells(
+                bx, cflag,
+            );
+
             error = std::max(error,tile_error);
         }
     }
@@ -364,6 +368,22 @@ Level::coarsenFromFine (Level& fineLevel, bool fill_boundary)
             Box const& gbx = amrex::grow(bx,2);
             Box const& ndgbx = amrex::surroundingNodes(gbx);
 
+            reduce_op.eval(ndgbx, reduce_data,
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) -> ReduceTuple
+            {
+                amrex::ignore_unused(j,k);
+                int ierr = coarsen_from_fine(AMREX_D_DECL(i,j,k), bx, 2,
+                                             cvol,ccent,cba,cbc,cbn,
+                                             AMREX_D_DECL(capx,capy,capz),
+                                             AMREX_D_DECL(cfcx,cfcy,cfcz),
+                                             AMREX_D_DECL(cecx[lidx],cecy[lidx],cecz[lidx]),
+                                             cflag,fvol,fcent,fba,fbc,fbn,
+                                             AMREX_D_DECL(fapx,fapy,fapz),
+                                             AMREX_D_DECL(ffcx,ffcy,ffcz),
+                                             AMREX_D_DECL(fecx[lidx],fecy[lidx],fecz[lidx]),
+                                             fflag);
+                return {ierr};
+            });
             reduce_op.eval(ndgbx, reduce_data,
             [=] AMREX_GPU_DEVICE (int i, int j, int k) -> ReduceTuple
             {

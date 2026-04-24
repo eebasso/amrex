@@ -5,11 +5,11 @@ namespace amrex::EB2 {
 namespace {
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 void set_eb_data (const int i, const int j,
-                  Array4<Real> const& apx, Array4<Real> const& apy,
+                  Array4<const Real> const& apx, Array4<const Real> const& apy,
                   GpuArray<Real,AMREX_SPACEDIM> const& dx,
                   Array4<Real> const& vfrac, Array4<Real> const& vcent,
                   Array4<Real> const& barea, Array4<Real> const& bcent,
-                  Array4<Real> const& bnorm, Array4<Real> const& levset) noexcept
+                  Array4<Real> const& bnorm, Array4<const Real> const& levset) noexcept
 {
 #ifdef AMREX_USE_FLOAT
     constexpr Real almostone = 1.0_rt-1.e-6_rt;
@@ -30,7 +30,6 @@ void set_eb_data (const int i, const int j,
     const Real apnorm = std::hypot(daxp,dayp) + 1.e-30_rt*std::sqrt(dx[0]*dx[1]);
     const Real nx = daxp * (1.0_rt/apnorm);
     const Real ny = dayp * (1.0_rt/apnorm);
-    const Real bareascaling = std::sqrt(Math::powi<2>(nx*dx[1]) + Math::powi<2>(ny*dx[0]));
 
     const Real nxabs = std::abs(nx);
     const Real nyabs = std::abs(ny);
@@ -78,7 +77,7 @@ void set_eb_data (const int i, const int j,
         y_xp = 0.5_rt*dx[1] - axp;
     }
 
-    barea(i,j,0) = (nx*daxp + ny*dayp)/bareascaling;
+    barea(i,j,0) = apnorm / std::sqrt(dx[0]*dx[1]);
     bcent(i,j,0,0) = 0.5_rt*(x_ym+x_yp);
     bcent(i,j,0,1) = 0.5_rt*(y_xm+y_xp);
     bnorm(i,j,0,0) = nx;
@@ -156,11 +155,11 @@ void set_covered(const int i, const int j,
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 bool set_eb_cell (int i, int j, Array4<EBCellFlag> const& cell,
-                  Array4<Real> const& apx, Array4<Real> const& apy,
+                  Array4<Real const> const& apx, Array4<Real const> const& apy,
                   GpuArray<Real,AMREX_SPACEDIM> const& dx,
                   Array4<Real> const& vfrac, Array4<Real> const& vcent,
                   Array4<Real> const& barea, Array4<Real> const& bcent,
-                  Array4<Real> const& bnorm, Array4<Real> const& levset,
+                  Array4<Real> const& bnorm, Array4<Real const> const& levset,
                   Real small_volfrac) noexcept
 {
     bool is_small_cell = false;
@@ -350,8 +349,8 @@ int build_faces (Box const& bx, Array4<EBCellFlag> const& cell,
 }
 
 void build_cells (Box const& bx, Array4<EBCellFlag> const& cell,
-                  Array4<Type_t> const& fx, Array4<Type_t> const& fy,
-                  Array4<Real> const& apx, Array4<Real> const& apy,
+                  Array4<Type_t const> const& fx, Array4<Type_t const> const& fy,
+                  Array4<Real const> const& apx, Array4<Real const> const& apy,
                   GpuArray<Real,AMREX_SPACEDIM> const& dx,
                   Array4<Real> const& vfrac, Array4<Real> const& vcent,
                   Array4<Real> const& barea, Array4<Real> const& bcent,
@@ -455,7 +454,7 @@ void build_cells (Box const& bx, Array4<EBCellFlag> const& cell,
 
 void set_connection_flags (Box const& bxg1,
                            Array4<EBCellFlag> const& cell,
-                           Array4<Type_t> const& fx, Array4<Type_t> const& fy) noexcept
+                           Array4<Type_t const> const& fx, Array4<Type_t const> const& fy) noexcept
 {
     // Build neighbors.  By default, all neighbors are already set.
     AMREX_HOST_DEVICE_FOR_3D ( bxg1, i, j, k,

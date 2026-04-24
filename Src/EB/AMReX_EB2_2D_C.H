@@ -96,18 +96,25 @@ int check_mvmc (int i, int j, int, Array4<Real const> const& fine)
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 int coarsen_from_fine (int i, int j, Box const& bx, int ngrow,
-                       Array4<Real> const& cvol, Array4<Real> const& ccent,
-                       Array4<Real> const& cba, Array4<Real> const& cbc,
-                       Array4<Real> const& cbn, Array4<Real> const& capx,
-                       Array4<Real> const& capy, Array4<Real> const& cfcx,
-                       Array4<Real> const& cfcy, Array4<Real> const& cecx,
-                       Array4<Real> const& cecy, Array4<EBCellFlag> const& cflag,
-                       Array4<Real const> const& fvol, Array4<Real const> const& fcent,
-                       Array4<Real const> const& fba, Array4<Real const> const& fbc,
-                       Array4<Real const> const& fbn, Array4<Real const> const& fapx,
-                       Array4<Real const> const& fapy, Array4<Real const> const& ffcx,
-                       Array4<Real const> const& ffcy, Array4<Real const> const& fecx,
-                       Array4<Real const> const& fecy, Array4<EBCellFlag const> const& fflag)
+                       Array4<Real> const& cvol,
+                       Array4<Real> const& ccent,
+                       Array4<Real> const& cba,
+                       Array4<Real> const& cbc,
+                       Array4<Real> const& cbn,
+                       Array4<Real> const& capx, Array4<Real> const& capy,
+                       Array4<Real> const& cfcx, Array4<Real> const& cfcy,
+                       Array4<Real> const& cecx, Array4<Real> const& cecy,
+                       Array4<EBCellFlag> const& cflag,
+                       Array4<Real const> const& fvol,
+                       Array4<Real const> const& fcent,
+                       Array4<Real const> const& fba,
+                       Array4<Real const> const& fbc,
+                       Array4<Real const> const& fbn,
+                       Array4<Real const> const& fapx, Array4<Real const> const& fapy,
+                       Array4<Real const> const& ffcx, Array4<Real const> const& ffcy,
+                       Array4<Real const> const& fecx, Array4<Real const> const& fecy,
+                       Array4<EBCellFlag const> const& fflag
+)
 {
     const Box& gbx = amrex::grow(bx,ngrow);
     const Box& xbx = amrex::surroundingNodes(bx,0);
